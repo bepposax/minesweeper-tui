@@ -66,8 +66,6 @@ int main(void)
             system("clear");
             print_board(board);
             printf("   Move " H_CYN "%d" RESET " -> ", moves);
-
-            // refuse inputs not starting with a number
             if (!scanf(" %d", &row))
                 row = -1;
             else
@@ -75,9 +73,8 @@ int main(void)
                 scanf(" %c", &x);
                 col = tolower(x) - 'a';
             }
-            // refuse inputs if longer than necessary
             while (getchar() != '\n')
-                row = -1;
+                ;
         } while (row < 0 || row >= HEIGHT || col < 0 || col >= WIDTH);
 
         if (isupper(x))
@@ -97,7 +94,7 @@ int main(void)
         free(board[i]);
     free(board);
 
-    return 0;
+    exit(EXIT_SUCCESS);
 }
 
 /**
@@ -152,7 +149,7 @@ void print_board(cell **board)
     char *rules[] = {
         "\tHOW TO PLAY",
         "",
-        "Insert the coordinates \"y x\"",
+        "Insert the coordinates <row> <col>",
         "- to play: [0-9][a-z]",
         "- to flag: [0-9][A-Z]",
         "- space is optional",
