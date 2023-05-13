@@ -271,9 +271,7 @@ int play(int row, int col, cell **board)
     reclaimed++;
     discover(row, col, board);
 
-    int remaining_cells = GOAL - reclaimed;
-
-    if (!remaining_cells)
+    if (!(GOAL - reclaimed))
     {
         game_over = true;
         return 1;
