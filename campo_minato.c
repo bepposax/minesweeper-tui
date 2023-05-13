@@ -66,9 +66,18 @@ int main(void)
             system("clear");
             print_board(board);
             printf("   Move " H_CYN "%d" RESET " -> ", moves);
-            scanf(" %d", &row);
-            scanf(" %c", &x);
-            col = tolower(x) - 'a';
+
+            // refuse inputs not starting with a number
+            if (!scanf(" %d", &row))
+                row = -1;
+            else
+            {
+                scanf(" %c", &x);
+                col = tolower(x) - 'a';
+            }
+            // refuse inputs if longer than necessary
+            while (getchar() != '\n')
+                row = -1;
         } while (row < 0 || row >= HEIGHT || col < 0 || col >= WIDTH);
 
         if (isupper(x))
@@ -116,10 +125,10 @@ void place_mines(cell **board)
 }
 
 /**
- * @brief updates the number of the cells surrounding a mine
+ * @brief updates the number of surrounding mines of cells touching this mine
  * @param board the game board
- * @param row the row of the mine
- * @param col the column of the mine
+ * @param row the mine's row
+ * @param col the mine's column
  */
 void signal_mine(cell **board, int row, int col)
 {
