@@ -1,5 +1,17 @@
-campo_minato: campo_minato.c
-	gcc campo_minato.c -o campo_minato
+CC = gcc
+CFLAGS = -Wall -Wextra 
+TARGET = campo_minato
+SRCS = main.c campo_minato.c
+
+.PHONY: all clean
+
+all: $(TARGET)
+
+$(TARGET): $(SRCS) campo_minato.h
+	$(CC) $(CFLAGS) -o $@ $(SRCS)
 
 clean:
-	rm -f campo_minato
+	rm -f $(TARGET)
+
+run: $(TARGET)
+	./$(TARGET)

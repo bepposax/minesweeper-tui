@@ -5,65 +5,25 @@
  * @author Ivano Izzo
  */
 #include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
 #include <time.h>
 #include <ctype.h>
-#include "lib/ANSI-colors.h"
+#include "campo_minato.h"
 
-#define NMINES 35
-#define HEIGHT 15
-#define WIDTH 15
 #define GOAL (HEIGHT * WIDTH - NMINES)
 
 int moves = 1, reclaimed = 0, mines_left = NMINES;
 bool game_over;
 
-/**
- * @brief represents a single cell of the board
- * @param is_mine true if the cell contains a mine
- * @param surrounding_mines counts mines surrounding the cell
- * @param discovered true if the cell has been visited
- */
-typedef struct cell
+void game_loop(cell **board)
 {
-    bool is_mine;
-    int surrounding_mines;
-    bool discovered;
-    bool is_flagged;
-} cell;
-
-void place_mines(cell **);
-void signal_mine(cell **, int, int);
-void print_board(cell **);
-int play(int, int, cell **);
-int discover(int, int, cell **);
-bool discoverable(int, int, cell **);
-void print_results();
-
-int main(void)
-{
-    cell **board = (cell **)malloc(HEIGHT * sizeof(cell));
-    if (!board)
-        exit(EXIT_FAILURE);
-    for (int i = 0; i < HEIGHT; i++)
-    {
-        board[i] = (cell *)malloc(WIDTH * sizeof(cell));
-        if (!board[i])
-            exit(EXIT_FAILURE);
-    }
-
-    place_mines(board);
-
     char x;
     int row, col;
 
-    // Game Loop
+    place_mines(board);
     while (!game_over)
     {
         do
         {
-            system("clear");
             print_board(board);
             printf("   Move " H_CYN "%d" RESET " -> ", moves);
             if (!scanf(" %d", &row))
@@ -85,16 +45,8 @@ int main(void)
         else
             play(row, col, board);
     }
-
-    system("clear");
     print_board(board);
     print_results();
-
-    for (int i = 0; i < HEIGHT; i++)
-        free(board[i]);
-    free(board);
-
-    exit(EXIT_SUCCESS);
 }
 
 /**
@@ -149,13 +101,13 @@ void print_board(cell **board)
     char *rules[] = {
         "\tHOW TO PLAY",
         "",
-        "Insert the coordinates <row> <col>",
+        "Insert the coordinates:",
         "- to play: [0-9][a-z]",
         "- to flag: [0-9][A-Z]",
-        "- space is optional",
-        "- you can play in a cell again",
+        "- play in a cell again",
         "  if all its mines are flagged"};
 
+    system("clear");
     // stats top
     printf(H_GRN);
     int len = printf("   ■ %d/%d", reclaimed, GOAL);
@@ -180,10 +132,10 @@ void print_board(cell **board)
             int num_mines = pos->surrounding_mines;
 
             if (pos->is_mine && pos->discovered && game_over)
-                printf(BG_RED B_WHT "\b %c " RESET, '*');
+                printf(BG_RED B_WHT "\b * " RESET);
             else if (pos->discovered || game_over)
                 if (pos->is_mine)
-                    printf(B_RED "%c " RESET, '*');
+                    printf(B_RED "* " RESET);
                 else if (num_mines)
                 {
                     switch (num_mines)
@@ -212,21 +164,21 @@ void print_board(cell **board)
             {
                 if (pos->is_flagged)
                     printf(RED);
-                printf("%s" RESET " ", "■");
+                printf("■ " RESET);
             }
         }
         // numbers right
         printf(BLK "%d " RESET, i);
         // instructions
-        if (i < sizeof(rules) / sizeof(rules[0]))
-            printf(BLK "\t%s" RESET, rules[i]);
+        if (i < (int)(sizeof(rules) / sizeof(rules[0])))
+            printf(BG_RED BLK "\t%s" RESET, rules[i]);
         puts("");
     }
     // letters bottom
     printf("   ");
     for (int j = 0; j < WIDTH; j++)
         printf(BLK "%c " RESET, j + 'A');
-    printf("\n\n");
+    puts("\n");
 }
 
 /**
@@ -341,10 +293,12 @@ bool discoverable(int row, int col, cell **board)
                 {
                     cell *neighbor = &(board[i][j]);
                     if (neighbor->is_flagged)
+                    {
                         if (neighbor->is_mine)
                             nmines++;
                         else
-                            return true; // incorrect flag placement (leads to a loss)
+                            return true;
+                    } // incorrect flag placement (leads to a loss)
                     if (!neighbor->discovered && !neighbor->is_flagged)
                         clear = false;
                 }
