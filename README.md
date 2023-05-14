@@ -2,7 +2,8 @@
 
 Campo Minato is a simple command-line implementation of the Minesweeper game in C.
 
-![screen](https://github.com/bepposax/minesweeper/assets/43136113/5f5cb23b-a49d-4945-ba75-61815ebaf80d)
+![screen](https://github.com/bepposax/minesweeper/assets/43136113/73135f55-3775-4c4b-a6df-e6951e3b44c7)
+
 
 ## Instructions
 
