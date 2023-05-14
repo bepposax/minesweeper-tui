@@ -2,5 +2,6 @@
     "files.associations": {
         "ansi-colors.h": "c",
         "stdbool.h": "c"
-    }
+    },
+    "C_Cpp.default.compilerPath": "C:/msys64/ucrt64/bin"
 }

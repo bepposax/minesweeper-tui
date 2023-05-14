@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra 
+CFLAGS = -Wall -Wextra
 TARGET = campo_minato
 SRCS = main.c campo_minato.c
 

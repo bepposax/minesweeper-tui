@@ -4,7 +4,6 @@ Campo Minato is a simple command-line implementation of the [Minesweeper](https:
 
 ![screen](https://github.com/bepposax/minesweeper/assets/43136113/73135f55-3775-4c4b-a6df-e6951e3b44c7)
 
-
 ## Instructions
 
 1. Make sure you have GCC (GNU Compiler Collection) installed on your system.
