@@ -1,5 +1,5 @@
 /**
- * @file campo_minato.c
+ * @file main.c
  *
  * @author Ivano Izzo
  */
