@@ -8,6 +8,7 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+#include <ncurses.h>
 #include "lib/ANSI-colors.h"
 
 #define HEIGHT 15
@@ -37,6 +38,6 @@ void print_board(cell **);
 int play(int, int, cell **);
 int discover(int, int, cell **);
 bool discoverable(int, int, cell **);
-void print_results();
+void print_results(int);
 
 #endif

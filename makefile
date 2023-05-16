@@ -1,5 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Wextra
+LDFLAGS = -lncurses
 TARGET = campo_minato
 SRCS = main.c campo_minato.c
 
@@ -8,7 +9,7 @@ SRCS = main.c campo_minato.c
 all: $(TARGET)
 
 $(TARGET): $(SRCS) campo_minato.h
-	$(CC) $(CFLAGS) -o $@ $(SRCS)
+	$(CC) $(SRCS) -o $@ $(CFLAGS) $(LDFLAGS)  
 
 clean:
 	rm -f $(TARGET)
