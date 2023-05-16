@@ -21,6 +21,7 @@ int main(void)
     cbreak();
     noecho();
     curs_set(0);
+    nodelay(stdscr, TRUE);
     mousemask(ALL_MOUSE_EVENTS, NULL);
     keypad(stdscr, TRUE);
 

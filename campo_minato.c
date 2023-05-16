@@ -18,7 +18,6 @@ void game_loop(cell **board)
 {
     int ch, row, col;
 
-
     place_mines(board);
     print_board(board);
     while (!game_over)
