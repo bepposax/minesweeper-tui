@@ -56,7 +56,7 @@ void game_loop(cell **board)
             return;
     }
     print_board(board);
-    while ((ch = getchar()) != 'q')
+    while (getchar() != 'q')
         ;
 }
 
