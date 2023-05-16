@@ -20,9 +20,9 @@ void game_loop(cell **board)
     int row, col;
 
     place_mines(board);
+    print_board(board);
     while (!game_over)
     {
-        print_board(board);
         if ((ch = getch()) == KEY_MOUSE)
         {
             MEVENT event;
@@ -41,11 +41,13 @@ void game_loop(cell **board)
                     if (event.bstate & BUTTON1_CLICKED)
                     {
                         play(row, col, board);
+                        print_board(board);
                     }
                     else if (event.bstate & BUTTON3_CLICKED && !board[row][col].discovered)
                     {
                         bool *flag = &(board[row][col].is_flagged);
                         (*flag = !*flag) ? mines_left-- : mines_left++;
+                        print_board(board);
                     }
                 }
             }
@@ -304,31 +306,30 @@ void print_results(int l)
     switch (l)
     {
     case 0:
-        printf(B_H_WHT "\t-- Game Over --" RESET);
+        printf(B_H_WHT "\t----- Game Over -----" RESET);
         break;
     case 1:
         printf("\tMoves: " H_CYN "%d" RESET, moves);
         break;
     case 2:
-        printf("\tCells reclaimed: " GRN "%d/%d" RESET, reclaimed, GOAL);
+        printf("\tCells reclaimed: " H_GRN "%d/%d" RESET, reclaimed, GOAL);
         break;
     case 3:
-        printf("\tRemaining cells: " YEL "%d" RESET, GOAL - reclaimed);
+        printf("\tRemaining cells: " H_YEL "%d" RESET, GOAL - reclaimed);
         break;
     case 4:
-        printf("\tMines left: " RED "%d" RESET, mines_left);
+        printf("\tMines left: " H_RED "%d" RESET, mines_left);
         break;
     case 5:
-    case 7:
         break;
     case 6:
         if (GOAL - reclaimed)
-            printf("\tYou " U_RED "LOST" RESET " - Try again");
+            printf("\tYou " B_H_RED "LOST" RESET " - Try again");
         else
-            printf("\tYou " U_GRN "WON" RESET " - Well done!");
+            printf("\tYou " B_H_GRN "WON" RESET " - Well done!");
         break;
     case HEIGHT - 1:
-        printf("\t\tq to exit");
+        printf("\t      q to exit");
         break;
     }
 }
