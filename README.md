@@ -1,6 +1,6 @@
-# Campo Minato
+# Minesweeper-TUI
 
-Campo Minato is a simple command-line implementation of the [Minesweeper](https://en.wikipedia.org/wiki/Minesweeper_(video_game)) game in C.
+Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](https://en.wikipedia.org/wiki/Minesweeper_(video_game)) game in C.
 
 ![screen](https://github.com/bepposax/minesweeper/assets/43136113/73135f55-3775-4c4b-a6df-e6951e3b44c7)
 
