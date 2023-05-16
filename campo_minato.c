@@ -16,8 +16,8 @@ bool game_over;
 
 void game_loop(cell **board)
 {
-    int ch;
-    int row, col;
+    int ch, row, col;
+
 
     place_mines(board);
     print_board(board);
