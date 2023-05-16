@@ -193,6 +193,7 @@ int play(int row, int col, cell **board)
             return 0;
         if (discoverable(row, col, board))
         {
+            moves++;
             for (int i = row - 1; i <= row + 1; i++)
                 if (i >= 0 && i < HEIGHT)
                     for (int j = col - 1; j <= col + 1; j++)

@@ -13,7 +13,7 @@
 
 #define HEIGHT 15
 #define WIDTH 15
-#define NMINES 35
+#define NMINES 40
 
 /**
  * @brief represents a single cell of the board
