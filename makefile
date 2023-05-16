@@ -4,7 +4,7 @@ LDFLAGS = -lncurses
 TARGET = campo_minato
 SRCS = main.c campo_minato.c
 
-.PHONY: all clean
+.PHONY: all clean run
 
 all: $(TARGET)
 
