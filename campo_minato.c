@@ -208,17 +208,9 @@ int play(int row, int col, cell **board)
         moves++;
         pos->discovered = true;
         uncovered++;
+        if (is_game_over(pos))
+            return 1;
         discover(row, col, board);
-        if (pos->is_mine)
-        {
-            game_over = true;
-            return 1;
-        }
-        if (!(GOAL - uncovered))
-        {
-            game_over = true;
-            return 1;
-        }
     }
     return 0;
 }
@@ -234,17 +226,12 @@ int discover(int row, int col, cell **board)
 {
     cell *this = &(board[row][col]);
 
-    // this may happen if a flag is misplaced
-    if (this->is_mine)
-    {
-        this->discovered = true;
-        game_over = true;
-        return 1;
-    }
     if (!this->discovered)
     {
         this->discovered = true;
         uncovered++;
+        if (is_game_over(this))
+            return 1;
     }
     for (int i = row - 1; i <= row + 1; i++)
         if (i >= 0 && i < HEIGHT)
@@ -260,6 +247,8 @@ int discover(int row, int col, cell **board)
                         {
                             neighbor->discovered = true;
                             uncovered++;
+                            if (is_game_over(neighbor))
+                                return 1;
                         }
                     }
                 }
@@ -296,6 +285,18 @@ bool discoverable(int row, int col, cell **board)
     if (nmines == board[row][col].surrounding_mines && !clear)
         return true;
     return false;
+}
+
+/**
+ * @brief checks if the game is over
+ * @param this a cell of the game board
+ * @return true if the cell contains a mine or if all the cells have been uncovered
+ */
+bool is_game_over(cell *this)
+{
+    if (this->is_mine || !(GOAL - uncovered))
+        game_over = true;
+    return game_over;
 }
 
 /**

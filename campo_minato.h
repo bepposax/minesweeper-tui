@@ -38,6 +38,7 @@ void print_board(cell **);
 int play(int, int, cell **);
 int discover(int, int, cell **);
 bool discoverable(int, int, cell **);
+bool is_game_over(cell *);
 void print_results(int);
 
 #endif
