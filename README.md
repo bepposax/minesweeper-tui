@@ -17,11 +17,11 @@ Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](htt
 - The game board is represented by a grid of cells.
 - The goal of the game is to uncover all the cells that do not contain mines.
 - Each cell may either be empty or contain a mine.
-- Uncovering a cell reveals the number of mines in the neighboring cells.
-- You can place a flag on a cell if you suspect it contains a mine.
-- To play a move, left-click on a cell.
-- To flag a cell, right-click it.
-- The game ends when you uncover all the safe cells or uncover a mine.
+- Use the mouse to left-click on a cell to uncover it.
+- Use the mouse to right-click on a cell to flag or unflag it as a potential mine.
+- Uncover all non-mine cells to win the game.
+- Uncover a mine to lose the game.
+- Press 'q' to quit the game at any time.
 
 ## Files
 
@@ -29,6 +29,10 @@ Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](htt
 - `campo_minato.c`: Source code file containing the game logic.
 - `main.c`: Source code file containing the main function.
 - `Makefile`: Makefile to compile and run the program.
+
+## Requirements
+
+- ncurses library
 
 ## Usage
 

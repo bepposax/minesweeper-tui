@@ -11,7 +11,7 @@
 
 #define GOAL (HEIGHT * WIDTH - NMINES)
 
-int moves = 0, reclaimed = 0, mines_left = NMINES;
+int moves = 0, uncovered = 0, mines_left = NMINES;
 bool game_over;
 
 void game_loop(cell **board)
@@ -113,7 +113,7 @@ void print_board(cell **board)
 
     // stats top
     printf(H_GRN);
-    int len = printf("■ %d/%d", reclaimed, GOAL);
+    int len = printf("■ %d/%d", uncovered, GOAL);
     for (int i = 0; i < WIDTH * 2 - len - 3; i++)
         printf(" ");
     printf(B_H_RED "*" H_RED " %2d\n\r" RESET, mines_left);
@@ -207,14 +207,14 @@ int play(int row, int col, cell **board)
     {
         moves++;
         pos->discovered = true;
-        reclaimed++;
+        uncovered++;
         discover(row, col, board);
         if (pos->is_mine)
         {
             game_over = true;
             return 1;
         }
-        if (!(GOAL - reclaimed))
+        if (!(GOAL - uncovered))
         {
             game_over = true;
             return 1;
@@ -244,7 +244,7 @@ int discover(int row, int col, cell **board)
     if (!this->discovered)
     {
         this->discovered = true;
-        reclaimed++;
+        uncovered++;
     }
     for (int i = row - 1; i <= row + 1; i++)
         if (i >= 0 && i < HEIGHT)
@@ -259,7 +259,7 @@ int discover(int row, int col, cell **board)
                         else if (!this->surrounding_mines)
                         {
                             neighbor->discovered = true;
-                            reclaimed++;
+                            uncovered++;
                         }
                     }
                 }
@@ -312,10 +312,10 @@ void print_results(int l)
         printf("\tMoves: " H_CYN "%d" RESET, moves);
         break;
     case 2:
-        printf("\tCells reclaimed: " H_GRN "%d/%d" RESET, reclaimed, GOAL);
+        printf("\tCells uncovered: " H_GRN "%d/%d" RESET, uncovered, GOAL);
         break;
     case 3:
-        printf("\tRemaining cells: " H_YEL "%d" RESET, GOAL - reclaimed);
+        printf("\tRemaining cells: " H_YEL "%d" RESET, GOAL - uncovered);
         break;
     case 4:
         printf("\tMines left: " H_RED "%d" RESET, mines_left);
@@ -323,7 +323,7 @@ void print_results(int l)
     case 5:
         break;
     case 6:
-        if (GOAL - reclaimed)
+        if (GOAL - uncovered)
             printf("\tYou " B_H_RED "LOST" RESET " - Try again");
         else
             printf("\tYou " B_H_GRN "WON" RESET " - Well done!");
