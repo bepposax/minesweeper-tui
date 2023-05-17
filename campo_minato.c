@@ -186,7 +186,6 @@ int play(int row, int col, cell **board)
 
     if (pos->is_flagged)
         return 0;
-
     if (pos->discovered)
     {
         if (!pos->surrounding_mines)
@@ -289,18 +288,19 @@ bool discoverable(int row, int col, cell **board)
 
 /**
  * @brief checks if the game is over
+ *
  * @param this a cell of the game board
  * @return true if the cell contains a mine or if all the cells have been uncovered
  */
 bool is_game_over(cell *this)
 {
-    if (this->is_mine || !(GOAL - uncovered))
-        game_over = true;
-    return game_over;
+    return (game_over = (this->is_mine || !(GOAL - uncovered)));
 }
 
 /**
  * @brief prints the final state of the board after a game is over, with some final stats
+ *
+ * @param l the line to print
  */
 void print_results(int l)
 {
