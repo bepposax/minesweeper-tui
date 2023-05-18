@@ -23,13 +23,6 @@ Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](htt
 - Uncover a mine to lose the game.
 - Press 'q' to quit the game at any time.
 
-## Files
-
-- `minesweeper.h`: Header file containing function declarations and data structures.
-- `minesweeper.c`: Source code file containing the game logic.
-- `main.c`: Source code file containing the main function.
-- `Makefile`: Makefile to compile and run the program.
-
 ## Requirements
 
 - ncurses library
@@ -39,10 +32,6 @@ Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](htt
 - `make`: Compiles the source code files and generates the executable file.
 - `make run`: Runs the program.
 - `make clean`: Deletes the executable file.
-
-## Dependencies
-
-- The program depends on the ANSI-colors library, which is included in the `include` folder.
 
 Note: This program has been tested on a Unix-like system with GCC installed. Compatibility with other systems may vary.
 
