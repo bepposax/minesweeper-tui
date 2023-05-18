@@ -25,8 +25,8 @@ Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](htt
 
 ## Files
 
-- `campo_minato.h`: Header file containing function declarations and data structures.
-- `campo_minato.c`: Source code file containing the game logic.
+- `minesweeper.h`: Header file containing function declarations and data structures.
+- `minesweeper.c`: Source code file containing the game logic.
 - `main.c`: Source code file containing the main function.
 - `Makefile`: Makefile to compile and run the program.
 
@@ -42,7 +42,7 @@ Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](htt
 
 ## Dependencies
 
-- The program depends on the ANSI-colors library, which is included in the `lib` folder.
+- The program depends on the ANSI-colors library, which is included in the `include` folder.
 
 Note: This program has been tested on a Unix-like system with GCC installed. Compatibility with other systems may vary.
 
