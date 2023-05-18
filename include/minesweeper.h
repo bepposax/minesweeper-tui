@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <ncurses.h>
-#include "include/ANSI-colors.h"
+#include "ANSI-colors.h"
 
 #define HEIGHT 15
 #define WIDTH 15
@@ -39,4 +39,5 @@ void signal_mine(cell **, int, int);
 void game_loop(cell **);
 int play(int, int, cell **);
 void print_board(cell **);
+
 #endif

@@ -3,7 +3,7 @@
  *
  * @author Ivano Izzo
  */
-#include "minesweeper.h"
+#include "../include/minesweeper.h"
 
 int main(void)
 {

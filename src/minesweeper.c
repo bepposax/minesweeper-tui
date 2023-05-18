@@ -1,13 +1,12 @@
 /**
  * @file minesweeper.c
- * @brief simulates a minesweeper game
  *
  * @author Ivano Izzo
  */
 #include <stdio.h>
 #include <time.h>
 #include <ctype.h>
-#include "minesweeper.h"
+#include "../include/minesweeper.h"
 
 #define GOAL (HEIGHT * WIDTH - NMINES)
 
@@ -69,6 +68,7 @@ void game_loop(cell **board)
 
 /**
  * @brief places the mines randomly on the board
+ *
  * @param board the game board
  */
 void place_mines(cell **board)
@@ -93,6 +93,7 @@ void place_mines(cell **board)
 
 /**
  * @brief updates the number of surrounding mines of cells touching this mine
+ *
  * @param board the game board
  * @param row the mine's row
  * @param col the mine's column
@@ -112,6 +113,7 @@ void signal_mine(cell **board, int row, int col)
 
 /**
  * @brief prints the current state of the board
+ *
  * @param board the game board
  */
 void print_board(cell **board)
@@ -182,6 +184,7 @@ void print_board(cell **board)
 
 /**
  * @brief discover a cell and checks if more can be discovered
+ *
  * @param row the row of the starting cell
  * @param col the column of the starting cell
  * @param board the game board
@@ -224,6 +227,7 @@ int play(int row, int col, cell **board)
 
 /**
  * @brief discovers all the possible cells from a starting cell
+ *
  * @param row the row of the starting cell
  * @param col the column of the starting cell
  * @param board the game board
@@ -264,6 +268,7 @@ int discover(int row, int col, cell **board)
 
 /**
  * @brief checks if the number of surrounding flags matches the surrounding mines
+ *
  * @param row the row of the starting cell
  * @param col the column of the starting cell
  * @param board the game board
@@ -308,11 +313,11 @@ bool is_game_over(cell *this)
 /**
  * @brief prints the final state of the board after a game is over, with some final stats
  *
- * @param l the line to print
+ * @param line the line to print
  */
-void print_results(int l)
+void print_results(int line)
 {
-    switch (l)
+    switch (line)
     {
     case 0:
         printf(B_H_WHT "\t----- Game Over -----" RESET);

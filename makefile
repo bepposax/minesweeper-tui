@@ -2,13 +2,13 @@ CC = gcc
 CFLAGS = -Wall -Wextra
 LDFLAGS = -lncurses
 TARGET = minesweeper
-SRCS = main.c minesweeper.c
+SRCS = src/main.c src/minesweeper.c
 
 .PHONY: all clean run
 
 all: $(TARGET)
 
-$(TARGET): $(SRCS) minesweeper.h
+$(TARGET): $(SRCS)
 	$(CC) $(SRCS) -o $@ $(CFLAGS) $(LDFLAGS)  
 
 clean:
