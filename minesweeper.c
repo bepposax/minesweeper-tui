@@ -1,5 +1,5 @@
 /**
- * @file campo_minato.c
+ * @file minesweeper.c
  * @brief simulates a minesweeper game
  *
  * @author Ivano Izzo
@@ -7,12 +7,17 @@
 #include <stdio.h>
 #include <time.h>
 #include <ctype.h>
-#include "campo_minato.h"
+#include "minesweeper.h"
 
 #define GOAL (HEIGHT * WIDTH - NMINES)
 
 int moves = 0, uncovered = 0, mines_left = NMINES;
 bool game_over;
+
+int discover(int, int, cell **);
+bool discoverable(int, int, cell **);
+bool is_game_over(cell *);
+void print_results(int);
 
 void game_loop(cell **board)
 {
@@ -53,10 +58,13 @@ void game_loop(cell **board)
         }
         else if (ch == 'q')
             return;
+        else if (ch == KEY_RESIZE)
+            print_board(board);
     }
     print_board(board);
-    while (getchar() != 'q')
-        ;
+    while ((ch = getch()) != 'q')
+        if (ch == KEY_RESIZE)
+            print_board(board);
 }
 
 /**

@@ -3,7 +3,7 @@
  *
  * @author Ivano Izzo
  */
-#include "campo_minato.h"
+#include "minesweeper.h"
 
 int main(void)
 {
@@ -18,7 +18,7 @@ int main(void)
     }
 
     initscr();
-    cbreak();
+    raw();
     noecho();
     curs_set(0);
     nodelay(stdscr, TRUE);
