@@ -8,16 +8,123 @@
 #include <ctype.h>
 #include "../include/minesweeper.h"
 
-#define GOAL (HEIGHT * WIDTH - NMINES)
-
-int moves = 0, uncovered = 0, mines_left = NMINES;
+int HEIGHT, WIDTH, NMINES, GOAL;
+int moves = 0, uncovered = 0, mines_left;
 bool game_over;
 
+int select_diff();
+void print_diff_menu();
 int discover(int, int, cell **);
 bool discoverable(int, int, cell **);
 bool is_game_over(cell *);
 void print_results(int);
 
+/**
+ * @brief initial setup
+ */
+void init()
+{
+    switch (select_diff())
+    {
+    case 1:
+        HEIGHT = 9;
+        WIDTH = 9;
+        NMINES = 10;
+        break;
+    case 2:
+        HEIGHT = 16;
+        WIDTH = 16;
+        NMINES = 40;
+        break;
+    case 3:
+        HEIGHT = 16;
+        WIDTH = 30;
+        NMINES = 99;
+        break;
+    default:
+        return;
+    }
+
+    mines_left = NMINES;
+    GOAL = (HEIGHT * WIDTH - NMINES);
+
+    cell **board = (cell **)malloc(HEIGHT * sizeof(cell));
+    if (!board)
+        exit(EXIT_FAILURE);
+    for (int i = 0; i < HEIGHT; i++)
+    {
+        board[i] = (cell *)malloc(WIDTH * sizeof(cell));
+        if (!board[i])
+            exit(EXIT_FAILURE);
+    }
+
+    game_loop(board);
+
+    for (int i = 0; i < HEIGHT; i++)
+        free(board[i]);
+    free(board);
+}
+
+/**
+ * @brief asks the user to select the game difficulty
+ */
+int select_diff()
+{
+    int ch;
+
+    print_diff_menu();
+    while ((ch = getch()))
+    {
+        if (ch == KEY_MOUSE)
+        {
+            MEVENT event;
+            if (getmouse(&event) == OK && (event.bstate & BUTTON1_CLICKED))
+                switch (event.y)
+                {
+                case 3:
+                    return 1;
+                case 5:
+                    return 2;
+                case 7:
+                    return 3;
+                default:
+                    break;
+                }
+        }
+        else if (ch == 'q')
+            return 0;
+        else if (ch == KEY_RESIZE)
+            print_diff_menu();
+    }
+    return -1;
+}
+
+/**
+ * @brief prints the difficulties to choose from
+ */
+void print_diff_menu()
+{
+    clear();
+    refresh();
+
+    printf("\n\t▆■■■■■■ DIFFICULTY ■■■■■■");
+    printf("▆\n\b█\r\t█");
+    printf("\n\b█" H_GRN " ■■■■■■ BEGINNER ■■■■■■ " RESET);
+    printf("█\n\b█\r\t█");
+    printf("\n\b█" H_YEL " ■■■■ INTERMEDIATE ■■■■ " RESET);
+    printf("█\n\b█\r\t█");
+    printf("\n\b█" H_RED " ■■■■■■■ EXPERT ■■■■■■■ " RESET);
+    printf("█\n\b█\r\t█\n\b█");
+    for (int i = 23; i >= 0; i--)
+        printf("■");
+    printf("█\n\r");
+
+    refresh();
+}
+
+/**
+ * @brief the game loop - it ends when the game is over or the user quits
+ */
 void game_loop(cell **board)
 {
     int ch, row, col;
@@ -342,7 +449,7 @@ void print_results(int line)
         else
             printf("\tYou " B_H_GRN "WON" RESET " - Well done!");
         break;
-    case HEIGHT - 1:
+    case 15:
         printf("\t      q to exit");
         break;
     }

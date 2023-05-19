@@ -13,9 +13,9 @@
 #include <ncurses.h>
 #include "ANSI-colors.h"
 
-#define HEIGHT 15
-#define WIDTH 15
-#define NMINES 40
+extern int HEIGHT;
+extern int WIDTH;
+extern int NMINES;
 
 /**
  * @brief represents a single cell of the board
@@ -34,6 +34,7 @@ typedef struct cell
 
 extern cell **board;
 
+void init();
 void place_mines(cell **);
 void signal_mine(cell **, int, int);
 void game_loop(cell **);
