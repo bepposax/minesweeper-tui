@@ -149,16 +149,9 @@ void game_loop(cell **board)
                 if (row >= 0 && row < HEIGHT && col >= 0 && col < WIDTH)
                 {
                     if (event.bstate & BUTTON1_CLICKED)
-                    {
                         play(row, col, board);
-                        print_board(board);
-                    }
-                    else if (event.bstate & BUTTON3_CLICKED && !board[row][col].discovered)
-                    {
-                        bool *flag = &(board[row][col].is_flagged);
-                        (*flag = !*flag) ? mines_left-- : mines_left++;
-                        print_board(board);
-                    }
+                    else if (event.bstate & BUTTON3_CLICKED)
+                        flag(row, col, board);
                 }
             }
         }
@@ -329,7 +322,25 @@ int play(int row, int col, cell **board)
             return 1;
         discover(row, col, board);
     }
+    print_board(board);
     return 0;
+}
+
+/**
+ * @brief places or removes a flag on an undiscovered cell
+ *
+ * @param row the row of the starting cell
+ * @param col the column of the starting cell
+ * @param board the game board
+ */
+void flag(int row, int col, cell **board)
+{
+    if (!board[row][col].discovered)
+    {
+        bool *flag = &(board[row][col].is_flagged);
+        (*flag = !*flag) ? mines_left-- : mines_left++;
+        print_board(board);
+    }
 }
 
 /**
@@ -427,7 +438,7 @@ void print_results(int line)
     switch (line)
     {
     case 0:
-        printf(B_H_WHT "\t----- Game Over -----" RESET);
+        printf(B_H_WHT "\t------ Game Over ------" RESET);
         break;
     case 1:
         printf("\tMoves: " H_CYN "%d" RESET, moves);
@@ -449,7 +460,7 @@ void print_results(int line)
         else
             printf("\tYou " B_H_GRN "WON" RESET " - Well done!");
         break;
-    case 15:
+    case 8:
         printf("\t      q to exit");
         break;
     }

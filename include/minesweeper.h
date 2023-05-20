@@ -5,17 +5,12 @@
  */
 #pragma once
 
-#ifndef MINESWEEPER_H
-#define MINESWEEPER_H
-
 #include <stdlib.h>
 #include <stdbool.h>
 #include <ncurses.h>
 #include "ANSI-colors.h"
 
-extern int HEIGHT;
-extern int WIDTH;
-extern int NMINES;
+extern int HEIGHT, WIDTH, NMINES;
 
 /**
  * @brief represents a single cell of the board
@@ -39,6 +34,5 @@ void place_mines(cell **);
 void signal_mine(cell **, int, int);
 void game_loop(cell **);
 int play(int, int, cell **);
+void flag(int, int, cell **);
 void print_board(cell **);
-
-#endif

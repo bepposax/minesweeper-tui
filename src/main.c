@@ -14,7 +14,9 @@ int main(void)
     nodelay(stdscr, TRUE);
     mousemask(ALL_MOUSE_EVENTS, NULL);
     keypad(stdscr, TRUE);
+
     init(); // game starts
+
     endwin();
     return 0;
 }
