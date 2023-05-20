@@ -7,16 +7,6 @@
 
 int main(void)
 {
-    cell **board = (cell **)malloc(HEIGHT * sizeof(cell));
-    if (!board)
-        exit(EXIT_FAILURE);
-    for (int i = 0; i < HEIGHT; i++)
-    {
-        board[i] = (cell *)malloc(WIDTH * sizeof(cell));
-        if (!board[i])
-            exit(EXIT_FAILURE);
-    }
-
     initscr();
     raw();
     noecho();
@@ -25,11 +15,7 @@ int main(void)
     mousemask(ALL_MOUSE_EVENTS, NULL);
     keypad(stdscr, TRUE);
 
-    game_loop(board);
-
-    for (int i = 0; i < HEIGHT; i++)
-        free(board[i]);
-    free(board);
+    init(); // game starts
 
     endwin();
     return 0;
