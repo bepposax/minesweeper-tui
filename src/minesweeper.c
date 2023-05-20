@@ -8,8 +8,7 @@
 #include <ctype.h>
 #include "../include/minesweeper.h"
 
-int HEIGHT, WIDTH, NMINES, GOAL;
-int moves = 0, uncovered = 0, mines_left;
+int height, width, mines, goal, moves = 0, uncovered = 0;
 bool game_over;
 
 int select_diff();
@@ -27,40 +26,37 @@ void init()
     switch (select_diff())
     {
     case 1:
-        HEIGHT = 9;
-        WIDTH = 9;
-        NMINES = 10;
+        height = 9;
+        width = 9;
+        mines = 10;
         break;
     case 2:
-        HEIGHT = 16;
-        WIDTH = 16;
-        NMINES = 40;
+        height = 16;
+        width = 16;
+        mines = 40;
         break;
     case 3:
-        HEIGHT = 16;
-        WIDTH = 30;
-        NMINES = 99;
+        height = 16;
+        width = 30;
+        mines = 99;
         break;
     default:
         return;
     }
 
-    mines_left = NMINES;
-    GOAL = (HEIGHT * WIDTH - NMINES);
-
-    cell **board = (cell **)malloc(HEIGHT * sizeof(cell));
+    cell **board = (cell **)malloc(height * sizeof(cell));
     if (!board)
         exit(EXIT_FAILURE);
-    for (int i = 0; i < HEIGHT; i++)
+    for (int i = 0; i < height; i++)
     {
-        board[i] = (cell *)malloc(WIDTH * sizeof(cell));
+        board[i] = (cell *)malloc(width * sizeof(cell));
         if (!board[i])
             exit(EXIT_FAILURE);
     }
 
     game_loop(board);
 
-    for (int i = 0; i < HEIGHT; i++)
+    for (int i = 0; i < height; i++)
         free(board[i]);
     free(board);
 }
@@ -146,7 +142,7 @@ void game_loop(cell **board)
                 else
                     continue;
 
-                if (row >= 0 && row < HEIGHT && col >= 0 && col < WIDTH)
+                if (row >= 0 && row < height && col >= 0 && col < width)
                 {
                     if (event.bstate & BUTTON1_CLICKED)
                         play(row, col, board);
@@ -173,20 +169,19 @@ void game_loop(cell **board)
  */
 void place_mines(cell **board)
 {
-    int mine_row, mine_col, mines = NMINES;
+    int mine_row, mine_col, mines_left = mines;
     srand(time(NULL));
 
-    while (mines)
+    while (mines_left--)
     {
-        mine_row = rand() % HEIGHT;
-        mine_col = rand() % WIDTH;
+        mine_row = rand() % height;
+        mine_col = rand() % width;
         cell *pos = &(board[mine_row][mine_col]);
 
         if (!pos->is_mine)
         {
             pos->is_mine = true;
             signal_mine(board, mine_row, mine_col);
-            mines--;
         }
     }
 }
@@ -201,9 +196,9 @@ void place_mines(cell **board)
 void signal_mine(cell **board, int row, int col)
 {
     for (int i = row - 1; i <= row + 1; i++)
-        if (i >= 0 && i < HEIGHT)
+        if (i >= 0 && i < height)
             for (int j = col - 1; j <= col + 1; j++)
-                if (j >= 0 && j < WIDTH)
+                if (j >= 0 && j < width)
                 {
                     cell *pos = &(board[i][j]);
                     if (!pos->is_mine)
@@ -223,14 +218,14 @@ void print_board(cell **board)
 
     // stats top
     printf(H_GRN);
-    int len = printf("■ %d/%d", uncovered, GOAL);
-    for (int i = 0; i < WIDTH * 2 - len - 3; i++)
+    int len = printf("■ %d/%d", uncovered, goal);
+    for (int i = 0; i < width * 2 - len - 3; i++)
         printf(" ");
-    printf(B_H_RED "*" H_RED " %2d\n\r" RESET, mines_left);
+    printf(B_H_RED "*" H_RED " %2d\n\r" RESET, mines);
 
-    for (int i = 0; i < HEIGHT; i++)
+    for (int i = 0; i < height; i++)
     {
-        for (int j = 0; j < WIDTH; j++)
+        for (int j = 0; j < width; j++)
         {
             cell *pos = &(board[i][j]);
             int num_mines = pos->surrounding_mines;
@@ -305,9 +300,9 @@ int play(int row, int col, cell **board)
         {
             moves++;
             for (int i = row - 1; i <= row + 1; i++)
-                if (i >= 0 && i < HEIGHT)
+                if (i >= 0 && i < height)
                     for (int j = col - 1; j <= col + 1; j++)
-                        if (j >= 0 && j < WIDTH && !board[i][j].is_flagged)
+                        if (j >= 0 && j < width && !board[i][j].is_flagged)
                             discover(i, j, board);
         }
         else
@@ -338,7 +333,7 @@ void flag(int row, int col, cell **board)
     if (!board[row][col].discovered)
     {
         bool *flag = &(board[row][col].is_flagged);
-        (*flag = !*flag) ? mines_left-- : mines_left++;
+        (*flag = !*flag) ? mines-- : mines++;
         print_board(board);
     }
 }
@@ -363,9 +358,9 @@ int discover(int row, int col, cell **board)
             return 1;
     }
     for (int i = row - 1; i <= row + 1; i++)
-        if (i >= 0 && i < HEIGHT)
+        if (i >= 0 && i < height)
             for (int j = col - 1; j <= col + 1; j++)
-                if (j >= 0 && j < WIDTH)
+                if (j >= 0 && j < width)
                 {
                     cell *neighbor = &(board[i][j]);
                     if (!neighbor->discovered)
@@ -397,9 +392,9 @@ bool discoverable(int row, int col, cell **board)
     bool clear = true;
 
     for (int i = row - 1; i <= row + 1; i++)
-        if (i >= 0 && i < HEIGHT)
+        if (i >= 0 && i < height)
             for (int j = col - 1; j <= col + 1; j++)
-                if (j >= 0 && j < WIDTH)
+                if (j >= 0 && j < width)
                 {
                     cell *neighbor = &(board[i][j]);
                     if (neighbor->is_flagged)
@@ -425,7 +420,7 @@ bool discoverable(int row, int col, cell **board)
  */
 bool is_game_over(cell *this)
 {
-    return (game_over = (this->is_mine || !(GOAL - uncovered)));
+    return (game_over = (this->is_mine || !(goal - uncovered)));
 }
 
 /**
@@ -444,18 +439,18 @@ void print_results(int line)
         printf("\tMoves: " H_CYN "%d" RESET, moves);
         break;
     case 2:
-        printf("\tCells uncovered: " H_GRN "%d/%d" RESET, uncovered, GOAL);
+        printf("\tCells uncovered: " H_GRN "%d/%d" RESET, uncovered, goal);
         break;
     case 3:
-        printf("\tRemaining cells: " H_YEL "%d" RESET, GOAL - uncovered);
+        printf("\tRemaining cells: " H_YEL "%d" RESET, goal - uncovered);
         break;
     case 4:
-        printf("\tMines left: " H_RED "%d" RESET, mines_left);
+        printf("\tMines left: " H_RED "%d" RESET, mines);
         break;
     case 5:
         break;
     case 6:
-        if (GOAL - uncovered)
+        if (goal - uncovered)
             printf("\tYou " B_H_RED "LOST" RESET " - Try again");
         else
             printf("\tYou " B_H_GRN "WON" RESET " - Well done!");

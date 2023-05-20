@@ -10,7 +10,7 @@
 #include <ncurses.h>
 #include "ANSI-colors.h"
 
-extern int HEIGHT, WIDTH, NMINES;
+extern int height, width, mines;
 
 /**
  * @brief represents a single cell of the board
