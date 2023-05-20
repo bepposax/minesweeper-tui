@@ -27,12 +27,15 @@ typedef struct cell
     bool is_flagged;
 } cell;
 
+/**
+ * @brief represents the game board
+ */
 extern cell **board;
 
 void init();
-void place_mines(cell **);
-void signal_mine(cell **, int, int);
-void game_loop(cell **);
-int play(int, int, cell **);
-void flag(int, int, cell **);
-void print_board(cell **);
+void place_mines();
+void signal_mine(int, int);
+void game_loop();
+int play(int, int);
+void flag(int, int);
+void print_board();

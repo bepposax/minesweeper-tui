@@ -10,11 +10,12 @@
 
 int height, width, mines, goal, moves = 0, uncovered = 0;
 bool game_over;
+cell **board;
 
 int select_diff();
 void print_diff_menu();
-int discover(int, int, cell **);
-bool discoverable(int, int, cell **);
+int discover(int, int);
+bool discoverable(int, int);
 bool is_game_over(cell *);
 void print_results(int);
 
@@ -43,8 +44,9 @@ void init()
     default:
         return;
     }
+    goal = height * width - mines;
 
-    cell **board = (cell **)malloc(height * sizeof(cell));
+    board = (cell **)malloc(height * sizeof(cell));
     if (!board)
         exit(EXIT_FAILURE);
     for (int i = 0; i < height; i++)
@@ -54,7 +56,7 @@ void init()
             exit(EXIT_FAILURE);
     }
 
-    game_loop(board);
+    game_loop();
 
     for (int i = 0; i < height; i++)
         free(board[i]);
@@ -121,12 +123,12 @@ void print_diff_menu()
 /**
  * @brief the game loop - it ends when the game is over or the user quits
  */
-void game_loop(cell **board)
+void game_loop()
 {
     int ch, row, col;
 
-    place_mines(board);
-    print_board(board);
+    place_mines();
+    print_board();
     while (!game_over)
     {
         if ((ch = getch()) == KEY_MOUSE)
@@ -145,29 +147,27 @@ void game_loop(cell **board)
                 if (row >= 0 && row < height && col >= 0 && col < width)
                 {
                     if (event.bstate & BUTTON1_CLICKED)
-                        play(row, col, board);
+                        play(row, col);
                     else if (event.bstate & BUTTON3_CLICKED)
-                        flag(row, col, board);
+                        flag(row, col);
                 }
             }
         }
         else if (ch == 'q')
             return;
         else if (ch == KEY_RESIZE)
-            print_board(board);
+            print_board();
     }
-    print_board(board);
+    print_board();
     while ((ch = getch()) != 'q')
         if (ch == KEY_RESIZE)
-            print_board(board);
+            print_board();
 }
 
 /**
  * @brief places the mines randomly on the board
- *
- * @param board the game board
  */
-void place_mines(cell **board)
+void place_mines()
 {
     int mine_row, mine_col, mines_left = mines;
     srand(time(NULL));
@@ -181,7 +181,7 @@ void place_mines(cell **board)
         if (!pos->is_mine)
         {
             pos->is_mine = true;
-            signal_mine(board, mine_row, mine_col);
+            signal_mine(mine_row, mine_col);
         }
     }
 }
@@ -189,11 +189,10 @@ void place_mines(cell **board)
 /**
  * @brief updates the number of surrounding mines of cells touching this mine
  *
- * @param board the game board
  * @param row the mine's row
  * @param col the mine's column
  */
-void signal_mine(cell **board, int row, int col)
+void signal_mine(int row, int col)
 {
     for (int i = row - 1; i <= row + 1; i++)
         if (i >= 0 && i < height)
@@ -208,10 +207,8 @@ void signal_mine(cell **board, int row, int col)
 
 /**
  * @brief prints the current state of the board
- *
- * @param board the game board
  */
-void print_board(cell **board)
+void print_board()
 {
     clear();
     refresh();
@@ -282,11 +279,10 @@ void print_board(cell **board)
  *
  * @param row the row of the starting cell
  * @param col the column of the starting cell
- * @param board the game board
  * @return 1 if the game is over;
  *         0 if the game is not over
  */
-int play(int row, int col, cell **board)
+int play(int row, int col)
 {
     cell *pos = &(board[row][col]);
 
@@ -296,14 +292,14 @@ int play(int row, int col, cell **board)
     {
         if (!pos->surrounding_mines)
             return 0;
-        if (discoverable(row, col, board))
+        if (discoverable(row, col))
         {
             moves++;
             for (int i = row - 1; i <= row + 1; i++)
                 if (i >= 0 && i < height)
                     for (int j = col - 1; j <= col + 1; j++)
                         if (j >= 0 && j < width && !board[i][j].is_flagged)
-                            discover(i, j, board);
+                            discover(i, j);
         }
         else
             return 0;
@@ -315,9 +311,9 @@ int play(int row, int col, cell **board)
         uncovered++;
         if (is_game_over(pos))
             return 1;
-        discover(row, col, board);
+        discover(row, col);
     }
-    print_board(board);
+    print_board();
     return 0;
 }
 
@@ -326,15 +322,14 @@ int play(int row, int col, cell **board)
  *
  * @param row the row of the starting cell
  * @param col the column of the starting cell
- * @param board the game board
  */
-void flag(int row, int col, cell **board)
+void flag(int row, int col)
 {
     if (!board[row][col].discovered)
     {
         bool *flag = &(board[row][col].is_flagged);
         (*flag = !*flag) ? mines-- : mines++;
-        print_board(board);
+        print_board();
     }
 }
 
@@ -343,10 +338,9 @@ void flag(int row, int col, cell **board)
  *
  * @param row the row of the starting cell
  * @param col the column of the starting cell
- * @param board the game board
  * @return 1 if a mine is reached; 0 otherwise
  */
-int discover(int row, int col, cell **board)
+int discover(int row, int col)
 {
     cell *this = &(board[row][col]);
 
@@ -366,7 +360,7 @@ int discover(int row, int col, cell **board)
                     if (!neighbor->discovered)
                     {
                         if (!neighbor->surrounding_mines && !neighbor->is_mine)
-                            discover(i, j, board);
+                            discover(i, j);
                         else if (!this->surrounding_mines)
                         {
                             neighbor->discovered = true;
@@ -384,9 +378,8 @@ int discover(int row, int col, cell **board)
  *
  * @param row the row of the starting cell
  * @param col the column of the starting cell
- * @param board the game board
  */
-bool discoverable(int row, int col, cell **board)
+bool discoverable(int row, int col)
 {
     int nmines = 0;
     bool clear = true;
@@ -451,9 +444,9 @@ void print_results(int line)
         break;
     case 6:
         if (goal - uncovered)
-            printf("\tYou " B_H_RED "LOST" RESET " - Try again");
+            printf("\tYou " BG_RED B_H_WHT " LOST " RESET " - Try again");
         else
-            printf("\tYou " B_H_GRN "WON" RESET " - Well done!");
+            printf("\tYou " BG_GRN B_H_YEL " WON " RESET " - Well done!");
         break;
     case 8:
         printf("\t      q to exit");
