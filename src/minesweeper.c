@@ -172,7 +172,7 @@ void place_mines()
     int mine_row, mine_col, mines_left = mines;
     srand(time(NULL));
 
-    while (mines_left--)
+    while (mines_left)
     {
         mine_row = rand() % height;
         mine_col = rand() % width;
@@ -182,6 +182,7 @@ void place_mines()
         {
             pos->is_mine = true;
             signal_mine(mine_row, mine_col);
+            mines_left--;
         }
     }
 }
