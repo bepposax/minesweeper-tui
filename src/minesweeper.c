@@ -73,14 +73,14 @@ int game_loop()
     print_board();
     do
     {
-        if ((ch = tolower(getchar())) == 'n')
+        if ((ch = getch()) == KEY_RESIZE)
+            print_board();
+        else if ((ch = tolower(ch)) == 'n')
         {
             moves = 0;
             uncovered_cells = 0;
             game_over = false;
         }
-        if (ch == KEY_RESIZE)
-            print_board();
     } while (ch != 'q' && ch != 'n');
 
     return ch;
