@@ -126,8 +126,8 @@ void print_board()
 
     // stats top
     printf(H_GRN);
-    int len = printf("■ %d/%d", uncovered_cells, goal);
-    for (int i = 0; i < width * 2 - len - 3; i++)
+    int len = printf(" ■ %d/%d", uncovered_cells, goal);
+    for (int i = 0; i < width * 2 - len; i++)
         printf(" ");
     printf(B_H_RED "*" H_RED " %2d\n\r" RESET, mines);
 
@@ -195,7 +195,7 @@ void print_board()
     printf("╯\n\r" RESET);
 
     // stats bottom
-    printf(B_H_CYN "# " H_CYN "%d\n\r" RESET, moves);
+    printf(B_H_CYN " # " H_CYN "%d\n\r" RESET, moves);
 
     refresh();
 }
