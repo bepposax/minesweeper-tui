@@ -1,132 +1,43 @@
 /**
  * @file minesweeper.c
- *
  * @author Ivano Izzo
  */
 #include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
 #include <time.h>
-#include <ctype.h>
 #include "../include/minesweeper.h"
+#include "../include/ANSI-colors.h"
 
-int height, width, mines, goal, moves = 0, uncovered = 0;
+int goal, moves = 0, uncovered_cells = 0;
 bool game_over;
 cell **board;
 
-int select_diff();
-void print_diff_menu();
-int discover(int, int);
+/**
+ * @brief checks if the number of surrounding flags matches the surrounding mines
+ * @param row the row of the starting cell
+ * @param col the column of the starting cell
+ */
 bool discoverable(int, int);
+
+/**
+ * @brief checks if the game is over
+ * @param this a cell of the game board
+ * @return true if the cell contains a mine or if all the cells have been uncovered
+ */
 bool is_game_over(cell *);
+
+/**
+ * @brief prints the final state of the board after a game is over, with some final stats
+ * @param line the line to print
+ */
 void print_results(int);
 
-/**
- * @brief initial setup
- */
-void init()
-{
-    switch (select_diff())
-    {
-    case 1:
-        height = 9;
-        width = 9;
-        mines = 10;
-        break;
-    case 2:
-        height = 16;
-        width = 16;
-        mines = 40;
-        break;
-    case 3:
-        height = 16;
-        width = 30;
-        mines = 99;
-        break;
-    default:
-        return;
-    }
-    goal = height * width - mines;
-
-    board = (cell **)malloc(height * sizeof(cell));
-    if (!board)
-        exit(EXIT_FAILURE);
-    for (int i = 0; i < height; i++)
-    {
-        board[i] = (cell *)malloc(width * sizeof(cell));
-        if (!board[i])
-            exit(EXIT_FAILURE);
-    }
-
-    game_loop();
-
-    for (int i = 0; i < height; i++)
-        free(board[i]);
-    free(board);
-}
-
-/**
- * @brief asks the user to select the game difficulty
- */
-int select_diff()
-{
-    int ch;
-
-    print_diff_menu();
-    while ((ch = getch()))
-    {
-        if (ch == KEY_MOUSE)
-        {
-            MEVENT event;
-            if (getmouse(&event) == OK && (event.bstate & BUTTON1_CLICKED))
-                switch (event.y)
-                {
-                case 3:
-                    return 1;
-                case 5:
-                    return 2;
-                case 7:
-                    return 3;
-                default:
-                    break;
-                }
-        }
-        else if (ch == 'q')
-            return 0;
-        else if (ch == KEY_RESIZE)
-            print_diff_menu();
-    }
-    return -1;
-}
-
-/**
- * @brief prints the difficulties to choose from
- */
-void print_diff_menu()
-{
-    clear();
-    refresh();
-
-    printf("\n\t▆■■■■■■ DIFFICULTY ■■■■■■");
-    printf("▆\n\b█\r\t█");
-    printf("\n\b█" H_GRN " ■■■■■■ BEGINNER ■■■■■■ " RESET);
-    printf("█\n\b█\r\t█");
-    printf("\n\b█" H_YEL " ■■■■ INTERMEDIATE ■■■■ " RESET);
-    printf("█\n\b█\r\t█");
-    printf("\n\b█" H_RED " ■■■■■■■ EXPERT ■■■■■■■ " RESET);
-    printf("█\n\b█\r\t█\n\b█");
-    for (int i = 23; i >= 0; i--)
-        printf("■");
-    printf("█\n\r");
-
-    refresh();
-}
-
-/**
- * @brief the game loop - it ends when the game is over or the user quits
- */
 void game_loop()
 {
     int ch, row, col;
 
+    goal = height * width - mines;
     place_mines();
     print_board();
     while (!game_over)
@@ -164,9 +75,6 @@ void game_loop()
             print_board();
 }
 
-/**
- * @brief places the mines randomly on the board
- */
 void place_mines()
 {
     int mine_row, mine_col, mines_left = mines;
@@ -187,12 +95,6 @@ void place_mines()
     }
 }
 
-/**
- * @brief updates the number of surrounding mines of cells touching this mine
- *
- * @param row the mine's row
- * @param col the mine's column
- */
 void signal_mine(int row, int col)
 {
     for (int i = row - 1; i <= row + 1; i++)
@@ -206,9 +108,6 @@ void signal_mine(int row, int col)
                 }
 }
 
-/**
- * @brief prints the current state of the board
- */
 void print_board()
 {
     clear();
@@ -216,7 +115,7 @@ void print_board()
 
     // stats top
     printf(H_GRN);
-    int len = printf("■ %d/%d", uncovered, goal);
+    int len = printf("■ %d/%d", uncovered_cells, goal);
     for (int i = 0; i < width * 2 - len - 3; i++)
         printf(" ");
     printf(B_H_RED "*" H_RED " %2d\n\r" RESET, mines);
@@ -275,14 +174,6 @@ void print_board()
     refresh();
 }
 
-/**
- * @brief discover a cell and checks if more can be discovered
- *
- * @param row the row of the starting cell
- * @param col the column of the starting cell
- * @return 1 if the game is over;
- *         0 if the game is not over
- */
 int play(int row, int col)
 {
     cell *pos = &(board[row][col]);
@@ -309,7 +200,7 @@ int play(int row, int col)
     {
         moves++;
         pos->discovered = true;
-        uncovered++;
+        uncovered_cells++;
         if (is_game_over(pos))
             return 1;
         discover(row, col);
@@ -318,12 +209,6 @@ int play(int row, int col)
     return 0;
 }
 
-/**
- * @brief places or removes a flag on an undiscovered cell
- *
- * @param row the row of the starting cell
- * @param col the column of the starting cell
- */
 void flag(int row, int col)
 {
     if (!board[row][col].discovered)
@@ -334,13 +219,6 @@ void flag(int row, int col)
     }
 }
 
-/**
- * @brief discovers all the possible cells from a starting cell
- *
- * @param row the row of the starting cell
- * @param col the column of the starting cell
- * @return 1 if a mine is reached; 0 otherwise
- */
 int discover(int row, int col)
 {
     cell *this = &(board[row][col]);
@@ -348,7 +226,7 @@ int discover(int row, int col)
     if (!this->discovered)
     {
         this->discovered = true;
-        uncovered++;
+        uncovered_cells++;
         if (is_game_over(this))
             return 1;
     }
@@ -365,7 +243,7 @@ int discover(int row, int col)
                         else if (!this->surrounding_mines)
                         {
                             neighbor->discovered = true;
-                            uncovered++;
+                            uncovered_cells++;
                             if (is_game_over(neighbor))
                                 return 1;
                         }
@@ -374,12 +252,6 @@ int discover(int row, int col)
     return 0;
 }
 
-/**
- * @brief checks if the number of surrounding flags matches the surrounding mines
- *
- * @param row the row of the starting cell
- * @param col the column of the starting cell
- */
 bool discoverable(int row, int col)
 {
     int nmines = 0;
@@ -406,22 +278,11 @@ bool discoverable(int row, int col)
     return false;
 }
 
-/**
- * @brief checks if the game is over
- *
- * @param this a cell of the game board
- * @return true if the cell contains a mine or if all the cells have been uncovered
- */
 bool is_game_over(cell *this)
 {
-    return (game_over = (this->is_mine || !(goal - uncovered)));
+    return (game_over = (this->is_mine || !(goal - uncovered_cells)));
 }
 
-/**
- * @brief prints the final state of the board after a game is over, with some final stats
- *
- * @param line the line to print
- */
 void print_results(int line)
 {
     switch (line)
@@ -433,10 +294,10 @@ void print_results(int line)
         printf("\tMoves: " H_CYN "%d" RESET, moves);
         break;
     case 2:
-        printf("\tCells uncovered: " H_GRN "%d/%d" RESET, uncovered, goal);
+        printf("\tCells uncovered: " H_GRN "%d/%d" RESET, uncovered_cells, goal);
         break;
     case 3:
-        printf("\tRemaining cells: " H_YEL "%d" RESET, goal - uncovered);
+        printf("\tRemaining cells: " H_YEL "%d" RESET, goal - uncovered_cells);
         break;
     case 4:
         printf("\tMines left: " H_RED "%d" RESET, mines);
@@ -444,7 +305,7 @@ void print_results(int line)
     case 5:
         break;
     case 6:
-        if (goal - uncovered)
+        if (goal - uncovered_cells)
             printf("\tYou " BG_RED B_H_WHT " LOST " RESET " - Try again");
         else
             printf("\tYou " BG_GRN B_H_YEL " WON " RESET " - Well done!");

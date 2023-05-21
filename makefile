@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra
 LDFLAGS = -lncurses
 TARGET = minesweeper
-SRCS = src/main.c src/minesweeper.c
+SRCS = src/*.c
 
 .PHONY: all clean run
 
