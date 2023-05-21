@@ -42,8 +42,9 @@ void signal_mine(int, int);
 
 /**
  * @brief the game loop - it ends when the game is over or the user quits
+ * @return 'q' to quit the game or 'n' to start a new game
  */
-void game_loop();
+int game_loop();
 
 /**
  * @brief discover a cell and checks if more can be discovered

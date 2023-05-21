@@ -33,7 +33,7 @@ bool is_game_over(cell *);
  */
 void print_results(int);
 
-void game_loop()
+int game_loop()
 {
     int ch, row, col;
 
@@ -64,15 +64,25 @@ void game_loop()
                 }
             }
         }
-        else if (ch == 'q')
-            return;
+        else if (ch == 'q' || ch == 'n')
+            return ch;
         else if (ch == KEY_RESIZE)
             print_board();
     }
     print_board();
-    while ((ch = getch()) != 'q')
+    do
+    {
+        if ((ch = getch()) == 'n')
+        {
+            moves = 0;
+            uncovered_cells = 0;
+            game_over = false;
+        }
         if (ch == KEY_RESIZE)
             print_board();
+    } while (ch != 'q' && ch != 'n');
+
+    return ch;
 }
 
 void place_mines()
@@ -311,7 +321,7 @@ void print_results(int line)
             printf("\tYou " BG_GRN B_H_YEL " WON " RESET " - Well done!");
         break;
     case 8:
-        printf("\t      q to exit");
+        printf("\t" U_WHT "n" RESET "ew-game           " U_WHT "q" RESET "uit");
         break;
     }
 }

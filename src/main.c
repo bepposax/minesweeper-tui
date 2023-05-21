@@ -43,17 +43,17 @@ int main(void)
     }
 
     // board allocation
-    board = (cell **)malloc(height * sizeof(cell));
+    board = (cell **)calloc(height, sizeof(cell));
     if (!board)
         exit(EXIT_FAILURE);
     for (int i = 0; i < height; i++)
     {
-        board[i] = (cell *)malloc(width * sizeof(cell));
+        board[i] = (cell *)calloc(width, sizeof(cell));
         if (!board[i])
             exit(EXIT_FAILURE);
     }
 
-    game_loop();
+    int ch = game_loop();
 
     // board deallocation
     for (int i = 0; i < height; i++)
@@ -61,5 +61,9 @@ int main(void)
     free(board);
 
     endwin();
+
+    if (ch == 'n')
+        main();
+
     return 0;
 }

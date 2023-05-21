@@ -7,7 +7,8 @@
 #include <ncurses.h>
 
 /**
- * @brief asks the user to select the game difficulty
+ * @brief the difficulties selection
+ * @return the chosen difficulty
  */
 int select_diff();
 

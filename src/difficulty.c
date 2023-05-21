@@ -42,17 +42,17 @@ void print_diff_menu()
     clear();
     refresh();
 
-    printf("\n\t▆■■■■■■ DIFFICULTY ■■■■■■");
-    printf("▆\n\b█\r\t█");
-    printf("\n\b█" H_GRN " ■■■■■■ BEGINNER ■■■■■■ " RESET);
-    printf("█\n\b█\r\t█");
-    printf("\n\b█" H_YEL " ■■■■ INTERMEDIATE ■■■■ " RESET);
-    printf("█\n\b█\r\t█");
-    printf("\n\b█" H_RED " ■■■■■■■ EXPERT ■■■■■■■ " RESET);
-    printf("█\n\b█\r\t█\n\b█");
+    printf("\n\t┏━━━━━━ DIFFICULTY ━━━━━━");
+    printf("┓\n\b┃\r\t┃");
+    printf("\n\b┃" H_GRN " ────── BEGINNER ────── " RESET);
+    printf("┃\n\b┃\r\t┃");
+    printf("\n\b┃" H_YEL " ──── INTERMEDIATE ──── " RESET);
+    printf("┃\n\b┃\r\t┃");
+    printf("\n\b┃" H_RED " ─────── EXPERT ─────── " RESET);
+    printf("┃\n\b┃\r\t┃\n\b┗");
     for (int i = 23; i >= 0; i--)
-        printf("■");
-    printf("█\n\r");
+        printf("━");
+    printf("┛\n\r");
 
     refresh();
 }
