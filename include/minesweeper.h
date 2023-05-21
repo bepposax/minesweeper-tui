@@ -34,7 +34,7 @@ extern cell **board;
 void place_mines();
 
 /**
- * @brief updates the number of surrounding mines of cells touching this mine
+ * @brief updates the surrounding_mines attribute of each cell touching this mine
  * @param row the mine's row
  * @param col the mine's column
  */
