@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
+#include <ctype.h>
 #include "../include/minesweeper.h"
 #include "../include/ANSI-colors.h"
 
@@ -42,13 +43,13 @@ int game_loop()
     print_board();
     while (!game_over)
     {
-        if ((ch = getch()) == KEY_MOUSE)
+        if ((ch = tolower(getch())) == KEY_MOUSE)
         {
             MEVENT event;
             if (getmouse(&event) == OK)
             {
-                row = event.y - 1;
-                col = (event.x);
+                row = event.y - 2;
+                col = event.x - 2;
 
                 if (col % 2 == 0)
                     col /= 2;
@@ -72,7 +73,7 @@ int game_loop()
     print_board();
     do
     {
-        if ((ch = getch()) == 'n')
+        if ((ch = tolower(getchar())) == 'n')
         {
             moves = 0;
             uncovered_cells = 0;
@@ -130,8 +131,16 @@ void print_board()
         printf(" ");
     printf(B_H_RED "*" H_RED " %2d\n\r" RESET, mines);
 
+    // border top
+    printf(WHT "╭");
+    for (int i = 0; i <= width * 2; i++)
+        printf("─");
+    printf("╮\n\r" RESET);
+
+    // game board
     for (int i = 0; i < height; i++)
     {
+        printf(WHT "│ " RESET);
         for (int j = 0; j < width; j++)
         {
             cell *pos = &(board[i][j]);
@@ -165,7 +174,7 @@ void print_board()
                     printf("%d " RESET, num_mines);
                 }
                 else
-                    printf(". ");
+                    printf(". " RESET);
             else
             {
                 if (pos->is_flagged)
@@ -173,10 +182,17 @@ void print_board()
                 printf("■ " RESET);
             }
         }
+        printf(WHT "│" RESET);
         if (game_over)
             print_results(i);
         printf("\n\r");
     }
+
+    // border bottom
+    printf(WHT "╰");
+    for (int i = 0; i <= width * 2; i++)
+        printf("─");
+    printf("╯\n\r" RESET);
 
     // stats bottom
     printf(B_H_CYN "# " H_CYN "%d\n\r" RESET, moves);

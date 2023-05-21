@@ -29,7 +29,7 @@ int select_diff()
                     break;
                 }
         }
-        else if (ch == 'q')
+        else if (ch == 'q' || ch == 'Q')
             return 0;
         else if (ch == KEY_RESIZE)
             print_diff_menu();
