@@ -9,7 +9,7 @@ SRCS = src/*.c
 all: $(TARGET)
 
 $(TARGET): $(SRCS)
-	$(CC) $(SRCS) -o $@ $(CFLAGS) $(LDFLAGS)  
+	$(CC) $(SRCS) -o $@ $(CFLAGS) $(LDFLAGS)
 
 clean:
 	rm -f $(TARGET)

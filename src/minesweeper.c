@@ -132,15 +132,15 @@ void print_board()
     printf(B_H_RED "*" H_RED " %2d\n\r" RESET, mines);
 
     // border top
-    printf(WHT "╭");
+    printf("╭");
     for (int i = 0; i <= width * 2; i++)
         printf("─");
-    printf("╮\n\r" RESET);
+    printf("╮\n\r");
 
     // game board
     for (int i = 0; i < height; i++)
     {
-        printf(WHT "│ " RESET);
+        printf("│ ");
         for (int j = 0; j < width; j++)
         {
             cell *pos = &(board[i][j]);
@@ -182,17 +182,17 @@ void print_board()
                 printf("■ " RESET);
             }
         }
-        printf(WHT "│" RESET);
+        printf("│");
         if (game_over)
             print_results(i);
         printf("\n\r");
     }
 
     // border bottom
-    printf(WHT "╰");
+    printf("╰");
     for (int i = 0; i <= width * 2; i++)
         printf("─");
-    printf("╯\n\r" RESET);
+    printf("╯\n\r");
 
     // stats bottom
     printf(B_H_CYN " # " H_CYN "%d\n\r" RESET, moves);
