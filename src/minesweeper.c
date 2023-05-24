@@ -147,7 +147,7 @@ void print_board()
             int num_mines = pos->surrounding_mines;
 
             if (pos->is_mine && pos->discovered && game_over)
-                printf(BG_RED B_WHT "\b * " RESET);
+                printf(RED "\b▐" BG_RED B_WHT "*" RESET RED "▌" RESET);
             else if (pos->discovered || game_over)
                 if (pos->is_mine)
                     printf(B_RED "* " RESET);
