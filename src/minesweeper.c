@@ -32,7 +32,7 @@ bool is_game_over(cell *);
  * @brief prints the final state of the board after a game is over, with some final stats
  * @param line the line to print
  */
-void print_results(int);
+int print_results(int);
 
 int game_loop()
 {
@@ -183,7 +183,7 @@ void print_board()
             }
         }
         printf("│");
-        if (game_over)
+        if (game_over && width <= 16)
             print_results(i);
         printf("\n\r");
     }
@@ -195,8 +195,16 @@ void print_board()
     printf("╯\n\r");
 
     // stats bottom
-    printf(B_H_CYN " # " H_CYN "%d\n\r" RESET, moves);
+    printf(B_H_CYN " # " H_CYN "%d\n" RESET, moves);
 
+    if (game_over && width > 16)
+    {
+        int i = 0;
+        printf("\t");
+        while (print_results(i++))
+            printf("\n\r\t");
+    }
+    printf("\n");
     refresh();
 }
 
@@ -309,35 +317,30 @@ bool is_game_over(cell *this)
     return (game_over = (this->is_mine || !(goal - uncovered_cells)));
 }
 
-void print_results(int line)
+int print_results(int line)
 {
     switch (line)
     {
     case 0:
-        printf(B_H_WHT "\t------ Game Over ------" RESET);
-        break;
+        return printf(B_H_WHT "\t------ Game Over ------" RESET);
     case 1:
-        printf("\tMoves: " H_CYN "%d" RESET, moves);
-        break;
+        return printf("\tMoves: " H_CYN "%d" RESET, moves);
     case 2:
-        printf("\tCells uncovered: " H_GRN "%d/%d" RESET, uncovered_cells, goal);
-        break;
+        return printf("\tUncovered cells: " H_GRN "%d/%d" RESET, uncovered_cells, goal);
     case 3:
-        printf("\tRemaining cells: " H_YEL "%d" RESET, goal - uncovered_cells);
-        break;
+        return printf("\tRemaining cells: " H_YEL "%d" RESET, goal - uncovered_cells);
     case 4:
-        printf("\tMines left: " H_RED "%d" RESET, mines);
-        break;
-    case 5:
-        break;
+        return printf("\tMines left: " H_RED "%d" RESET, mines);
     case 6:
         if (goal - uncovered_cells)
-            printf("\tYou " BG_RED B_H_WHT " LOST " RESET " - Try again");
+            return printf("\tYou " BG_RED B_H_WHT " LOST " RESET " - Try again");
         else
-            printf("\tYou " BG_GRN B_H_YEL " WON " RESET " - Well done!");
-        break;
+            return printf("\tYou " BG_GRN B_H_YEL " WON " RESET " - Well done!");
     case 8:
-        printf("\t" U_WHT "n" RESET "ew-game           " U_WHT "q" RESET "uit");
-        break;
+        return printf("\t" U_WHT "n" RESET "ew-game           " U_WHT "q" RESET "uit");
+    case 9:
+        return 0;
+    default:
+        return 1;
     }
 }
