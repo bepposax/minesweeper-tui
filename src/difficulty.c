@@ -2,9 +2,9 @@
  * @file difficulty.c
  * @author Ivano Izzo
  */
-#include <stdio.h>
 #include "../include/difficulty.h"
-#include "../include/ANSI-colors.h"
+#include <stdio.h>
+#include <ncurses.h>
 
 int select_diff()
 {
@@ -25,8 +25,6 @@ int select_diff()
                     return 2;
                 case 14:
                     return 3;
-                default:
-                    break;
                 }
         }
         else if (ch == 'q' || ch == 'Q')

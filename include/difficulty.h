@@ -4,8 +4,6 @@
  */
 #pragma once
 
-#include <ncurses.h>
-
 /**
  * @brief the difficulties selection
  * @return the chosen difficulty

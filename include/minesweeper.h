@@ -3,30 +3,10 @@
  * @author Ivano Izzo
  */
 #pragma once
+#include "../include/board.h"
 
-#include <ncurses.h>
-
-extern int height, width, mines, goal, moves, uncovered_cells;
+extern int goal, moves, uncovered_cells;
 extern bool game_over;
-
-/**
- * @brief represents a single cell of the board
- * @param is_mine true if the cell contains a mine
- * @param surrounding_mines counts mines surrounding the cell
- * @param discovered true if the cell has been visited
- */
-typedef struct cell
-{
-    bool is_mine;
-    int surrounding_mines;
-    bool discovered;
-    bool is_flagged;
-} cell;
-
-/**
- * @brief represents the game board
- */
-extern cell **board;
 
 /**
  * @brief places the mines randomly on the board

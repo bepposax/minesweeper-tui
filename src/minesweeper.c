@@ -2,17 +2,16 @@
  * @file minesweeper.c
  * @author Ivano Izzo
  */
+#include "../include/minesweeper.h"
+#include "../include/ANSI-colors.h"
+#include <ncurses.h>
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
 #include <ctype.h>
-#include "../include/minesweeper.h"
-#include "../include/ANSI-colors.h"
 
 int goal, moves = 0, uncovered_cells = 0;
 bool game_over;
-cell **board;
 
 /**
  * @brief checks if the number of surrounding flags matches the surrounding mines
@@ -31,6 +30,7 @@ bool is_game_over(cell *);
 /**
  * @brief prints the final state of the board after a game is over, with some final stats
  * @param line the line to print
+ * @return 0 if there are no more lines to print
  */
 int print_results(int);
 

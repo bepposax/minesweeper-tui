@@ -22,6 +22,7 @@ Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](htt
 - Uncover all non-mine cells to win the game.
 - Uncover a mine to lose the game.
 - Press 'q' to quit the game at any time.
+- Press 'n' to start a new game.
 
 ## Requirements
 
