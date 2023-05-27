@@ -10,7 +10,7 @@
 #include <time.h>
 #include <ctype.h>
 
-int goal, moves = 0, uncovered_cells = 0;
+int goal, moves, uncovered_cells;
 bool game_over;
 
 /**
@@ -33,6 +33,11 @@ bool is_game_over(cell *);
  * @return 0 if there are no more lines to print
  */
 int print_results(int);
+
+/**
+ * @brief resets the game stats before a new game
+ */
+void reset_stats();
 
 int game_loop()
 {
@@ -65,8 +70,11 @@ int game_loop()
                 }
             }
         }
-        else if (ch == 'q' || ch == 'n')
+        else if (ch == 'n' || ch == 'q')
+        {
+            reset_stats();
             return ch;
+        }
         else if (ch == KEY_RESIZE)
             print_board();
     }
@@ -76,11 +84,7 @@ int game_loop()
         if ((ch = getch()) == KEY_RESIZE)
             print_board();
         else if ((ch = tolower(ch)) == 'n')
-        {
-            moves = 0;
-            uncovered_cells = 0;
-            game_over = false;
-        }
+            reset_stats();
     } while (ch != 'q' && ch != 'n');
 
     return ch;
@@ -200,7 +204,7 @@ void print_board()
     if (game_over && width > 16)
     {
         int i = 0;
-        printf("\t");
+        printf("\r\t");
         while (print_results(i++))
             printf("\n\r\t");
     }
@@ -234,7 +238,8 @@ int play(int row, int col)
     {
         moves++;
         pos->discovered = true;
-        uncovered_cells++;
+        if (!pos->is_mine)
+            uncovered_cells++;
         if (is_game_over(pos))
             return 1;
         discover(row, col);
@@ -260,7 +265,8 @@ int discover(int row, int col)
     if (!this->discovered)
     {
         this->discovered = true;
-        uncovered_cells++;
+        if (!this->is_mine)
+            uncovered_cells++;
         if (is_game_over(this))
             return 1;
     }
@@ -343,4 +349,11 @@ int print_results(int line)
     default:
         return 1;
     }
+}
+
+void reset_stats()
+{
+    moves = 0;
+    uncovered_cells = 0;
+    game_over = false;
 }

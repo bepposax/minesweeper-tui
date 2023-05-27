@@ -32,7 +32,7 @@ int select_diff()
         else if (ch == KEY_RESIZE)
             print_diff_menu();
     }
-    return -1;
+    return 0;
 }
 
 void print_diff_menu()
