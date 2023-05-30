@@ -14,7 +14,7 @@ extern bool game_over;
 void place_mines();
 
 /**
- * @brief updates the surrounding_mines attribute of each cell touching this mine
+ * @brief signals a mine to the cells surrounding it
  * @param row the mine's row
  * @param col the mine's column
  */
@@ -27,30 +27,31 @@ void signal_mine(int, int);
 int game_loop();
 
 /**
- * @brief discover a cell and checks if more can be discovered
- * @param row the row of the starting cell
- * @param col the column of the starting cell
- * @return 1 if the game is over;
+ * @brief plays a move in a cell
+ * @param row the row of the cell
+ * @param col the column of the cell
+ * @return 1 if the game is over
  *         0 if the game is not over
  */
 int play(int, int);
 
 /**
- * @brief places or removes a flag on an undiscovered cell
- * @param row the row of the starting cell
- * @param col the column of the starting cell
+ * @brief flags or unflags an undiscovered cell
+ * @param row the row of the cell
+ * @param col the column of the cell
  */
 void flag(int, int);
 
 /**
- * @brief discovers all the possible cells from a starting cell
+ * @brief discovers the cells surrounding the starting cell
  * @param row the row of the starting cell
  * @param col the column of the starting cell
- * @return 1 if a mine is reached; 0 otherwise
+ * @return 1 if the game is over
+ *         0 if the game is not over
  */
 int discover(int, int);
 
 /**
- * @brief prints the current state of the board
+ * @brief prints the game board
  */
 void print_board();

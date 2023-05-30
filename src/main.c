@@ -18,6 +18,7 @@ int main(void)
     nodelay(stdscr, TRUE);
     mousemask(ALL_MOUSE_EVENTS, NULL);
     keypad(stdscr, TRUE);
+    use_default_colors();
 
     int diff = select_diff();
 

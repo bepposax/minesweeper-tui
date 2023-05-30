@@ -9,10 +9,11 @@
 extern int height, width, mines;
 
 /**
- * @brief represents a single cell of the board
+ * @brief a cell of the game board
  * @param is_mine true if the cell contains a mine
- * @param surrounding_mines counts mines surrounding the cell
- * @param discovered true if the cell has been visited
+ * @param surrounding_mines the number of mines surrounding the cell
+ * @param discovered true if the cell has been discovered
+ * @param is_flagged true if the cell has been flagged
  */
 typedef struct cell
 {
@@ -23,17 +24,18 @@ typedef struct cell
 } cell;
 
 /**
- * @brief represents the game board
+ * @brief the game board
+ * @see cell
  */
 extern cell **board;
 
 /**
- * @brief allocates the game board, based on the chosen difficulty
- * @param diff the chosen difficulty
+ * @brief creates the game board
+ * @param diff the difficulty chosen by the user
  */
 void create_board(int);
 
 /**
- * @brief deallocates the game board once the game is over
+ * @brief frees the game board
  */
 void free_board();

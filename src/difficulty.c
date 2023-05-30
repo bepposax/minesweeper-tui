@@ -67,8 +67,7 @@ void print_diff_menu()
         printf("─");
     printf("╯\n\r");
 
-    // menu
-    use_default_colors();
+    // difficulty menu
     attron(A_BOLD);
     mvprintw(5, 8, "%s", menu[0]);
     start_color();
@@ -84,5 +83,4 @@ void print_diff_menu()
     attroff(COLOR_PAIR(3));
     attroff(A_BOLD);
     refresh();
-    use_default_colors();
 }

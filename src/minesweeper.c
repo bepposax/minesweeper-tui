@@ -14,28 +14,32 @@ int goal, moves, uncovered_cells;
 bool game_over;
 
 /**
- * @brief checks if the number of surrounding flags matches the surrounding mines
- * @param row the row of the starting cell
- * @param col the column of the starting cell
+ * @brief checks if the number of flags and mines surrounding this cell match
+ * @param row the row of the cell
+ * @param col the column of the cell
  */
 bool discoverable(int, int);
 
 /**
  * @brief checks if the game is over
- * @param this a cell of the game board
- * @return true if the cell contains a mine or if all the cells have been uncovered
+ * @param this the cell to check
+ * @return true if the game is over
+ *        false if the game is not over
+ * @note the game is over if the cell contains a mine or if the number of uncovered cells
+ *      is equal to the number of cells on the board minus the number of mines
+ *     (i.e. the user has uncovered all the cells that do not contain a mine)
  */
 bool is_game_over(cell *);
 
 /**
- * @brief prints the final state of the board after a game is over, with some final stats
+ * @brief prints the results of the game
  * @param line the line to print
- * @return 0 if there are no more lines to print
+ * @return 0 if the line is the last one
  */
 int print_results(int);
 
 /**
- * @brief resets the game stats before a new game
+ * @brief resets the game stats
  */
 void reset_stats();
 
@@ -309,7 +313,8 @@ bool discoverable(int row, int col)
                             nmines++;
                         else
                             return true;
-                    } // incorrect flag placement (leads to a loss)
+                    }
+                    // incorrect flag placement (leads to a loss)
                     if (!neighbor->discovered && !neighbor->is_flagged)
                         clear = false;
                 }
