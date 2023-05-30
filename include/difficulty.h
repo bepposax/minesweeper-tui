@@ -9,7 +9,7 @@
  * @return  1 if the user chose beginner;
  *          2 if the user chose intermediate;
  *          3 if the user chose expert;
- *          0 if the user quits the game
+ *          0 if the user quit the game
  */
 int select_diff();
 

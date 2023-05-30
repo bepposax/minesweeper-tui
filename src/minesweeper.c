@@ -15,8 +15,8 @@ bool game_over;
 
 /**
  * @brief checks if the number of flags and mines surrounding this cell match
- * @param row the row of the cell
- * @param col the column of the cell
+ * @param row the cell's row
+ * @param col the cell's column
  */
 bool discoverable(int, int);
 

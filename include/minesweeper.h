@@ -28,8 +28,8 @@ int game_loop();
 
 /**
  * @brief plays a move in a cell
- * @param row the row of the cell
- * @param col the column of the cell
+ * @param row the cell's row
+ * @param col the cell's column
  * @return 1 if the game is over
  *         0 if the game is not over
  */
@@ -37,17 +37,18 @@ int play(int, int);
 
 /**
  * @brief flags or unflags an undiscovered cell
- * @param row the row of the cell
- * @param col the column of the cell
+ * @param row the cell's row
+ * @param col the cell's column
  */
 void flag(int, int);
 
 /**
- * @brief discovers the cells surrounding the starting cell
- * @param row the row of the starting cell
- * @param col the column of the starting cell
+ * @brief discovers the cells surrounding a cell
+ * @param row the cell's row
+ * @param col the cell's column
  * @return 1 if the game is over
  *         0 if the game is not over
+ * @see discoverable
  */
 int discover(int, int);
 
