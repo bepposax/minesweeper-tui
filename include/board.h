@@ -10,17 +10,15 @@ extern int height, width, mines;
 
 /**
  * @brief a cell of the game board
- * @param is_mine true if the cell contains a mine
  * @param surrounding_mines the number of mines surrounding the cell
- * @param discovered true if the cell has been discovered
+ * @param is_mine true if the cell contains a mine
+ * @param is_discovered true if the cell has been discovered
  * @param is_flagged true if the cell has been flagged
  */
 typedef struct cell
 {
-    bool is_mine;
     int surrounding_mines;
-    bool discovered;
-    bool is_flagged;
+    bool is_mine, is_discovered, is_flagged;
 } cell;
 
 /**

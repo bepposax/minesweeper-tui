@@ -154,9 +154,9 @@ void print_board()
             cell *pos = &(board[i][j]);
             int num_mines = pos->surrounding_mines;
 
-            if (pos->is_mine && pos->discovered && game_over)
+            if (pos->is_mine && pos->is_discovered && game_over)
                 printf(RED "\b▐" BG_RED B_WHT "*" RESET RED "▌" RESET);
-            else if (pos->discovered || game_over)
+            else if (pos->is_discovered || game_over)
                 if (pos->is_mine)
                     printf(B_RED "* " RESET);
                 else if (num_mines)
@@ -222,7 +222,7 @@ int play(int row, int col)
 
     if (pos->is_flagged)
         return 0;
-    if (pos->discovered)
+    if (pos->is_discovered)
     {
         if (!pos->surrounding_mines)
             return 0;
@@ -241,7 +241,7 @@ int play(int row, int col)
     else
     {
         moves++;
-        pos->discovered = true;
+        pos->is_discovered = true;
         if (!pos->is_mine)
             uncovered_cells++;
         if (is_game_over(pos))
@@ -254,7 +254,7 @@ int play(int row, int col)
 
 void flag(int row, int col)
 {
-    if (!board[row][col].discovered)
+    if (!board[row][col].is_discovered)
     {
         bool *flag = &(board[row][col].is_flagged);
         (*flag = !*flag) ? mines-- : mines++;
@@ -266,9 +266,9 @@ int discover(int row, int col)
 {
     cell *this = &(board[row][col]);
 
-    if (!this->discovered)
+    if (!this->is_discovered)
     {
-        this->discovered = true;
+        this->is_discovered = true;
         if (!this->is_mine)
             uncovered_cells++;
         if (is_game_over(this))
@@ -280,13 +280,13 @@ int discover(int row, int col)
                 if (j >= 0 && j < width)
                 {
                     cell *neighbor = &(board[i][j]);
-                    if (!neighbor->discovered)
+                    if (!neighbor->is_discovered)
                     {
                         if (!neighbor->surrounding_mines && !neighbor->is_mine)
                             discover(i, j);
                         else if (!this->surrounding_mines)
                         {
-                            neighbor->discovered = true;
+                            neighbor->is_discovered = true;
                             uncovered_cells++;
                             if (is_game_over(neighbor))
                                 return 1;
@@ -315,7 +315,7 @@ bool discoverable(int row, int col)
                             return true;
                     }
                     // incorrect flag placement (leads to a loss)
-                    if (!neighbor->discovered && !neighbor->is_flagged)
+                    if (!neighbor->is_discovered && !neighbor->is_flagged)
                         clear = false;
                 }
     if (nmines == board[row][col].surrounding_mines && !clear)
