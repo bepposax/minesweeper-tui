@@ -20,7 +20,7 @@ void place_mines();
  * @param row the mine's row
  * @param col the mine's column
  */
-void signal_mine(int, int);
+void signal_mine(int row, int col);
 
 /**
  * @brief the game loop - it ends when the game is over or the user quits
@@ -35,14 +35,14 @@ int game_loop();
  * @return 1 if the game is over
  *         0 if the game is not over
  */
-int play(int, int);
+int play(int row, int col);
 
 /**
  * @brief flags or unflags an undiscovered cell
  * @param row the cell's row
  * @param col the cell's column
  */
-void flag(int, int);
+void flag(int row, int col);
 
 /**
  * @brief discovers the cells surrounding a cell
@@ -52,7 +52,7 @@ void flag(int, int);
  *         0 if the game is not over
  * @see discoverable
  */
-int discover(int, int);
+int discover(int row, int col);
 
 /**
  * @brief prints the game board

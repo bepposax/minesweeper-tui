@@ -32,7 +32,7 @@ extern cell **board;
  * @brief creates the game board
  * @param diff the difficulty chosen by the user
  */
-void create_board(int);
+void create_board(int diff);
 
 /**
  * @brief frees the game board
