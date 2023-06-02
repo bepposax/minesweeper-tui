@@ -21,20 +21,17 @@ int main(void)
     use_default_colors();
 
     int diff = select_diff();
+    int ch;
 
     if (diff)
     {
         create_board(diff);
-        int ch = game_loop();
+        ch = game_loop();
         free_board();
-
-        if (ch == 'n')
-        {
-            endwin();
-            main();
-        }
     }
-
     endwin();
+    if (ch == 'n')
+        main();
+
     return 0;
 }

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANSI_COLORS_H
+#define ANSI_COLORS_H
 
 // Regular text
 #define BLK "\033[0;30m"
@@ -72,3 +73,5 @@
 
 // Reset
 #define RESET "\033[0m"
+
+#endif

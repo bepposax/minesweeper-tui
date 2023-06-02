@@ -38,16 +38,15 @@ bool is_game_over(cell *);
  */
 int print_results(int);
 
-/**
- * @brief resets the game stats
- */
-void reset_stats();
-
 int game_loop()
 {
     int ch, row, col;
 
+    moves = 0;
+    uncovered_cells = 0;
+    game_over = false;
     goal = height * width - mines;
+
     place_mines();
     print_board();
     while (!game_over)
@@ -75,21 +74,15 @@ int game_loop()
             }
         }
         else if (ch == 'n' || ch == 'q')
-        {
-            reset_stats();
             return ch;
-        }
         else if (ch == KEY_RESIZE)
             print_board();
     }
+    // game over
     print_board();
-    do
-    {
-        if ((ch = getch()) == KEY_RESIZE)
+    while ((ch = tolower(getch())) != 'q' && ch != 'n')
+        if (ch == KEY_RESIZE)
             print_board();
-        else if ((ch = tolower(ch)) == 'n')
-            reset_stats();
-    } while (ch != 'q' && ch != 'n');
 
     return ch;
 }
@@ -354,11 +347,4 @@ int print_results(int line)
     default:
         return 1;
     }
-}
-
-void reset_stats()
-{
-    moves = 0;
-    uncovered_cells = 0;
-    game_over = false;
 }
