@@ -2,7 +2,8 @@
  * @file difficulty.h
  * @author Ivano Izzo
  */
-#pragma once
+#ifndef DIFFICULTY_H
+#define DIFFICULTY_H
 
 /**
  * @brief asks the user to choose a difficulty
@@ -17,3 +18,5 @@ int select_diff();
  * @brief prints the difficulty menu
  */
 void print_diff_menu();
+
+#endif

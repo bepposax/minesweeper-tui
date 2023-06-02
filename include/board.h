@@ -2,7 +2,8 @@
  * @file board.h
  * @author Ivano Izzo
  */
-#pragma once
+#ifndef BOARD_H
+#define BOARD_H
 
 #include <stdbool.h>
 
@@ -37,3 +38,5 @@ void create_board(int);
  * @brief frees the game board
  */
 void free_board();
+
+#endif

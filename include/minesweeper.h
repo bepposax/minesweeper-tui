@@ -2,7 +2,9 @@
  * @file minesweeper.h
  * @author Ivano Izzo
  */
-#pragma once
+#ifndef MINESWEEPER_H
+#define MINESWEEPER_H
+
 #include "../include/board.h"
 
 extern int goal, moves, uncovered_cells;
@@ -56,3 +58,5 @@ int discover(int, int);
  * @brief prints the game board
  */
 void print_board();
+
+#endif
