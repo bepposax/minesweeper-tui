@@ -41,7 +41,7 @@
 #define BG_CYN "\033[46m"
 #define BG_WHT "\033[47m"
 
-// High intensty text
+// High intensity text
 #define H_BLK "\033[0;90m"
 #define H_RED "\033[0;91m"
 #define H_GRN "\033[0;92m"
@@ -61,7 +61,7 @@
 #define B_H_CYN "\033[1;96m"
 #define B_H_WHT "\033[1;97m"
 
-// High intensty background
+// High intensity background
 #define BG_H_BLK "\033[0;100m"
 #define BG_H_RED "\033[0;101m"
 #define BG_H_GRN "\033[0;102m"
