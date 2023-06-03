@@ -37,50 +37,68 @@ int select_diff()
 
 void print_diff_menu()
 {
-    char *menu[4] = {
-        "D I F F I C U L T Y",
-        "B E G I N N E R",
-        "I N T E R M E D I A T E",
-        "E X P E R T"};
+    int width = 16;
 
     clear();
+    start_color();
+    init_pair(COLOR_GREEN, COLOR_GREEN, -1);
+    init_pair(COLOR_YELLOW, COLOR_YELLOW, -1);
+    init_pair(COLOR_RED, COLOR_RED, -1);
+    init_pair(COLOR_CYAN, COLOR_CYAN, -1);
+
+    // stats
+    attron(COLOR_PAIR(COLOR_GREEN));
+    mvprintw(0, 1, "goal");
+    attron(COLOR_PAIR(COLOR_RED));
+    mvprintw(0, width * 2 - 3, "mines");
+    attron(COLOR_PAIR(COLOR_CYAN));
+    mvprintw(width + 3, 1, "moves");
+    attroff(COLOR_PAIR(COLOR_CYAN));
+    move(1, 0);
     refresh();
 
     // border top
-    printf("\n\r╭");
-    for (int i = 0; i <= 16 * 2; i++)
+    printf("╭");
+    for (int i = 0; i <= width * 2; i++)
         printf("─");
     printf("╮\n\r");
-
-    // board background
-    for (int i = 0; i < 16; i++)
+    // board
+    for (int i = 0; i < width; i++)
     {
         printf("│ ");
-        for (int j = 0; j < 16; j++)
+        for (int j = 0; j < width; j++)
             printf("■ ");
         printf("│\n\r");
     }
-
     // border bottom
     printf("╰");
-    for (int i = 0; i <= 16 * 2; i++)
+    for (int i = 0; i <= width * 2; i++)
         printf("─");
-    printf("╯\n\r");
+    printf("╯\n");
 
-    // difficulty menu
+    // difficulties
     attron(A_BOLD);
-    mvprintw(5, 8, "%s", menu[0]);
-    start_color();
-    init_pair(1, COLOR_GREEN, -1);
-    init_pair(2, COLOR_YELLOW, -1);
-    init_pair(3, COLOR_RED, -1);
-    attron(COLOR_PAIR(1));
-    mvprintw(8, 10, "%s", menu[1]);
-    attron(COLOR_PAIR(2));
-    mvprintw(11, 6, "%s", menu[2]);
-    attron(COLOR_PAIR(3));
-    mvprintw(14, 12, "%s", menu[3]);
-    attroff(COLOR_PAIR(3));
+    mvprintw(5, 8, "D I F F I C U L T Y");
+    attron(COLOR_PAIR(COLOR_GREEN));
+    mvprintw(8, 10, "B E G I N N E R");
+    attron(COLOR_PAIR(COLOR_YELLOW));
+    mvprintw(11, 6, "I N T E R M E D I A T E");
+    attron(COLOR_PAIR(COLOR_RED));
+    mvprintw(14, 12, "E X P E R T");
+    attroff(COLOR_PAIR(COLOR_RED));
     attroff(A_BOLD);
+
+    // option keys
+    mvprintw(width, width * 2 + 4, "\t ew game");
+    mvprintw(width, width * 2 + 4, "\t");
+    attron(A_UNDERLINE);
+    printw("n");
+    attroff(A_UNDERLINE);
+    mvprintw(width + 1, width * 2 + 4, "\t uit");
+    mvprintw(width + 1, width * 2 + 4, "\t");
+    attron(A_UNDERLINE);
+    printw("q");
+    attroff(A_UNDERLINE);
+
     refresh();
 }
