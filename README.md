@@ -2,9 +2,11 @@
 
 Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](https://en.wikipedia.org/wiki/Minesweeper_(video_game) "Minesweeper (video game)") game in C.
 
-![board](https://github.com/bepposax/minesweeper-tui/assets/43136113/481b8b94-cf62-4377-878b-87686caee30e)
+![board](https://github.com/bepposax/minesweeper-tui/assets/43136113/d1c26c1b-7b12-4ad5-8053-b3e0fd1b4a43)
+
 
 ## Instructions
+
 
 1. Make sure you have GCC (GNU Compiler Collection) installed on your system.
 2. Clone the repository or download the source code files.
