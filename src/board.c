@@ -29,22 +29,17 @@ void create_board(int diff)
         mines = 99;
         break;
     }
-
-    board = (cell **)calloc(height, sizeof(cell));
-    if (!board)
+    if (!(board = (cell **)calloc(height, sizeof(cell))))
     {
-        fprintf(stderr, "%s:%d: Error: Failed to allocate memory\n", __FILE__, __LINE__ - 3);
+        fprintf(stderr, "%s:%d: Error: Failed to allocate memory\n", __FILE__, __LINE__ - 2);
         exit(EXIT_FAILURE);
     }
     for (int i = 0; i < height; i++)
-    {
-        board[i] = (cell *)calloc(width, sizeof(cell));
-        if (!board[i])
+        if (!(board[i] = (cell *)calloc(width, sizeof(cell))))
         {
-            fprintf(stderr, "%s:%d: Error: Failed to allocate memory\n", __FILE__, __LINE__ - 3);
+            fprintf(stderr, "%s:%d: Error: Failed to allocate memory\n", __FILE__, __LINE__ - 2);
             exit(EXIT_FAILURE);
         }
-    }
 }
 
 void free_board()
