@@ -4,9 +4,7 @@ Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](htt
 
 ![board](https://github.com/bepposax/minesweeper-tui/assets/43136113/d1c26c1b-7b12-4ad5-8053-b3e0fd1b4a43)
 
-
 ## Instructions
-
 
 1. Make sure you have GCC (GNU Compiler Collection) installed on your system.
 2. Clone the repository or download the source code files.
