@@ -46,7 +46,7 @@ void print_diff_menu()
     init_pair(COLOR_RED, COLOR_RED, -1);
     init_pair(COLOR_CYAN, COLOR_CYAN, -1);
 
-    // stats
+    // corner stats
     attron(COLOR_PAIR(COLOR_GREEN));
     mvprintw(0, 1, "goal");
     attron(COLOR_PAIR(COLOR_RED));
@@ -57,12 +57,11 @@ void print_diff_menu()
     move(1, 0);
     refresh();
 
-    // border top
+    // board
     printf("╭");
     for (int i = 0; i <= width * 2; i++)
         printf("─");
     printf("╮\n\r");
-    // board
     for (int i = 0; i < width; i++)
     {
         printf("│ ");
@@ -70,7 +69,6 @@ void print_diff_menu()
             printf("■ ");
         printf("│\n\r");
     }
-    // border bottom
     printf("╰");
     for (int i = 0; i <= width * 2; i++)
         printf("─");
@@ -88,17 +86,13 @@ void print_diff_menu()
     attroff(COLOR_PAIR(COLOR_RED));
     attroff(A_BOLD);
 
-    // option keys
-    mvprintw(width, width * 2 + 4, "\t ew game");
-    mvprintw(width, width * 2 + 4, "\t");
+    // side options
     attron(A_UNDERLINE);
-    printw("n");
+    mvprintw(width, width * 2 + 6, "n");
+    mvprintw(width + 1, width * 2 + 6, "q");
     attroff(A_UNDERLINE);
-    mvprintw(width + 1, width * 2 + 4, "\t uit");
-    mvprintw(width + 1, width * 2 + 4, "\t");
-    attron(A_UNDERLINE);
-    printw("q");
-    attroff(A_UNDERLINE);
+    mvprintw(width, width * 2 + 7, "ew game");
+    mvprintw(width + 1, width * 2 + 7, "uit");
 
     refresh();
 }
