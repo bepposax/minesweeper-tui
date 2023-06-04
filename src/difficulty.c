@@ -6,6 +6,17 @@
 #include <stdio.h>
 #include <ncurses.h>
 
+/**
+ * @brief mvprintw with color
+ * @param color the color to use
+ * @param row the row to print
+ * @param col the column to print
+ * @param str the string to print
+ * @return the return value of mvprintw
+ * @see mvprintw
+ */
+int cmvprintw(int color, int row, int col, const char *str);
+
 int select_diff()
 {
     int ch;
@@ -47,13 +58,9 @@ void print_diff_menu()
     init_pair(COLOR_CYAN, COLOR_CYAN, -1);
 
     // corner stats
-    attron(COLOR_PAIR(COLOR_GREEN));
-    mvprintw(0, 1, "goal");
-    attron(COLOR_PAIR(COLOR_RED));
-    mvprintw(0, width * 2 - 3, "mines");
-    attron(COLOR_PAIR(COLOR_CYAN));
-    mvprintw(width + 3, 1, "moves");
-    attroff(COLOR_PAIR(COLOR_CYAN));
+    cmvprintw(COLOR_PAIR(COLOR_GREEN), 0, 1, "goal");
+    cmvprintw(COLOR_PAIR(COLOR_RED), 0, width * 2 - 3, "mines");
+    cmvprintw(COLOR_PAIR(COLOR_CYAN), width + 3, 1, "moves");
     move(1, 0);
     refresh();
 
@@ -77,13 +84,9 @@ void print_diff_menu()
     // difficulties
     attron(A_BOLD);
     mvprintw(5, 8, "D I F F I C U L T Y");
-    attron(COLOR_PAIR(COLOR_GREEN));
-    mvprintw(8, 10, "B E G I N N E R");
-    attron(COLOR_PAIR(COLOR_YELLOW));
-    mvprintw(11, 6, "I N T E R M E D I A T E");
-    attron(COLOR_PAIR(COLOR_RED));
-    mvprintw(14, 12, "E X P E R T");
-    attroff(COLOR_PAIR(COLOR_RED));
+    cmvprintw(COLOR_PAIR(COLOR_GREEN), 8, 10, "B E G I N N E R");
+    cmvprintw(COLOR_PAIR(COLOR_YELLOW), 11, 6, "I N T E R M E D I A T E");
+    cmvprintw(COLOR_PAIR(COLOR_RED), 14, 12, "E X P E R T");
     attroff(A_BOLD);
 
     // side options
@@ -95,4 +98,12 @@ void print_diff_menu()
     mvprintw(width + 1, width * 2 + 7, "uit");
 
     refresh();
+}
+
+int cmvprintw(int color, int row, int col, const char *str)
+{
+    attron(color);
+    int r = mvprintw(row, col, "%s", str);
+    attroff(color);
+    return r;
 }
