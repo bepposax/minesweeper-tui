@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <ctype.h>
 
 int goal, moves, uncovered_cells;
 bool game_over;
@@ -51,7 +50,7 @@ int game_loop()
     print_board();
     while (!game_over)
     {
-        if ((ch = tolower(getch())) == KEY_MOUSE)
+        if ((ch = getch()) == KEY_MOUSE)
         {
             MEVENT event;
             if (getmouse(&event) == OK)
@@ -73,14 +72,14 @@ int game_loop()
                 }
             }
         }
-        else if (ch == 'n' || ch == 'q')
+        else if (ch == 'n' || ch == 'N' || ch == 'q' || ch == 'Q')
             return ch;
         else if (ch == KEY_RESIZE)
             print_board();
     }
     // game over
     print_board();
-    while ((ch = tolower(getch())) != 'q' && ch != 'n')
+    while ((ch = getch()) != 'q' && ch != 'Q' && ch != 'n' && ch != 'N')
         if (ch == KEY_RESIZE)
             print_board();
 

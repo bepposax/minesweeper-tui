@@ -30,7 +30,7 @@ int main(void)
         free_board();
     }
     endwin();
-    if (ch == 'n')
+    if (ch == 'n' || ch == 'N')
         main();
 
     return 0;
