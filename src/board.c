@@ -29,7 +29,7 @@ void create_board(int diff)
         mines = 99;
         break;
     }
-    if (!(board = (cell **)calloc(height, sizeof(cell))))
+    if (!(board = (cell **)calloc(height, sizeof(cell *))))
     {
         fprintf(stderr, "%s:%d: Error: Failed to allocate memory\n", __FILE__, __LINE__ - 2);
         exit(EXIT_FAILURE);
