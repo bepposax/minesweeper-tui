@@ -17,18 +17,18 @@ bool game_over;
  * @param row the cell's row
  * @param col the cell's column
  */
-bool discoverable(int, int);
+bool discoverable(int row, int col);
 
 /**
  * @brief checks if the game is over
  * @param this the cell to check
  * @return true if the game is over
- *        false if the game is not over
+ *         false if the game is not over
  * @note the game is over if the cell contains a mine or if the number of uncovered cells
- *      is equal to the number of cells on the board minus the number of mines
- *     (i.e. the user has uncovered all the cells that do not contain a mine)
+ *       is equal to the number of cells on the board minus the number of mines
+ *       (i.e. the user has uncovered all the cells that do not contain a mine)
  */
-bool is_game_over(cell *);
+bool is_game_over(cell *this);
 
 /**
  * @brief prints the results of the game
