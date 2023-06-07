@@ -1,8 +1,8 @@
 # Minesweeper-TUI
 
-Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](https://en.wikipedia.org/wiki/Minesweeper_(video_game) "Minesweeper (video game)") game in C.
+Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](https://en.wikipedia.org/wiki/Minesweeper_(video_game) "Minesweeper (video game) - Wikipedia") game in C.
 
-![board](https://github.com/bepposax/minesweeper-tui/assets/43136113/d1c26c1b-7b12-4ad5-8053-b3e0fd1b4a43)
+![board](https://github.com/bepposax/minesweeper-tui/assets/43136113/d1c26c1b-7b12-4ad5-8053-b3e0fd1b4a43 "Game board")
 
 ## Instructions
 
@@ -17,8 +17,8 @@ Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](htt
 - The game board is represented by a grid of cells.
 - The goal of the game is to uncover all the cells that do not contain mines.
 - Each cell may either be empty or contain a mine.
-- Use the mouse to left-click on a cell to uncover it.
-- Use the mouse to right-click on a cell to flag or unflag it as a potential mine.
+- Left-click on a cell to uncover it.
+- Right-click on a cell to flag or unflag it as a potential mine.
 - Uncover all non-mine cells to win the game.
 - Uncover a mine to lose the game.
 - Press 'q' to quit the game at any time.
@@ -26,7 +26,7 @@ Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](htt
 
 ## Requirements
 
-- ncurses library
+- [ncurses](https://en.wikipedia.org/wiki/Ncurses "ncurses - Wikipedia") library
 
 ## Usage
 
