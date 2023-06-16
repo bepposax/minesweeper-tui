@@ -34,7 +34,10 @@ Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](htt
 - `make run`: Runs the program.
 - `make clean`: Deletes the executable file.
 
-Note: This program has been tested on Windows Subsystem for Linux (WSL) with GCC installed. Compatibility with other systems may vary.
+## Notes
+
+- *This program has been tested on Windows Subsystem for Linux (WSL) with GCC installed. Compatibility with other systems may vary.*  
+- *To ensure proper rendering of the game board, it's recommended to use a monospace font that supports the Unicode symbols used by the game.*
 
 Feel free to modify the code and customize the game according to your preferences.
 
