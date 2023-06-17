@@ -2,7 +2,7 @@
 
 Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](https://en.wikipedia.org/wiki/Minesweeper_(video_game) "Minesweeper (video game) - Wikipedia") game in C.
 
-![board](https://github.com/bepposax/minesweeper-tui/assets/43136113/3019e363-a5e9-4831-8ad2-7bc56a52031c "Game board")
+![board](https://github.com/bepposax/minesweeper-tui/assets/43136113/0ae39140-ea32-4c9c-b6b6-62fcfc3fc200 "Game board")
 
 ## Instructions
 
