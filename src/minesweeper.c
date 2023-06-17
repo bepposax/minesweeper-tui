@@ -174,12 +174,13 @@ void print_board()
                     printf("%d " RESET, num_mines);
                 }
                 else
-                    printf(". " RESET);
+                    printf(". ");
             else
             {
                 if (pos->is_flagged)
-                    printf(RED);
-                printf("■ " RESET);
+                    printf(RED "⚑ " RESET);
+                else
+                    printf("■ ");
             }
         }
         printf("│");
