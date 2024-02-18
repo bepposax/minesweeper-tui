@@ -17,7 +17,7 @@ bool game_over;
  * @param row the cell's row
  * @param col the cell's column
  */
-bool discoverable(int row, int col);
+static bool discoverable(int row, int col);
 
 /**
  * @brief checks if the game is over
@@ -28,19 +28,18 @@ bool discoverable(int row, int col);
  *       is equal to the number of cells on the board minus the number of mines
  *       (i.e. the user has uncovered all the cells that do not contain a mine)
  */
-bool is_game_over(cell *this);
+static bool is_game_over(cell *this);
 
 /**
  * @brief prints the results of the game
  * @param line the line to print
  * @return 0 if the line is the last one
  */
-int print_results(int);
+static int print_results(int);
 
 int game_loop()
 {
     int ch, row, col;
-
     moves = 0;
     uncovered_cells = 0;
     game_over = false;
@@ -57,12 +56,10 @@ int game_loop()
             {
                 row = event.y - 2;
                 col = event.x - 2;
-
                 if (col % 2 == 0)
                     col /= 2;
                 else
                     continue;
-
                 if (row >= 0 && row < height && col >= 0 && col < width)
                 {
                     if (event.bstate & BUTTON1_CLICKED)
@@ -72,10 +69,10 @@ int game_loop()
                 }
             }
         }
-        else if (ch == 'n' || ch == 'N' || ch == 'q' || ch == 'Q')
-            return ch;
         else if (ch == KEY_RESIZE)
             print_board();
+        else if (ch == 'n' || ch == 'N' || ch == 'q' || ch == 'Q')
+            return ch;
     }
     // game over
     print_board();
@@ -130,13 +127,11 @@ void print_board()
     for (int i = 0; i < width * 2 - len; i++)
         printf(" ");
     printf(B_H_RED "*" H_RED " %2d\n\r" RESET, mines);
-
     // border top
     printf("╭");
     for (int i = 0; i <= width * 2; i++)
         printf("─");
     printf("╮\n\r");
-
     // game board
     for (int i = 0; i < height; i++)
     {
@@ -188,16 +183,13 @@ void print_board()
             print_results(i);
         printf("\n\r");
     }
-
     // border bottom
     printf("╰");
     for (int i = 0; i <= width * 2; i++)
         printf("─");
     printf("╯\n\r");
-
     // stats bottom
     printf(B_H_CYN " # " H_CYN "%d\n" RESET, moves);
-
     if (game_over && width > 16)
     {
         int i = 0;
@@ -289,7 +281,7 @@ int discover(int row, int col)
     return 0;
 }
 
-bool discoverable(int row, int col)
+static bool discoverable(int row, int col)
 {
     int nmines = 0;
     bool clear = true;
@@ -316,7 +308,7 @@ bool discoverable(int row, int col)
     return false;
 }
 
-bool is_game_over(cell *this)
+static bool is_game_over(cell *this)
 {
     return (game_over = (this->is_mine || !(goal - uncovered_cells)));
 }

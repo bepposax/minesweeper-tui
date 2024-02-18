@@ -9,6 +9,12 @@
 int height, width, mines;
 cell **board;
 
+/**
+ * @brief prints memory allocation error to stderr
+ * @param line the line where the error occourred
+ */
+static void printerr(int line);
+
 void create_board(int diff)
 {
     switch (diff)
@@ -30,16 +36,16 @@ void create_board(int diff)
         break;
     }
     if (!(board = (cell **)calloc(height, sizeof(cell *))))
-    {
-        fprintf(stderr, "%s:%d: Error: Failed to allocate memory\n", __FILE__, __LINE__ - 2);
-        exit(EXIT_FAILURE);
-    }
+        printerr(__LINE__ - 1);
     for (int i = 0; i < height; i++)
         if (!(board[i] = (cell *)calloc(width, sizeof(cell))))
-        {
-            fprintf(stderr, "%s:%d: Error: Failed to allocate memory\n", __FILE__, __LINE__ - 2);
-            exit(EXIT_FAILURE);
-        }
+            printerr(__LINE__ - 1);
+}
+
+static void printerr(int line)
+{
+    fprintf(stderr, "%s:%d: Error: Failed to allocate memory\n", __FILE__, line);
+    exit(EXIT_FAILURE);
 }
 
 void free_board()

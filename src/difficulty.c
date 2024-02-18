@@ -15,7 +15,7 @@
  * @return the return value of mvprintw
  * @see mvprintw
  */
-int cmvprintw(int color, int row, int col, const char *str);
+static int cmvprintw(int color, int row, int col, const char *str);
 
 int select_diff()
 {
@@ -58,9 +58,9 @@ void print_diff_menu()
     init_pair(COLOR_CYAN, COLOR_CYAN, -1);
 
     // corner stats
-    cmvprintw(COLOR_PAIR(COLOR_GREEN), 0, 1, "goal");
-    cmvprintw(COLOR_PAIR(COLOR_RED), 0, width * 2 - 3, "mines");
-    cmvprintw(COLOR_PAIR(COLOR_CYAN), width + 3, 1, "moves");
+    cmvprintw(COLOR_GREEN, 0, 1, "goal");
+    cmvprintw(COLOR_RED, 0, width * 2 - 3, "mines");
+    cmvprintw(COLOR_CYAN, width + 3, 1, "moves");
     move(1, 0);
     refresh();
 
@@ -84,9 +84,9 @@ void print_diff_menu()
     // difficulties
     attron(A_BOLD);
     mvprintw(5, 8, "D I F F I C U L T Y");
-    cmvprintw(COLOR_PAIR(COLOR_GREEN), 8, 10, "B E G I N N E R");
-    cmvprintw(COLOR_PAIR(COLOR_YELLOW), 11, 6, "I N T E R M E D I A T E");
-    cmvprintw(COLOR_PAIR(COLOR_RED), 14, 12, "E X P E R T");
+    cmvprintw(COLOR_GREEN, 8, 10, "B E G I N N E R");
+    cmvprintw(COLOR_YELLOW, 11, 6, "I N T E R M E D I A T E");
+    cmvprintw(COLOR_RED, 14, 12, "E X P E R T");
     attroff(A_BOLD);
 
     // side options
@@ -100,10 +100,10 @@ void print_diff_menu()
     refresh();
 }
 
-int cmvprintw(int color, int row, int col, const char *str)
+static int cmvprintw(int color, int row, int col, const char *str)
 {
-    attron(color);
+    attron(COLOR_PAIR(color));
     int r = mvprintw(row, col, "%s", str);
-    attroff(color);
+    attroff(COLOR_PAIR(color));
     return r;
 }

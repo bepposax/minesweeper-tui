@@ -2,7 +2,6 @@
  * @file main.c
  * @author Ivano Izzo
  */
-
 #include "../include/difficulty.h"
 #include "../include/board.h"
 #include "../include/minesweeper.h"
@@ -10,6 +9,8 @@
 
 int main(void)
 {
+    int diff, choice;
+
     // ncurses
     initscr();
     raw();
@@ -19,19 +20,17 @@ int main(void)
     mousemask(ALL_MOUSE_EVENTS, NULL);
     keypad(stdscr, TRUE);
     use_default_colors();
-
-    int diff = select_diff();
-    int ch;
-
-    if (diff)
+    do
     {
-        create_board(diff);
-        ch = game_loop();
-        free_board();
-    }
+        choice = 0;
+        if ((diff = select_diff()))
+        {
+            create_board(diff);
+            choice = game_loop();
+            free_board();
+        }
+    } while (choice == 'n' || choice == 'N');
     endwin();
-    if (ch == 'n' || ch == 'N')
-        main();
 
     return 0;
 }
