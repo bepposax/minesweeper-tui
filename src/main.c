@@ -31,6 +31,7 @@ int main(void)
         }
     } while (choice == 'n' || choice == 'N');
     endwin();
+    curs_set(2);
 
     return 0;
 }
