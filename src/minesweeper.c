@@ -127,11 +127,13 @@ void print_board()
     for (int i = 0; i < width * 2 - len; i++)
         printf(" ");
     printf(B_H_RED "*" H_RED " %2d\n\r" RESET, mines);
+
     // border top
     printf("╭");
     for (int i = 0; i <= width * 2; i++)
         printf("─");
     printf("╮\n\r");
+
     // game board
     for (int i = 0; i < height; i++)
     {
@@ -139,14 +141,14 @@ void print_board()
         for (int j = 0; j < width; j++)
         {
             cell *pos = &(board[i][j]);
-            int num_mines = pos->surrounding_mines;
+            int num_mines;
 
             if (pos->is_mine && pos->is_discovered && game_over)
                 printf(RED "\b▐" BG_RED B_WHT "*" RESET RED "▌" RESET);
             else if (pos->is_discovered || game_over)
                 if (pos->is_mine)
                     printf(B_RED "* " RESET);
-                else if (num_mines)
+                else if ((num_mines = pos->surrounding_mines))
                 {
                     switch (num_mines)
                     {
@@ -169,7 +171,7 @@ void print_board()
                     printf("%d " RESET, num_mines);
                 }
                 else
-                    printf(". ");
+                    printf(H_BLK "· " RESET);
             else
             {
                 if (pos->is_flagged)
@@ -183,11 +185,13 @@ void print_board()
             print_results(i);
         printf("\n\r");
     }
+
     // border bottom
     printf("╰");
     for (int i = 0; i <= width * 2; i++)
         printf("─");
     printf("╯\n\r");
+
     // stats bottom
     printf(B_H_CYN " # " H_CYN "%d\n" RESET, moves);
     if (game_over && width > 16)
@@ -198,7 +202,6 @@ void print_board()
             printf("\n\r\t");
     }
     printf("\n");
-    refresh();
 }
 
 int play(int row, int col)
