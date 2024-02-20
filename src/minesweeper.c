@@ -268,20 +268,26 @@ int play(int row, int col)
 
 void flag(int row, int col)
 {
-    if (!board[row][col].is_discovered)
+    cell *this = &board[row][col];
+
+    if (!this->is_discovered)
     {
-        bool *flag = &(board[row][col].is_flagged);
-        (*flag = !*flag) ? mines-- : mines++;
+        if (this->is_marked)
+            mark(row, col);
+        (this->is_flagged = !this->is_flagged) ? mines-- : mines++;
         print_board();
     }
 }
 
 void mark(int row, int col)
 {
-    if (!board[row][col].is_discovered)
+    cell *this = &board[row][col];
+
+    if (!this->is_discovered)
     {
-        bool *mark = &(board[row][col].is_marked);
-        (*mark = !*mark);
+        if (this->is_flagged)
+            flag(row, col);
+        this->is_marked = !this->is_marked;
         print_board();
     }
 }
