@@ -25,8 +25,8 @@ Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](htt
   - Uncovers an undiscovered cell ( ■ ).
   - Uncovers the surroundings of a numbered cell ( <span style=color:green>**2**</span>  ) if all its adjacent mines are flagged.
 - 🖱️ **Right-click** 
-  - Flags ( <span style=color:firebrick>**⚑**</span> ) an undiscovered cell as a potential mine.
-  - Marks ( <span style=color:orange>**?**</span> ) a flagged cell as a dubious mine. (*work in progress*)
+  - Flags ( <span style=color:firebrick>**⚑**</span> ) an undiscovered cell as a mine spot.
+  - Marks ( <span style=color:orange>**?**</span> ) a flagged cell as a probable mine spot. (*work in progress*)
 - Press **Q** to quit the game or exit the program.
 - Press **N** to start a new game.
 - Press **R** to restart the current game. (*work in progress*)
