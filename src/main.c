@@ -29,7 +29,7 @@ int main(void)
             choice = game_loop();
             free_board();
         }
-    } while (choice == 'n' || choice == 'N');
+    } while (choice == 'n');
     endwin();
     curs_set(2);
 

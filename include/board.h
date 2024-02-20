@@ -35,6 +35,11 @@ extern cell **board;
 void create_board(int diff);
 
 /**
+ * @brief resets the board to its initial state
+ */
+void reset_board();
+
+/**
  * @brief frees the game board
  */
 void free_board();

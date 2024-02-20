@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <ctype.h>
 
 int goal, moves, uncovered_cells;
 bool game_over;
@@ -46,46 +47,60 @@ static int print_results(int);
 
 int game_loop()
 {
-    int ch, row, col;
-    moves = 0;
-    uncovered_cells = 0;
-    game_over = false;
-    goal = height * width - mines;
+    int ch = 0, row, col;
 
-    place_mines();
-    print_board();
-    while (!game_over)
+    do
     {
-        if ((ch = getch()) == KEY_MOUSE)
+        game_over = false;
+        goal = height * width - mines;
+        moves = 0;
+        uncovered_cells = 0;
+
+        if (ch != 'r')
+            place_mines();
+        print_board();
+        while (!game_over)
         {
-            MEVENT event;
-            if (getmouse(&event) == OK)
+            if ((ch = tolower(getch())) == KEY_MOUSE)
             {
-                row = event.y - 2;
-                col = event.x - 2;
-                if (col % 2 == 0)
-                    col /= 2;
-                else
-                    continue;
-                if (row >= 0 && row < height && col >= 0 && col < width)
+                MEVENT event;
+                if (getmouse(&event) == OK)
                 {
-                    if (event.bstate & BUTTON1_CLICKED)
-                        play(row, col);
-                    else if (event.bstate & BUTTON3_CLICKED)
-                        pin(row, col);
+                    row = event.y - 2;
+                    col = event.x - 2;
+                    if (col % 2 == 0)
+                        col /= 2;
+                    else
+                        continue;
+                    if (row >= 0 && row < height && col >= 0 && col < width)
+                    {
+                        if (event.bstate & BUTTON1_CLICKED)
+                            play(row, col);
+                        else if (event.bstate & BUTTON3_CLICKED)
+                            pin(row, col);
+                    }
                 }
             }
+            else if (ch == KEY_RESIZE)
+                print_board();
+            else if (ch == 'n' || ch == 'q')
+                return ch;
+            else if (ch == 'r')
+            {
+                moves = 0;
+                uncovered_cells = 0;
+                reset_board();
+                print_board();
+            }
         }
-        else if (ch == KEY_RESIZE)
-            print_board();
-        else if (ch == 'n' || ch == 'N' || ch == 'q' || ch == 'Q')
-            return ch;
-    }
-    // game over
-    print_board();
-    while ((ch = getch()) != 'q' && ch != 'Q' && ch != 'n' && ch != 'N')
-        if (ch == KEY_RESIZE)
-            print_board();
+        // game over
+        print_board();
+        while ((ch = tolower(getch())) != 'q' && ch != 'n' && ch != 'r')
+            if (ch == KEY_RESIZE)
+                print_board();
+        if (ch == 'r')
+            reset_board();
+    } while (ch == 'r');
 
     return ch;
 }
@@ -190,7 +205,7 @@ void print_board()
             }
         }
         printf("│");
-        if (game_over && width <= 16)
+        if (game_over && width <= 25)
             print_results(i);
         printf("\n\r");
     }
@@ -203,7 +218,7 @@ void print_board()
 
     // stats bottom
     printf(B_H_CYN " # " H_CYN "%d\n" RESET, moves);
-    if (game_over && width > 16)
+    if (game_over && width > 25)
     {
         int i = 0;
         printf("\r\t");
@@ -364,7 +379,7 @@ int print_results(int line)
         else
             return printf("\tYou " BG_GRN B_H_YEL " WON " RESET " - Well done!");
     case 8:
-        return printf("\t" U_WHT "n" RESET "ew-game           " U_WHT "q" RESET "uit");
+        return printf("\t" U_WHT "n" RESET "ew-game  " U_WHT "r" RESET "estart  " U_WHT "q" RESET "uit");
     case 9:
         return 0;
     default:

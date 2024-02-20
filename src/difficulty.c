@@ -94,10 +94,12 @@ void print_diff_menu()
 
     // side options
     attron(A_UNDERLINE);
-    mvprintw(width, width * 2 + 6, "n");
+    mvprintw(width - 1, width * 2 + 6, "n");
+    mvprintw(width + 0, width * 2 + 6, "r");
     mvprintw(width + 1, width * 2 + 6, "q");
     attroff(A_UNDERLINE);
-    mvprintw(width, width * 2 + 7, "ew game");
+    mvprintw(width - 1, width * 2 + 7, "ew game");
+    mvprintw(width + 0, width * 2 + 7, "estart");
     mvprintw(width + 1, width * 2 + 7, "uit");
 
     // refresh();

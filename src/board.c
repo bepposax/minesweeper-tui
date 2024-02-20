@@ -89,6 +89,14 @@ static void printerr(int line)
     exit(EXIT_FAILURE);
 }
 
+void reset_board()
+{
+    for (int i = 0; i < height; ++i)
+        for (int j = 0; j < width; ++j)
+            if (board[i][j].is_discovered)
+                board[i][j].is_discovered = false;
+}
+
 void free_board()
 {
     for (int i = 0; i < height; i++)
