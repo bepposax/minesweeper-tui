@@ -61,19 +61,19 @@ static void customize()
     attron(COLOR_PAIR(COLOR_CYAN));
     do
     {
-        mvprintw(15, 12, " Height    ");
+        mvprintw(15, 12, " Height -- ");
         mvgetnstr(15, 20, input, 2);
         height = atoi(input);
     } while (height < 1 || height > 99);
     do
     {
-        mvprintw(15, 12, " Width     ");
+        mvprintw(15, 12, " Width  -- ");
         mvgetnstr(15, 20, input, 2);
         width = atoi(input);
     } while (width < 1 || width > 99);
     do
     {
-        mvprintw(15, 12, " Mines     ");
+        mvprintw(15, 12, " Mines  -- ");
         mvgetnstr(15, 20, input, 2);
         mines = atoi(input);
     } while (mines < 1 || mines > height * width);
