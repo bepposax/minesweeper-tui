@@ -30,12 +30,14 @@ int select_diff()
             if (getmouse(&event) == OK && (event.bstate & BUTTON1_CLICKED))
                 switch (event.y)
                 {
-                case 8:
+                case 6:
                     return 1;
-                case 11:
+                case 9:
                     return 2;
-                case 14:
+                case 12:
                     return 3;
+                case 15:
+                    return 4;
                 }
         }
         else if (ch == 'q' || ch == 'Q')
@@ -83,10 +85,11 @@ void print_diff_menu()
 
     // difficulties
     attron(A_BOLD);
-    mvprintw(5, 8, "D I F F I C U L T Y");
-    cmvprintw(COLOR_GREEN, 8, 10, "B E G I N N E R");
-    cmvprintw(COLOR_YELLOW, 11, 6, "I N T E R M E D I A T E");
-    cmvprintw(COLOR_RED, 14, 12, "E X P E R T");
+    mvprintw(3, 8, "D I F F I C U L T Y");
+    cmvprintw(COLOR_GREEN, 6, 10, "B E G I N N E R");
+    cmvprintw(COLOR_YELLOW, 9, 6, "I N T E R M E D I A T E");
+    cmvprintw(COLOR_RED, 12, 12, "E X P E R T");
+    cmvprintw(COLOR_CYAN, 15, 12, "C U S T O M");
     attroff(A_BOLD);
 
     // side options
@@ -97,7 +100,7 @@ void print_diff_menu()
     mvprintw(width, width * 2 + 7, "ew game");
     mvprintw(width + 1, width * 2 + 7, "uit");
 
-    refresh();
+    // refresh();
 }
 
 static int cmvprintw(int color, int row, int col, const char *str)
