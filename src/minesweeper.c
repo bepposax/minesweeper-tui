@@ -224,7 +224,6 @@ void print_board()
             printf("\n\r\t");
     }
     printf("\n");
-    printf("%d\n", game_over);
 }
 
 int play(int row, int col)
