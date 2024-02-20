@@ -93,14 +93,12 @@ void reset_board()
 {
     for (int i = 0; i < height; ++i)
         for (int j = 0; j < width; ++j)
-        {
             if (board[i][j].is_discovered)
                 board[i][j].is_discovered = false;
-            if (board[i][j].is_flagged)
+            else if (board[i][j].is_flagged)
                 board[i][j].is_flagged = false;
-            if (board[i][j].is_marked)
+            else if (board[i][j].is_marked)
                 board[i][j].is_marked = false;
-        }
 }
 
 void free_board()
