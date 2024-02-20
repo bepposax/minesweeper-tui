@@ -38,16 +38,18 @@ int game_loop();
 int play(int row, int col);
 
 /**
- * @brief flags an undiscovered cell
- * @param this the cell to flag
+ * @brief flags or unflags an undiscovered cell
+ * @param row the cell's row
+ * @param col the cell's column
  */
-void flag(cell *this);
+void flag(int row, int col);
 
 /**
- * @brief marks a flagged cell
- * @param this the cell to mark
+ * @brief marks or unmarks an undiscovered cell
+ * @param row the cell's row
+ * @param col the cell's column
  */
-void mark(cell *this);
+void mark(int row, int col);
 
 /**
  * @brief discovers the cells surrounding a cell
