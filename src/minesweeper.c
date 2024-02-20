@@ -13,6 +13,13 @@ int goal, moves, uncovered_cells;
 bool game_over;
 
 /**
+ * @brief manages flags and marks after a right click input
+ * @param row the cell's row
+ * @param col the cell's column
+ */
+static void pin(int row, int col);
+
+/**
  * @brief checks if the number of flags and mines surrounding this cell match
  * @param row the cell's row
  * @param col the cell's column
@@ -65,7 +72,7 @@ int game_loop()
                     if (event.bstate & BUTTON1_CLICKED)
                         play(row, col);
                     else if (event.bstate & BUTTON3_CLICKED)
-                        flag(row, col);
+                        pin(row, col);
                 }
             }
         }
@@ -176,6 +183,8 @@ void print_board()
             {
                 if (pos->is_flagged)
                     printf(RED "⚑ " RESET);
+                else if (pos->is_marked)
+                    printf(H_YEL "? " RESET);
                 else
                     printf("■ ");
             }
@@ -208,7 +217,7 @@ int play(int row, int col)
 {
     cell *pos = &(board[row][col]);
 
-    if (pos->is_flagged)
+    if (pos->is_flagged || pos->is_marked)
         return 0;
     if (pos->is_discovered)
     {
@@ -240,14 +249,33 @@ int play(int row, int col)
     return 0;
 }
 
-void flag(int row, int col)
+static void pin(int row, int col)
 {
-    if (!board[row][col].is_discovered)
+    cell *this = &board[row][col];
+
+    if (!this->is_discovered)
     {
-        bool *flag = &(board[row][col].is_flagged);
-        (*flag = !*flag) ? mines-- : mines++;
+        if (this->is_flagged)
+            mark(this);
+        else if (!this->is_marked)
+            flag(this);
+        else
+            this->is_marked = false;
         print_board();
     }
+}
+
+void flag(cell *this)
+{
+    this->is_flagged = true;
+    mines--;
+}
+
+void mark(cell *this)
+{
+    this->is_marked = true;
+    this->is_flagged = false;
+    mines++;
 }
 
 int discover(int row, int col)

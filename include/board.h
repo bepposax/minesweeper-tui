@@ -19,7 +19,7 @@ extern int height, width, mines;
 typedef struct cell
 {
     int surrounding_mines;
-    bool is_mine, is_discovered, is_flagged;
+    bool is_mine, is_discovered, is_flagged, is_marked;
 } cell;
 
 /**
