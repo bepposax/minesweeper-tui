@@ -53,7 +53,8 @@ void create_board(int diff)
 
 static void customize()
 {
-    char input[2];
+    char input[4];
+    int maxx = getmaxx(stdscr) / 2 - 2, maxy = getmaxy(stdscr) - 6;
 
     echo();
     curs_set(2);
@@ -61,26 +62,33 @@ static void customize()
     attron(COLOR_PAIR(COLOR_CYAN));
     do
     {
-        mvprintw(15, 12, " Height -- ");
-        mvgetnstr(15, 20, input, 2);
+        mvprintw(15, 12, " Height --  ");
+        mvprintw(16, 14, "       ");
+        mvprintw(16, 14, "max%4d", maxy);
+        mvgetnstr(15, 20, input, 3);
         height = atoi(input);
-    } while (height < 1 || height > 99);
+    } while (height < 1 || height > maxy);
     do
     {
-        mvprintw(15, 12, " Width  -- ");
-        mvgetnstr(15, 20, input, 2);
+        mvprintw(15, 12, " Width  --  ");
+        mvprintw(16, 14, "       ");
+        mvprintw(16, 14, "max%4d", maxx);
+        mvgetnstr(15, 20, input, 3);
         width = atoi(input);
-    } while (width < 1 || width > 99);
+    } while (width < 1 || width > maxx);
     do
     {
         mvprintw(15, 12, " Mines  -- ");
-        mvgetnstr(15, 20, input, 2);
+        mvprintw(16, 14, "       ");
+        mvprintw(16, 14, "max%4d", height * width);
+        mvgetnstr(15, 20, input, 4);
         mines = atoi(input);
     } while (mines < 1 || mines > height * width);
     attroff(COLOR_PAIR(COLOR_CYAN));
     attroff(A_BOLD);
     curs_set(0);
     noecho();
+    clear();
 }
 
 static void printerr(int line)
