@@ -41,7 +41,7 @@ int select_diff()
                 }
         }
         else if (ch == 'q' || ch == 'Q')
-            return 0;
+            break;
         else if (ch == KEY_RESIZE)
             print_diff_menu();
     }
@@ -101,8 +101,6 @@ void print_diff_menu()
     mvprintw(width - 1, width * 2 + 7, "ew game");
     mvprintw(width + 0, width * 2 + 7, "estart");
     mvprintw(width + 1, width * 2 + 7, "uit");
-
-    // refresh();
 }
 
 static int cmvprintw(int color, int row, int col, const char *str)
