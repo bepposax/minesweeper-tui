@@ -63,24 +63,21 @@ static void customize()
     do
     {
         mvprintw(15, 12, " Height --  ");
-        mvprintw(16, 14, "       ");
-        mvprintw(16, 14, "max%4d", maxy);
+        mvprintw(16, 14, "max%4d ", maxy);
         mvgetnstr(15, 20, input, 3);
         height = atoi(input);
     } while (height < 1 || height > maxy);
     do
     {
         mvprintw(15, 12, " Width  --  ");
-        mvprintw(16, 14, "       ");
-        mvprintw(16, 14, "max%4d", maxx);
+        mvprintw(16, 14, "max%4d ", maxx);
         mvgetnstr(15, 20, input, 3);
         width = atoi(input);
     } while (width < 1 || width > maxx);
     do
     {
         mvprintw(15, 12, " Mines  -- ");
-        mvprintw(16, 14, "       ");
-        mvprintw(16, 14, "max%4d", height * width);
+        mvprintw(16, 14, "max%4d ", height * width);
         mvgetnstr(15, 20, input, 4);
         mines = atoi(input);
     } while (mines < 1 || mines > height * width);
