@@ -372,13 +372,13 @@ int print_results(int line)
     case 0:
         return printf(B_H_WHT "------ Game Over ------" RESET);
     case 1:
-        return printf("Moves: " H_CYN "%d" RESET, moves);
+        return printf("Moves: " H_CYN "%16d" RESET, moves);
     case 2:
-        return printf("Uncovered cells: " H_GRN "%d/%d" RESET, uncovered_cells, goal);
+        return printf("Uncovered cells:" H_GRN "%3d/%3d" RESET, uncovered_cells, goal);
     case 3:
-        return printf("Remaining cells: " H_YEL "%d" RESET, goal - uncovered_cells);
+        return printf("Remaining cells: " H_YEL "%6d" RESET, goal - uncovered_cells);
     case 4:
-        return printf("Mines left: " H_RED "%d" RESET, mines);
+        return printf("Mines left: " H_RED "%11d" RESET, mines);
     case 6:
         if (lost)
             return printf("You " BG_RED B_H_WHT " LOST " RESET " - Try again");
