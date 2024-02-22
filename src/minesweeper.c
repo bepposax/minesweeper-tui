@@ -11,7 +11,7 @@
 #include <ctype.h>
 
 int goal, moves, uncovered_cells;
-bool game_over;
+bool game_over, lost;
 
 /**
  * @brief checks if the number of flags and mines surrounding this cell match
@@ -355,7 +355,7 @@ static bool discoverable(int row, int col)
 
 static bool is_game_over(cell *this)
 {
-    return (game_over = (this->is_mine || !(goal - uncovered_cells)));
+    return (game_over = ((lost = this->is_mine) || !(goal - uncovered_cells)));
 }
 
 int print_results(int line)
@@ -373,7 +373,7 @@ int print_results(int line)
     case 4:
         return printf("\tMines left: " H_RED "%d" RESET, mines);
     case 6:
-        if (goal - uncovered_cells)
+        if (lost)
             return printf("\tYou " BG_RED B_H_WHT " LOST " RESET " - Try again");
         else
             return printf("\tYou " BG_GRN B_H_YEL " WON " RESET " - Well done!");
