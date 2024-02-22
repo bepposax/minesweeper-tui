@@ -164,7 +164,7 @@ void print_board()
             {
                 if (pos->is_discovered)
                     printf(RED "\b▐" BG_RED B_WHT "*" RESET RED "▌" RESET);
-                else if (!pos->is_flagged)
+                else
                     printf(B_RED "* " RESET);
             }
             else if (pos->is_discovered)
