@@ -2,7 +2,7 @@
 
 Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](https://en.wikipedia.org/wiki/Minesweeper_(video_game) "Minesweeper (video game) - Wikipedia") game in C.
 
-![difficultites](https://github.com/bepposax/minesweeper-tui/assets/43136113/aa55979f-3347-495a-83d3-df46db765349) ![board](https://github.com/bepposax/minesweeper-tui/assets/43136113/0ae39140-ea32-4c9c-b6b6-62fcfc3fc200 "Game board")
+![difficultites](https://github.com/bepposax/minesweeper-tui/assets/43136113/aa55979f-3347-495a-83d3-df46db765349) ![board](https://github.com/bepposax/minesweeper-tui/assets/43136113/0ae39140-ea32-4c9c-b6b6-62fcfc3fc200 "Game board")  
 
 ## Instructions
 
@@ -22,16 +22,29 @@ Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](htt
 
 ## Controls
 
-- 🖱️ **Left-click** 
-  - Uncovers an undiscovered cell ( ■ ).
-  - Uncovers the surroundings of a numbered cell ( <span style=color:green>**2**</span>  ) if all its adjacent mines are flagged.
-- 🖱️ **Right-click** 
-  - Flags ( <span style=color:firebrick>**⚑**</span> ) an undiscovered cell as a mine spot.
-- 🖱️ **Middle-click**
-  - Marks ( <span style=color:orange>**?**</span> ) an undiscovered cell as a possible mine spot.
-- Press **Q** to quit the game or exit the program.
-- Press **N** to start a new game.
-- Press **R** to restart the current game.
+<table>
+  <tr>
+    <th>🖱️ <kbd>Left
+    <td>uncover an undiscovered cell ( ■ )
+  <tr>
+    <td>
+    <td>uncover the surroundings of a numbered cell ( <b>2</b> ) if all its adjacent mines are flagged
+  <tr>
+    <th>🖱️ <kbd>Right
+    <td>flag ( <b>⚑</b> ) an undiscovered cell as a mine spot
+  <tr>
+    <th>🖱️ <kbd>Middle
+    <td>mark ( <b>?</b> ) an undiscovered cell as a possible mine spot
+  <tr>
+    <th><kbd>Q
+    <td>quit the game or exit the program
+  <tr>
+    <th><kbd>N
+    <td>start a new game
+  <tr>
+    <th><kbd>R
+    <td>restart the current game
+</table>
 
 ## Requirements
 
