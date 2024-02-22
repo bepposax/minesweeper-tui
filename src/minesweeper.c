@@ -203,8 +203,11 @@ void print_board()
             }
         }
         printf("│");
-        if (game_over && width <= 25)
+        if (game_over && (width <= (getmaxx(stdscr) - 30) / 2 && height > 8))
+        {
+            printf("\t");
             print_results(i);
+        }
         printf("\n\r");
     }
 
@@ -216,12 +219,17 @@ void print_board()
 
     // stats bottom
     printf(B_H_CYN " # " H_CYN "%d\n" RESET, moves);
-    if (game_over && width > 25)
+    if (game_over && (width > (getmaxx(stdscr) - 30) / 2 || height <= 8))
     {
-        int i = 0;
-        printf("\r\t");
-        while (print_results(i++))
-            printf("\n\r\t");
+        int i = 0, indent = width - 11;
+
+        do
+        {
+            printf("\n\r");
+            if (indent > 0)
+                for (int j = 0; j < indent; j++)
+                    printf(" ");
+        } while (print_results(i++));
     }
     printf("\n");
 }
@@ -363,22 +371,22 @@ int print_results(int line)
     switch (line)
     {
     case 0:
-        return printf(B_H_WHT "\t------ Game Over ------" RESET);
+        return printf(B_H_WHT "------ Game Over ------" RESET);
     case 1:
-        return printf("\tMoves: " H_CYN "%d" RESET, moves);
+        return printf("Moves: " H_CYN "%d" RESET, moves);
     case 2:
-        return printf("\tUncovered cells: " H_GRN "%d/%d" RESET, uncovered_cells, goal);
+        return printf("Uncovered cells: " H_GRN "%d/%d" RESET, uncovered_cells, goal);
     case 3:
-        return printf("\tRemaining cells: " H_YEL "%d" RESET, goal - uncovered_cells);
+        return printf("Remaining cells: " H_YEL "%d" RESET, goal - uncovered_cells);
     case 4:
-        return printf("\tMines left: " H_RED "%d" RESET, mines);
+        return printf("Mines left: " H_RED "%d" RESET, mines);
     case 6:
         if (lost)
-            return printf("\tYou " BG_RED B_H_WHT " LOST " RESET " - Try again");
+            return printf("You " BG_RED B_H_WHT " LOST " RESET " - Try again");
         else
-            return printf("\tYou " BG_GRN B_H_YEL " WON " RESET " - Well done!");
+            return printf("You " BG_GRN B_H_YEL " WON " RESET " - Well done!");
     case 8:
-        return printf("\t" U_WHT "n" RESET "ew-game  " U_WHT "r" RESET "estart  " U_WHT "q" RESET "uit");
+        return printf("" U_WHT "n" RESET "ew-game  " U_WHT "r" RESET "estart  " U_WHT "q" RESET "uit");
     case 9:
         return 0;
     default:
