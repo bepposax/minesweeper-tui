@@ -226,9 +226,8 @@ void print_board()
         do
         {
             printf("\n\r");
-            if (indent > 0)
-                for (int j = 0; j < indent; j++)
-                    printf(" ");
+            for (int j = 0; j < indent; j++)
+                printf(" ");
         } while (print_results(i++));
     }
     printf("\n");
