@@ -203,9 +203,11 @@ void print_board()
             }
         }
         printf("│");
-        if (game_over && (width <= (getmaxx(stdscr) - 30) / 2 && height > 8))
+
+        // results right
+        if (game_over && (width <= (getmaxx(stdscr) - 34) / 2 && height > 8))
         {
-            printf("\t");
+            printf("    ");
             print_results(i);
         }
         printf("\n\r");
@@ -219,7 +221,9 @@ void print_board()
 
     // stats bottom
     printf(B_H_CYN " # " H_CYN "%d\n" RESET, moves);
-    if (game_over && (width > (getmaxx(stdscr) - 30) / 2 || height <= 8))
+
+    // results bottom
+    if (game_over && (width > (getmaxx(stdscr) - 34) / 2 || height <= 8))
     {
         int i = 0, indent = width - 11;
 
@@ -370,22 +374,24 @@ int print_results(int line)
     switch (line)
     {
     case 0:
-        return printf(B_H_WHT "------ Game Over ------" RESET);
+        return printf(B_H_WHT "------- Game Over -------" RESET);
     case 1:
-        return printf("Moves: " H_CYN "%16d" RESET, moves);
+        return printf("Moves: " H_CYN "%18d" RESET, moves);
     case 2:
-        return printf("Uncovered cells:" H_GRN "%3d/%3d" RESET, uncovered_cells, goal);
+        char s[10];
+        sprintf(s, "%d/%d", uncovered_cells, goal);
+        return printf("Uncovered cells:" H_GRN "%9s" RESET, s);
     case 3:
-        return printf("Remaining cells: " H_YEL "%6d" RESET, goal - uncovered_cells);
+        return printf("Remaining cells: " H_YEL "%8d" RESET, goal - uncovered_cells);
     case 4:
-        return printf("Mines left: " H_RED "%11d" RESET, mines);
+        return printf("Mines left: " H_RED "%13d" RESET, mines);
     case 6:
         if (lost)
-            return printf("You " BG_RED B_H_WHT " LOST " RESET " - Try again");
+            return printf("You " BG_RED B_H_WHT " LOST " RESET "%15s", "Try again");
         else
-            return printf("You " BG_GRN B_H_YEL " WON " RESET " - Well done!");
+            return printf("You " BG_GRN B_H_YEL " WON " RESET "%16s", "Well done!");
     case 8:
-        return printf("" U_WHT "n" RESET "ew-game  " U_WHT "r" RESET "estart  " U_WHT "q" RESET "uit");
+        return printf("" U_WHT "n" RESET "ew-game   " U_WHT "r" RESET "estart   " U_WHT "q" RESET "uit");
     case 9:
         return 0;
     default:
