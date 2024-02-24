@@ -1,3 +1,7 @@
+/**
+ * @file string_builder.c
+ * @author Ivano Izzo
+ */
 #include "../include/string_builder.h"
 #include "../include/board.h"
 #include <stdio.h>
