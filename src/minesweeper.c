@@ -10,6 +10,10 @@
 #include <time.h>
 #include <ctype.h>
 
+#define MAXLEN 100000
+
+char out[MAXLEN]; // output as string
+int os;           // offset
 int goal, moves, uncovered_cells;
 bool game_over, lost;
 
@@ -135,26 +139,29 @@ void signal_mine(int row, int col)
 
 void print_board()
 {
+    os = 0;
+
     clear();
     refresh();
 
     // stats top
-    printf(H_GRN);
-    int len = printf(" ■ %d/%d", uncovered_cells, goal);
+    os += sprintf(out + os, H_GRN);
+    int len = sprintf(out + os, " ■ %d/%d", uncovered_cells, goal);
+    os += len;
     for (int i = 0; i < width * 2 - len; i++)
-        printf(" ");
-    printf(B_H_RED "*" H_RED " %2d\n\r" RESET, mines);
+        os += sprintf(out + os, " ");
+    os += sprintf(out + os, B_H_RED "*" H_RED " %2d\n\r" RESET, mines);
 
     // border top
-    printf("╭");
+    os += sprintf(out + os, "╭");
     for (int i = 0; i <= width * 2; i++)
-        printf("─");
-    printf("╮\n\r");
+        os += sprintf(out + os, "─");
+    os += sprintf(out + os, "╮\n\r");
 
     // game board
     for (int i = 0; i < height; i++)
     {
-        printf("│ ");
+        os += sprintf(out + os, "│ ");
         for (int j = 0; j < width; j++)
         {
             cell *pos = &(board[i][j]);
@@ -163,9 +170,9 @@ void print_board()
             if (pos->is_mine && game_over)
             {
                 if (pos->is_discovered)
-                    printf(RED "\b▐" BG_RED B_WHT "*" RESET RED "▌" RESET);
+                    os += sprintf(out + os, RED "\b▐" BG_RED B_WHT "*" RESET RED "▌" RESET);
                 else
-                    printf(B_RED "* " RESET);
+                    os += sprintf(out + os, B_RED "* " RESET);
             }
             else if (pos->is_discovered)
                 if ((num_mines = pos->surrounding_mines))
@@ -173,54 +180,54 @@ void print_board()
                     switch (num_mines)
                     {
                     case 1:
-                        printf(H_BLU);
+                        os += sprintf(out + os, H_BLU);
                         break;
                     case 2:
-                        printf(H_GRN);
+                        os += sprintf(out + os, H_GRN);
                         break;
                     case 3:
-                        printf(H_YEL);
+                        os += sprintf(out + os, H_YEL);
                         break;
                     case 4:
-                        printf(H_MAG);
+                        os += sprintf(out + os, H_MAG);
                         break;
                     default:
-                        printf(H_CYN);
+                        os += sprintf(out + os, H_CYN);
                         break;
                     }
-                    printf("%d " RESET, num_mines);
+                    os += sprintf(out + os, "%d " RESET, num_mines);
                 }
                 else
-                    printf(H_BLK "· " RESET);
+                    os += sprintf(out + os, H_BLK "· " RESET);
             else
             {
                 if (pos->is_flagged)
-                    printf(RED "⚑ " RESET);
+                    os += sprintf(out + os, RED "⚑ " RESET);
                 else if (pos->is_marked)
-                    printf(H_YEL "? " RESET);
+                    os += sprintf(out + os, H_YEL "? " RESET);
                 else
-                    printf("■ ");
+                    os += sprintf(out + os, "■ ");
             }
         }
-        printf("│");
+        os += sprintf(out + os, "│");
 
         // results right
         if (game_over && (width <= (getmaxx(stdscr) - 34) / 2 && height > 8))
         {
-            printf("    ");
+            os += sprintf(out + os, "    ");
             print_results(i);
         }
-        printf("\n\r");
+        os += sprintf(out + os, "\n\r");
     }
 
     // border bottom
-    printf("╰");
+    os += sprintf(out + os, "╰");
     for (int i = 0; i <= width * 2; i++)
-        printf("─");
-    printf("╯\n\r");
+        os += sprintf(out + os, "─");
+    os += sprintf(out + os, "╯\n\r");
 
     // stats bottom
-    printf(B_H_CYN " # " H_CYN "%d\n" RESET, moves);
+    os += sprintf(out + os, B_H_CYN " # " H_CYN "%d\n" RESET, moves);
 
     // results bottom
     if (game_over && (width > (getmaxx(stdscr) - 34) / 2 || height <= 8))
@@ -229,12 +236,12 @@ void print_board()
 
         do
         {
-            printf("\n\r");
+            os += sprintf(out + os, "\n\r");
             for (int j = 0; j < indent; j++)
-                printf(" ");
+                os += sprintf(out + os, " ");
         } while (print_results(i++));
     }
-    printf("\n");
+    printf("%s", out);
 }
 
 int play(int row, int col)
@@ -374,24 +381,24 @@ int print_results(int line)
     switch (line)
     {
     case 0:
-        return printf(B_H_WHT "------- Game Over -------" RESET);
+        return (os += sprintf(out + os, B_H_WHT "------- Game Over -------" RESET));
     case 1:
-        return printf("Moves: " H_CYN "%18d" RESET, moves);
+        return (os += sprintf(out + os, "Moves: " H_CYN "%18d" RESET, moves));
     case 2:
         char s[10];
-        sprintf(s, "%d/%d", uncovered_cells, goal);
-        return printf("Uncovered cells:" H_GRN "%9s" RESET, s);
+        snprintf(s, 10, "%d/%d", uncovered_cells, goal);
+        return (os += sprintf(out + os, "Uncovered cells:" H_GRN "%9s" RESET, s));
     case 3:
-        return printf("Remaining cells: " H_YEL "%8d" RESET, goal - uncovered_cells);
+        return (os += sprintf(out + os, "Remaining cells: " H_YEL "%8d" RESET, goal - uncovered_cells));
     case 4:
-        return printf("Mines left: " H_RED "%13d" RESET, mines);
+        return (os += sprintf(out + os, "Mines left: " H_RED "%13d" RESET, mines));
     case 6:
         if (lost)
-            return printf("You " BG_RED B_H_WHT " LOST " RESET "%15s", "Try again");
+            return (os += sprintf(out + os, "You " BG_RED B_H_WHT " LOST " RESET "%15s", "Try again"));
         else
-            return printf("You " BG_GRN B_H_YEL " WON " RESET "%16s", "Well done!");
+            return (os += sprintf(out + os, "You " BG_GRN B_H_YEL " WON " RESET "%16s", "Well done!"));
     case 8:
-        return printf("" U_WHT "n" RESET "ew-game   " U_WHT "r" RESET "estart   " U_WHT "q" RESET "uit");
+        return (os += sprintf(out + os, "" U_WHT "n" RESET "ew-game   " U_WHT "r" RESET "estart   " U_WHT "q" RESET "uit"));
     case 9:
         return 0;
     default:
