@@ -4,16 +4,13 @@
  */
 #include "../include/minesweeper.h"
 #include "../include/ANSI-colors.h"
+#include "../include/string_builder.h"
 #include <ncurses.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <ctype.h>
 
-#define MAXLEN 100000
-
-char out[MAXLEN]; // output as string
-int os;           // offset
 int goal, moves, uncovered_cells;
 bool game_over, lost;
 
@@ -83,7 +80,10 @@ int game_loop()
             else if (ch == KEY_RESIZE)
                 print_board();
             else if (ch == 'n' || ch == 'q')
+            {
+                strfree();
                 return ch;
+            }
             else if (ch == 'r')
             {
                 moves = 0;
@@ -100,6 +100,7 @@ int game_loop()
         if (ch == 'r')
             reset_board();
     } while (ch == 'r');
+    strfree();
 
     return ch;
 }
@@ -139,29 +140,26 @@ void signal_mine(int row, int col)
 
 void print_board()
 {
-    os = 0;
-
     clear();
     refresh();
 
     // stats top
-    os += sprintf(out + os, H_GRN);
-    int len = sprintf(out + os, " ■ %d/%d", uncovered_cells, goal);
-    os += len;
+    strappend(H_GRN);
+    int len = strappend(" ■ %d/%d", uncovered_cells, goal);
     for (int i = 0; i < width * 2 - len; i++)
-        os += sprintf(out + os, " ");
-    os += sprintf(out + os, B_H_RED "*" H_RED " %2d\n\r" RESET, mines);
+        strappend(" ");
+    strappend(B_H_RED "*" H_RED " %2d\n\r" RESET, mines);
 
     // border top
-    os += sprintf(out + os, "╭");
+    strappend("╭");
     for (int i = 0; i <= width * 2; i++)
-        os += sprintf(out + os, "─");
-    os += sprintf(out + os, "╮\n\r");
+        strappend("─");
+    strappend("╮\n\r");
 
     // game board
     for (int i = 0; i < height; i++)
     {
-        os += sprintf(out + os, "│ ");
+        strappend("│ ");
         for (int j = 0; j < width; j++)
         {
             cell *pos = &(board[i][j]);
@@ -170,9 +168,9 @@ void print_board()
             if (pos->is_mine && game_over)
             {
                 if (pos->is_discovered)
-                    os += sprintf(out + os, RED "\b▐" BG_RED B_WHT "*" RESET RED "▌" RESET);
+                    strappend(RED "\b▐" BG_RED B_WHT "*" RESET RED "▌" RESET);
                 else
-                    os += sprintf(out + os, B_RED "* " RESET);
+                    strappend(B_RED "* " RESET);
             }
             else if (pos->is_discovered)
                 if ((num_mines = pos->surrounding_mines))
@@ -180,54 +178,54 @@ void print_board()
                     switch (num_mines)
                     {
                     case 1:
-                        os += sprintf(out + os, H_BLU);
+                        strappend(H_BLU);
                         break;
                     case 2:
-                        os += sprintf(out + os, H_GRN);
+                        strappend(H_GRN);
                         break;
                     case 3:
-                        os += sprintf(out + os, H_YEL);
+                        strappend(H_YEL);
                         break;
                     case 4:
-                        os += sprintf(out + os, H_MAG);
+                        strappend(H_MAG);
                         break;
                     default:
-                        os += sprintf(out + os, H_CYN);
+                        strappend(H_CYN);
                         break;
                     }
-                    os += sprintf(out + os, "%d " RESET, num_mines);
+                    strappend("%d " RESET, num_mines);
                 }
                 else
-                    os += sprintf(out + os, H_BLK "· " RESET);
+                    strappend(H_BLK "· " RESET);
             else
             {
                 if (pos->is_flagged)
-                    os += sprintf(out + os, RED "⚑ " RESET);
+                    strappend(RED "⚑ " RESET);
                 else if (pos->is_marked)
-                    os += sprintf(out + os, H_YEL "? " RESET);
+                    strappend(H_YEL "? " RESET);
                 else
-                    os += sprintf(out + os, "■ ");
+                    strappend("■ ");
             }
         }
-        os += sprintf(out + os, "│");
+        strappend("│");
 
         // results right
         if (game_over && (width <= (getmaxx(stdscr) - 34) / 2 && height > 8))
         {
-            os += sprintf(out + os, "    ");
+            strappend("    ");
             print_results(i);
         }
-        os += sprintf(out + os, "\n\r");
+        strappend("\n\r");
     }
 
     // border bottom
-    os += sprintf(out + os, "╰");
+    strappend("╰");
     for (int i = 0; i <= width * 2; i++)
-        os += sprintf(out + os, "─");
-    os += sprintf(out + os, "╯\n\r");
+        strappend("─");
+    strappend("╯\n\r");
 
     // stats bottom
-    os += sprintf(out + os, B_H_CYN " # " H_CYN "%d\n" RESET, moves);
+    strappend(B_H_CYN " # " H_CYN "%d\n" RESET, moves);
 
     // results bottom
     if (game_over && (width > (getmaxx(stdscr) - 34) / 2 || height <= 8))
@@ -236,12 +234,13 @@ void print_board()
 
         do
         {
-            os += sprintf(out + os, "\n\r");
+            strappend("\n\r");
             for (int j = 0; j < indent; j++)
-                os += sprintf(out + os, " ");
+                strappend(" ");
         } while (print_results(i++));
     }
-    printf("%s", out);
+    printf("%s", buffer);
+    offset = 0;
 }
 
 int play(int row, int col)
@@ -381,24 +380,24 @@ int print_results(int line)
     switch (line)
     {
     case 0:
-        return (os += sprintf(out + os, B_H_WHT "------- Game Over -------" RESET));
+        return strappend(B_H_WHT "------- Game Over -------" RESET);
     case 1:
-        return (os += sprintf(out + os, "Moves: " H_CYN "%18d" RESET, moves));
+        return strappend("Moves: " H_CYN "%18d" RESET, moves);
     case 2:
         char s[10];
         snprintf(s, 10, "%d/%d", uncovered_cells, goal);
-        return (os += sprintf(out + os, "Uncovered cells:" H_GRN "%9s" RESET, s));
+        return strappend("Uncovered cells:" H_GRN "%9s" RESET, s);
     case 3:
-        return (os += sprintf(out + os, "Remaining cells: " H_YEL "%8d" RESET, goal - uncovered_cells));
+        return strappend("Remaining cells: " H_YEL "%8d" RESET, goal - uncovered_cells);
     case 4:
-        return (os += sprintf(out + os, "Mines left: " H_RED "%13d" RESET, mines));
+        return strappend("Mines left: " H_RED "%13d" RESET, mines);
     case 6:
         if (lost)
-            return (os += sprintf(out + os, "You " BG_RED B_H_WHT " LOST " RESET "%15s", "Try again"));
+            return strappend("You " BG_RED B_H_WHT " LOST " RESET "%15s", "Try again");
         else
-            return (os += sprintf(out + os, "You " BG_GRN B_H_YEL " WON " RESET "%16s", "Well done!"));
+            return strappend("You " BG_GRN B_H_YEL " WON " RESET "%16s", "Well done!");
     case 8:
-        return (os += sprintf(out + os, "" U_WHT "n" RESET "ew-game   " U_WHT "r" RESET "estart   " U_WHT "q" RESET "uit"));
+        return strappend("" U_WHT "n" RESET "ew-game   " U_WHT "r" RESET "estart   " U_WHT "q" RESET "uit");
     case 9:
         return 0;
     default:
