@@ -76,7 +76,7 @@ static void customize()
     } while (width < 1 || width > maxx);
     do
     {
-        mvprintw(15, 12, " Mines  -- ");
+        mvprintw(15, 12, " Mines  --  ");
         mvprintw(16, 14, "max%4d ", height * width);
         mvgetnstr(15, 20, input, 4);
         mines = atoi(input);
