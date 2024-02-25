@@ -239,7 +239,7 @@ void print_board()
                 strappend(" ");
         } while (print_results(i++));
     }
-    printf("%s", buffer);
+    printf("\r%s", buffer);
     offset = 0;
 }
 
@@ -397,7 +397,7 @@ int print_results(int line)
         else
             return strappend("You " BG_GRN B_H_YEL " WON " RESET "%16s", "Well done!");
     case 8:
-        return strappend("" U_WHT "n" RESET "ew-game   " U_WHT "r" RESET "estart   " U_WHT "q" RESET "uit");
+        return strappend(U_WHT "n" RESET "ew-game   " U_WHT "r" RESET "estart   " U_WHT "q" RESET "uit");
     case 9:
         return 0;
     default:
