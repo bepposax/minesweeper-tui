@@ -239,7 +239,7 @@ void print_board()
                 strappend(" ");
         } while (print_results(i++));
     }
-    printf("\r%s", buffer);
+    printf("%s\r", buffer);
     offset = 0;
 }
 
