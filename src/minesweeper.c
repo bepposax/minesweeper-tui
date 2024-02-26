@@ -287,7 +287,7 @@ static bool discoverable(int row, int col)
                 if (j >= 0 && j < width && i != j && i != j)
                     if (board[i][j].is_flagged)
                         flags++;
-    return (flags == board[row][col].surrounding_mines) ? true : false;
+    return flags == board[row][col].surrounding_mines;
 }
 
 static bool is_game_over(cell *this)

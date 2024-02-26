@@ -36,13 +36,21 @@ int select_diff()
                 switch (event.y)
                 {
                 case 6:
-                    return 1;
+                    if (event.x >= 9 && event.x <= 25)
+                        return 1;
+                    break;
                 case 9:
-                    return 2;
+                    if (event.x >= 5 && event.x <= 29)
+                        return 2;
+                    break;
                 case 12:
-                    return 3;
+                    if (event.x >= 11 && event.x <= 23)
+                        return 3;
+                    break;
                 case 15:
-                    return 4;
+                    if (event.x >= 11 && event.x <= 23)
+                        return 4;
+                    break;
                 }
         }
         else if (ch == 'q' || ch == 'Q')

@@ -28,13 +28,11 @@ int strappend(const char *fmt, ...)
 
     if (!buffer)
         strinit();
-
     va_list args;
     va_start(args, fmt);
     if (offset + strlen(fmt) > allocated)
         if (!(buffer = (char *)realloc(buffer, allocated *= 2)))
             printerr(__LINE__ - 1);
-
     res = vsprintf(buffer + offset, fmt, args);
     va_end(args);
     offset += res;
