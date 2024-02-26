@@ -266,10 +266,8 @@ static int discover(int row, int col)
                         else if (!this->surrounding_mines)
                         {
                             neighbor->is_discovered = true;
-                            if (neighbor->is_marked)
-                                neighbor->is_marked = false;
-                            else if (neighbor->is_flagged)
-                                neighbor->is_flagged = false;
+                            neighbor->is_marked &= 0;
+                            neighbor->is_flagged &= 0;
                             uncovered_cells++;
                             if (is_game_over(neighbor))
                                 return 1;
