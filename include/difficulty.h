@@ -14,9 +14,4 @@
  */
 int select_diff();
 
-/**
- * @brief prints the difficulty menu
- */
-void print_diff_menu();
-
 #endif

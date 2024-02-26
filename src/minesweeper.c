@@ -3,7 +3,6 @@
  * @author Ivano Izzo
  */
 #include "../include/minesweeper.h"
-#include "../include/ANSI-colors.h"
 #include "../include/string_builder.h"
 #include <ncurses.h>
 #include <stdio.h>
@@ -13,6 +12,51 @@
 
 int goal, moves, uncovered_cells;
 bool game_over, lost;
+
+/**
+ * @brief places the mines randomly on the board
+ */
+static void place_mines();
+
+/**
+ * @brief signals a mine to the cells surrounding it
+ * @param row the mine's row
+ * @param col the mine's column
+ */
+static void signal_mine(int row, int col);
+
+/**
+ * @brief plays a move in a cell
+ * @param row the cell's row
+ * @param col the cell's column
+ * @return 1 if the game is over
+ *         0 if the game is not over
+ */
+static int play(int row, int col);
+
+/**
+ * @brief flags or unflags an undiscovered cell
+ * @param row the cell's row
+ * @param col the cell's column
+ */
+static void flag(int row, int col);
+
+/**
+ * @brief marks or unmarks an undiscovered cell
+ * @param row the cell's row
+ * @param col the cell's column
+ */
+static void mark(int row, int col);
+
+/**
+ * @brief discovers the cells surrounding a cell
+ * @param row the cell's row
+ * @param col the cell's column
+ * @return 1 if the game is over
+ *         0 if the game is not over
+ * @see discoverable
+ */
+static int discover(int row, int col);
 
 /**
  * @brief checks if the number of flags and mines surrounding this cell match
@@ -31,13 +75,6 @@ static bool discoverable(int row, int col);
  *       (i.e. the user has uncovered all the cells that do not contain a mine)
  */
 static bool is_game_over(cell *this);
-
-/**
- * @brief prints the results of the game
- * @param line the line to print
- * @return 0 if the line is the last one
- */
-static int print_results(int);
 
 int game_loop()
 {
@@ -105,7 +142,7 @@ int game_loop()
     return ch;
 }
 
-void place_mines()
+static void place_mines()
 {
     int mine_row, mine_col, mines_left = mines;
     srand(time(NULL));
@@ -125,7 +162,7 @@ void place_mines()
     }
 }
 
-void signal_mine(int row, int col)
+static void signal_mine(int row, int col)
 {
     for (int i = row - 1; i <= row + 1; i++)
         if (i >= 0 && i < height)
@@ -138,7 +175,7 @@ void signal_mine(int row, int col)
                 }
 }
 
-void flag(int row, int col)
+static void flag(int row, int col)
 {
     cell *this = &board[row][col];
 
@@ -151,7 +188,7 @@ void flag(int row, int col)
     }
 }
 
-void mark(int row, int col)
+static void mark(int row, int col)
 {
     cell *this = &board[row][col];
 
@@ -164,7 +201,7 @@ void mark(int row, int col)
     }
 }
 
-int play(int row, int col)
+static int play(int row, int col)
 {
     cell *pos = &(board[row][col]);
 
@@ -204,7 +241,7 @@ int play(int row, int col)
     return 0;
 }
 
-int discover(int row, int col)
+static int discover(int row, int col)
 {
     cell *this = &(board[row][col]);
 
@@ -249,7 +286,7 @@ static bool discoverable(int row, int col)
     for (int i = row - 1; i <= row + 1; i++)
         if (i >= 0 && i < height)
             for (int j = col - 1; j <= col + 1; j++)
-                if (j >= 0 && j < width && i != j)
+                if (j >= 0 && j < width && i != j && i != j)
                     if (board[i][j].is_flagged)
                         flags++;
     return (flags == board[row][col].surrounding_mines) ? true : false;
@@ -258,139 +295,4 @@ static bool discoverable(int row, int col)
 static bool is_game_over(cell *this)
 {
     return (game_over = ((lost = this->is_mine) || !(goal - uncovered_cells)));
-}
-
-void print_board()
-{
-    clear();
-    refresh();
-
-    // stats top
-    strappend(H_GRN);
-    int len = strappend(" ■ %d/%d", uncovered_cells, goal);
-    for (int i = 0; i < width * 2 - len; i++)
-        strappend(" ");
-    strappend(B_H_RED "*" H_RED " %2d\n\r" RESET, mines);
-
-    // border top
-    strappend("╭");
-    for (int i = 0; i <= width * 2; i++)
-        strappend("─");
-    strappend("╮\n\r");
-
-    // game board
-    for (int i = 0; i < height; i++)
-    {
-        strappend("│ ");
-        for (int j = 0; j < width; j++)
-        {
-            cell *pos = &(board[i][j]);
-            int num_mines;
-
-            if (pos->is_mine && game_over)
-            {
-                if (pos->is_discovered)
-                    strappend(RED "\b▐" BG_RED B_WHT "*" RESET RED "▌" RESET);
-                else
-                    strappend(B_RED "* " RESET);
-            }
-            else if (pos->is_discovered)
-                if ((num_mines = pos->surrounding_mines))
-                {
-                    switch (num_mines)
-                    {
-                    case 1:
-                        strappend(H_BLU);
-                        break;
-                    case 2:
-                        strappend(H_GRN);
-                        break;
-                    case 3:
-                        strappend(H_YEL);
-                        break;
-                    case 4:
-                        strappend(H_MAG);
-                        break;
-                    default:
-                        strappend(H_CYN);
-                        break;
-                    }
-                    strappend("%d " RESET, num_mines);
-                }
-                else
-                    strappend(H_BLK "· " RESET);
-            else
-            {
-                if (pos->is_flagged)
-                    strappend(RED "⚑ " RESET);
-                else if (pos->is_marked)
-                    strappend(H_YEL "? " RESET);
-                else
-                    strappend("■ ");
-            }
-        }
-        strappend("│");
-
-        // results right
-        if (game_over && (width <= (getmaxx(stdscr) - 34) / 2 && height > 8))
-        {
-            strappend("    ");
-            print_results(i);
-        }
-        strappend("\n\r");
-    }
-
-    // border bottom
-    strappend("╰");
-    for (int i = 0; i <= width * 2; i++)
-        strappend("─");
-    strappend("╯\n\r");
-
-    // stats bottom
-    strappend(B_H_CYN " # " H_CYN "%d\n" RESET, moves);
-
-    // results bottom
-    if (game_over && (width > (getmaxx(stdscr) - 34) / 2 || height <= 8))
-    {
-        int i = 0, indent = width - 11;
-
-        do
-        {
-            strappend("\n\r");
-            for (int j = 0; j < indent; j++)
-                strappend(" ");
-        } while (print_results(i++));
-    }
-    printf("%s\r", buffer);
-    offset = 0;
-}
-
-int print_results(int line)
-{
-    switch (line)
-    {
-    case 0:
-        return strappend(B_H_WHT "------- Game Over -------" RESET);
-    case 1:
-        return strappend("Moves: " H_CYN "%18d" RESET, moves);
-    case 2:
-        char s[10];
-        snprintf(s, 10, "%d/%d", uncovered_cells, goal);
-        return strappend("Uncovered cells:" H_GRN "%9s" RESET, s);
-    case 3:
-        return strappend("Remaining cells: " H_YEL "%8d" RESET, goal - uncovered_cells);
-    case 4:
-        return strappend("Mines left: " H_RED "%13d" RESET, mines);
-    case 6:
-        if (lost)
-            return strappend("You " BG_RED B_H_WHT " LOST " RESET "%15s", "Try again");
-        else
-            return strappend("You " BG_GRN B_H_YEL " WON " RESET "%16s", "Well done!");
-    case 8:
-        return strappend(U_WHT "n" RESET "ew-game   " U_WHT "r" RESET "estart   " U_WHT "q" RESET "uit");
-    case 9:
-        return 0;
-    default:
-        return 1;
-    }
 }

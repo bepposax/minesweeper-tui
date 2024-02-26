@@ -7,7 +7,8 @@
 
 #include <stdbool.h>
 
-extern int height, width, mines;
+extern int height, width, mines, goal, moves, uncovered_cells;
+extern bool game_over, lost;
 
 /**
  * @brief a cell of the game board
@@ -43,5 +44,10 @@ void reset_board();
  * @brief frees the game board
  */
 void free_board();
+
+/**
+ * @brief prints the game board
+ */
+void print_board();
 
 #endif

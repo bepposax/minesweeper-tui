@@ -7,10 +7,11 @@
 
 extern char *buffer;
 extern long unsigned int offset;
+extern int height, width;
 
 /**
- * @brief appends formatted strings to the output buffer
- * @param fmt the formatted strings
+ * @brief appends a formatted string to the buffer
+ * @param fmt the formatted string
  * @return the number of appended characters
  * @see vsprintf
  */
