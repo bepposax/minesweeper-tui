@@ -138,6 +138,128 @@ void signal_mine(int row, int col)
                 }
 }
 
+void flag(int row, int col)
+{
+    cell *this = &board[row][col];
+
+    if (!this->is_discovered)
+    {
+        if (this->is_marked)
+            mark(row, col);
+        (this->is_flagged = !this->is_flagged) ? mines-- : mines++;
+        print_board();
+    }
+}
+
+void mark(int row, int col)
+{
+    cell *this = &board[row][col];
+
+    if (!this->is_discovered)
+    {
+        if (this->is_flagged)
+            flag(row, col);
+        this->is_marked = !this->is_marked;
+        print_board();
+    }
+}
+
+int play(int row, int col)
+{
+    cell *pos = &(board[row][col]);
+
+    if (pos->is_flagged || pos->is_marked)
+        return 0;
+    if (pos->is_discovered)
+    {
+        if (!pos->surrounding_mines)
+            return 0;
+        if (discoverable(row, col))
+        {
+            moves++;
+            for (int i = row - 1; i <= row + 1; i++)
+                if (i >= 0 && i < height)
+                    for (int j = col - 1; j <= col + 1; j++)
+                        if (j >= 0 && j < width && !board[i][j].is_flagged)
+                        {
+                            discover(i, j);
+                            if (is_game_over(&board[i][j]))
+                                return 1;
+                        }
+        }
+        else
+            return 0;
+    }
+    else
+    {
+        moves++;
+        pos->is_discovered = true;
+        if (!pos->is_mine)
+            uncovered_cells++;
+        if (is_game_over(pos))
+            return 1;
+        discover(row, col);
+    }
+    print_board();
+    return 0;
+}
+
+int discover(int row, int col)
+{
+    cell *this = &(board[row][col]);
+
+    if (!this->is_discovered)
+    {
+        this->is_discovered = true;
+        if (!this->is_mine)
+            uncovered_cells++;
+        if (is_game_over(this))
+            return 1;
+    }
+    for (int i = row - 1; i <= row + 1; i++)
+        if (i >= 0 && i < height)
+            for (int j = col - 1; j <= col + 1; j++)
+                if (j >= 0 && j < width)
+                {
+                    cell *neighbor = &(board[i][j]);
+                    if (!neighbor->is_discovered)
+                    {
+                        if (!neighbor->surrounding_mines && !neighbor->is_mine)
+                            discover(i, j);
+                        else if (!this->surrounding_mines)
+                        {
+                            neighbor->is_discovered = true;
+                            if (neighbor->is_marked)
+                                neighbor->is_marked = false;
+                            else if (neighbor->is_flagged)
+                                neighbor->is_flagged = false;
+                            uncovered_cells++;
+                            if (is_game_over(neighbor))
+                                return 1;
+                        }
+                    }
+                }
+    return 0;
+}
+
+static bool discoverable(int row, int col)
+{
+    int flags = 0;
+
+    for (int i = row - 1; i <= row + 1; i++)
+        if (i >= 0 && i < height)
+            for (int j = col - 1; j <= col + 1; j++)
+                if (j >= 0 && j < width && i != j)
+                    if (board[i][j].is_flagged)
+                        flags++;
+    return (flags == board[row][col].surrounding_mines) ? true : false;
+}
+
+static bool is_game_over(cell *this)
+{
+    return (game_over = ((lost = this->is_mine) || !(goal - uncovered_cells)));
+}
+
 void print_board()
 {
     clear();
@@ -241,138 +363,6 @@ void print_board()
     }
     printf("%s\r", buffer);
     offset = 0;
-}
-
-int play(int row, int col)
-{
-    cell *pos = &(board[row][col]);
-
-    if (pos->is_flagged || pos->is_marked)
-        return 0;
-    if (pos->is_discovered)
-    {
-        if (!pos->surrounding_mines)
-            return 0;
-        if (discoverable(row, col))
-        {
-            moves++;
-            for (int i = row - 1; i <= row + 1; i++)
-                if (i >= 0 && i < height)
-                    for (int j = col - 1; j <= col + 1; j++)
-                        if (j >= 0 && j < width && !board[i][j].is_flagged)
-                        {
-                            discover(i, j);
-                            if (is_game_over(&board[i][j]))
-                                return 1;
-                        }
-        }
-        else
-            return 0;
-    }
-    else
-    {
-        moves++;
-        pos->is_discovered = true;
-        if (!pos->is_mine)
-            uncovered_cells++;
-        if (is_game_over(pos))
-            return 1;
-        discover(row, col);
-    }
-    print_board();
-    return 0;
-}
-
-void flag(int row, int col)
-{
-    cell *this = &board[row][col];
-
-    if (!this->is_discovered)
-    {
-        if (this->is_marked)
-            mark(row, col);
-        (this->is_flagged = !this->is_flagged) ? mines-- : mines++;
-        print_board();
-    }
-}
-
-void mark(int row, int col)
-{
-    cell *this = &board[row][col];
-
-    if (!this->is_discovered)
-    {
-        if (this->is_flagged)
-            flag(row, col);
-        this->is_marked = !this->is_marked;
-        print_board();
-    }
-}
-
-int discover(int row, int col)
-{
-    cell *this = &(board[row][col]);
-
-    if (!this->is_discovered)
-    {
-        this->is_discovered = true;
-        if (!this->is_mine)
-            uncovered_cells++;
-        if (is_game_over(this))
-            return 1;
-    }
-    for (int i = row - 1; i <= row + 1; i++)
-        if (i >= 0 && i < height)
-            for (int j = col - 1; j <= col + 1; j++)
-                if (j >= 0 && j < width)
-                {
-                    cell *neighbor = &(board[i][j]);
-                    if (!neighbor->is_discovered)
-                    {
-                        if (!neighbor->surrounding_mines && !neighbor->is_mine)
-                            discover(i, j);
-                        else if (!this->surrounding_mines)
-                        {
-                            neighbor->is_discovered = true;
-                            uncovered_cells++;
-                            if (is_game_over(neighbor))
-                                return 1;
-                        }
-                    }
-                }
-    return 0;
-}
-
-static bool discoverable(int row, int col)
-{
-    int nmines = 0;
-    bool clear = true;
-
-    for (int i = row - 1; i <= row + 1; i++)
-        if (i >= 0 && i < height)
-            for (int j = col - 1; j <= col + 1; j++)
-                if (j >= 0 && j < width)
-                {
-                    cell *neighbor = &(board[i][j]);
-                    if (neighbor->is_flagged)
-                    {
-                        if (neighbor->is_mine)
-                            nmines++;
-                        else
-                            return true;
-                    }
-                    // incorrect flag placement (leads to a loss)
-                    else if (!neighbor->is_discovered)
-                        clear = false;
-                }
-    if (nmines == board[row][col].surrounding_mines && !clear)
-        return true;
-    return false;
-}
-
-static bool is_game_over(cell *this)
-{
-    return (game_over = ((lost = this->is_mine) || !(goal - uncovered_cells)));
 }
 
 int print_results(int line)
