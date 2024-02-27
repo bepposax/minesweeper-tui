@@ -9,7 +9,9 @@
 #include <string.h>
 
 char *buffer;
-size_t offset, allocated;
+size_t offset;
+static size_t allocated;
+extern int height, width;
 
 /**
  * @brief prints memory allocation error to stderr

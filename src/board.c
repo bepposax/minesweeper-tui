@@ -9,8 +9,10 @@
 #include <stdio.h>
 #include <ncurses.h>
 
-int height, width, mines;
 cell **board;
+int height, width, mines;
+extern int goal, moves, uncovered_cells;
+extern bool game_over, lost;
 
 /**
  * @brief prints memory allocation error to stderr
@@ -230,7 +232,7 @@ void print_board()
     offset = 0;
 }
 
-int print_stats(int line)
+static int print_stats(int line)
 {
     switch (line)
     {

@@ -7,7 +7,6 @@
 
 extern char *buffer;
 extern long unsigned int offset;
-extern int height, width;
 
 /**
  * @brief appends a formatted string to the buffer
