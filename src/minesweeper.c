@@ -284,7 +284,7 @@ static bool discoverable(int row, int col)
     for (int i = row - 1; i <= row + 1; i++)
         if (i >= 0 && i < height)
             for (int j = col - 1; j <= col + 1; j++)
-                if (j >= 0 && j < width && i != j && i != j)
+                if (j >= 0 && j < width)
                     if (board[i][j].is_flagged)
                         flags++;
     return flags == board[row][col].surrounding_mines;
