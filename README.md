@@ -65,6 +65,7 @@ Feel free to modify the code and customize the game according to your preference
 
 ---
 
-[![Creative Commons License](https://i.creativecommons.org/l/by-nc/4.0/88x31.png)](http://creativecommons.org/licenses/by-nc/4.0/)
-
-This work is licensed under a [Creative Commons Attribution-NonCommercial 4.0 International License](http://creativecommons.org/licenses/by-nc/4.0/).
+[![Creative Commons License](https://i.creativecommons.org/l/by-nc/4.0/88x31.png)](http://creativecommons.org/licenses/by-nc/4.0/)  
+© 2023-2024 Ivano Izzo ([GitHub](https://github.com/bepposax) - [LinkedIn](https://www.linkedin.com/in/iizzo/))  
+This work is licensed under a [Creative Commons Attribution-NonCommercial 4.0 International License](http://creativecommons.org/licenses/by-nc/4.0/).  
+The full text of the license can be found in the [LICENSE](LICENSE) file.
