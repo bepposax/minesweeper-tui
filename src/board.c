@@ -3,6 +3,7 @@
  * @author Ivano Izzo
  */
 #include "../include/board.h"
+#include "../include/difficulty.h"
 #include "../include/ANSI-colors.h"
 #include "../include/string_builder.h"
 #include <stdlib.h>
@@ -21,9 +22,11 @@ extern bool game_over, lost;
 static void printerr(int line);
 
 /**
- * @brief asks the user for custom height, width and number of mines
+ * @brief asks the user for custom input
+ * @param prompt the user prompt
+ * @return the user's input
  */
-static void customize();
+static int customize(char *prompt);
 
 /**
  * @brief prints the stats of the game when it ends
@@ -52,7 +55,9 @@ void create_board(int diff)
         mines = 99;
         break;
     case 4:
-        customize();
+        height = customize("Height");
+        width = customize("Width ");
+        mines = customize("Mines ");
         break;
     }
     if (!(board = (cell **)calloc(height, sizeof(cell *))))
@@ -62,41 +67,34 @@ void create_board(int diff)
             printerr(__LINE__ - 1);
 }
 
-static void customize()
+static int customize(char *prompt)
 {
     char input[4];
-    int maxx = getmaxx(stdscr) / 2 - 2, maxy = getmaxy(stdscr) - 6;
+    int maxx, maxy, limit, choice;
 
     echo();
     curs_set(2);
-    attron(A_BOLD);
-    attron(COLOR_PAIR(COLOR_CYAN));
     do
     {
-        mvprintw(15, 12, " Height --  ");
-        mvprintw(16, 14, "max%4d ", maxy);
-        mvgetnstr(15, 20, input, 3);
-        height = atoi(input);
-    } while (height < 1 || height > maxy);
-    do
-    {
-        mvprintw(15, 12, " Width  --  ");
-        mvprintw(16, 14, "max%4d ", maxx);
-        mvgetnstr(15, 20, input, 3);
-        width = atoi(input);
-    } while (width < 1 || width > maxx);
-    do
-    {
-        mvprintw(15, 12, " Mines  --  ");
-        mvprintw(16, 14, "max%4d ", height * width);
+        print_diff_menu();
+        attron(A_BOLD);
+        attron(COLOR_PAIR(COLOR_CYAN));
+        getmaxyx(stdscr, maxy, maxx);
+        mvprintw(15, 12, " %s --  ", prompt);
+        limit = prompt[0] == 'H' ? maxy - 6 : prompt[0] == 'W' ? maxx / 2 - 2
+                                                               : height * width;
+        mvprintw(16, 14, "max%4d ", limit);
         mvgetnstr(15, 20, input, 4);
-        mines = atoi(input);
-    } while (mines < 1 || mines > height * width);
-    attroff(COLOR_PAIR(COLOR_CYAN));
-    attroff(A_BOLD);
-    curs_set(0);
-    noecho();
-    clear();
+        choice = atoi(input);
+    } while (choice < 1 || choice > limit);
+    if (prompt[0] == 'M')
+    {
+        curs_set(0);
+        noecho();
+        clear();
+    }
+
+    return choice;
 }
 
 static void printerr(int line)

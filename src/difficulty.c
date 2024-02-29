@@ -17,11 +17,6 @@
  */
 static int cmvprintw(int color, int row, int col, const char *str);
 
-/**
- * @brief prints the difficulty menu
- */
-static void print_diff_menu();
-
 int select_diff()
 {
     int ch;
@@ -61,7 +56,7 @@ int select_diff()
     return 0;
 }
 
-static void print_diff_menu()
+void print_diff_menu()
 {
     int width = 16;
 
