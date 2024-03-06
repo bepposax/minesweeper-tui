@@ -145,15 +145,14 @@ int game_loop()
 static void place_mines()
 {
     int mine_row, mine_col, mines_left = mines;
-    srand(time(NULL));
+    cell *pos;
 
+    srand(time(NULL));
     while (mines_left)
     {
         mine_row = rand() % height;
         mine_col = rand() % width;
-        cell *pos = &(board[mine_row][mine_col]);
-
-        if (!pos->is_mine)
+        if (!(pos = &(board[mine_row][mine_col]))->is_mine)
         {
             pos->is_mine = true;
             signal_mine(mine_row, mine_col);
@@ -164,15 +163,14 @@ static void place_mines()
 
 static void signal_mine(int row, int col)
 {
+    cell *pos;
+
     for (int i = row - 1; i <= row + 1; i++)
         if (i >= 0 && i < height)
             for (int j = col - 1; j <= col + 1; j++)
                 if (j >= 0 && j < width)
-                {
-                    cell *pos = &(board[i][j]);
-                    if (!pos->is_mine)
+                    if (!(pos = &(board[i][j]))->is_mine)
                         (pos->surrounding_mines)++;
-                }
 }
 
 static void flag(int row, int col)
@@ -244,6 +242,7 @@ static int play(int row, int col)
 static int discover(int row, int col)
 {
     cell *this = &(board[row][col]);
+    cell *neighbor;
 
     if (!this->is_discovered)
     {
@@ -258,8 +257,7 @@ static int discover(int row, int col)
             for (int j = col - 1; j <= col + 1; j++)
                 if (j >= 0 && j < width)
                 {
-                    cell *neighbor = &(board[i][j]);
-                    if (!neighbor->is_discovered)
+                    if (!(neighbor = &(board[i][j]))->is_discovered)
                     {
                         if (!neighbor->surrounding_mines && !neighbor->is_mine)
                             discover(i, j);
@@ -280,14 +278,20 @@ static int discover(int row, int col)
 static bool discoverable(int row, int col)
 {
     int flags = 0;
+    bool undiscovered_neighbors = false;
+    cell *neighbor;
 
     for (int i = row - 1; i <= row + 1; i++)
         if (i >= 0 && i < height)
             for (int j = col - 1; j <= col + 1; j++)
                 if (j >= 0 && j < width)
-                    if (board[i][j].is_flagged)
+                {
+                    if ((neighbor = &(board[i][j]))->is_flagged)
                         flags++;
-    return flags == board[row][col].surrounding_mines;
+                    else if (!neighbor->is_discovered)
+                        undiscovered_neighbors = true;
+                }
+    return flags == board[row][col].surrounding_mines && undiscovered_neighbors;
 }
 
 static bool is_game_over(cell *this)
