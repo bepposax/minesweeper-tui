@@ -6,6 +6,7 @@
 #include "../include/difficulty.h"
 #include "../include/ANSI-colors.h"
 #include "../include/string_builder.h"
+#include "../include/symbols.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <ncurses.h>
@@ -132,21 +133,21 @@ void print_board()
 
     // stats top
     strappend(H_GRN);
-    int len = strappend(" ■ %d/%d", uncovered_cells, goal);
+    int len = strappend(" " CELL " %d/%d", uncovered_cells, goal);
     for (int i = 0; i < width * 2 - len; i++)
         strappend(" ");
-    strappend(B_H_RED "*" H_RED " %2d\n\r" RESET, mines);
+    strappend(B_H_RED MINE H_RED " %2d\n\r" RESET, mines);
 
     // border top
-    strappend("╭");
+    strappend(ARC_0);
     for (int i = 0; i <= width * 2; i++)
-        strappend("─");
-    strappend("╮\n\r");
+        strappend(LINE_H);
+    strappend(ARC_1 "\n\r");
 
     // game board
     for (int i = 0; i < height; i++)
     {
-        strappend("│ ");
+        strappend(LINE_V " ");
         for (int j = 0; j < width; j++)
         {
             cell *pos = &(board[i][j]);
@@ -155,9 +156,9 @@ void print_board()
             if (pos->is_mine && game_over)
             {
                 if (pos->is_discovered)
-                    strappend(RED "\b▐" BG_RED B_WHT "*" RESET RED "▌" RESET);
+                    strappend(RED "\b" H_BLOCK_R BG_RED B_WHT MINE RESET RED H_BLOCK_L RESET);
                 else
-                    strappend(B_RED "* " RESET);
+                    strappend(B_RED MINE " " RESET);
             }
             else if (pos->is_discovered)
                 if ((num_mines = pos->surrounding_mines))
@@ -183,13 +184,13 @@ void print_board()
                     strappend("%d " RESET, num_mines);
                 }
                 else
-                    strappend(H_BLK "· " RESET);
+                    strappend(H_BLK M_DOT " " RESET);
             else
             {
                 if (pos->is_flagged)
-                    strappend(RED "⚑ " RESET);
+                    strappend(RED FLAG " " RESET);
                 else if (pos->is_marked)
-                    strappend(H_YEL "? " RESET);
+                    strappend(H_YEL MARK " " RESET);
                 else
                     strappend("■ ");
             }
@@ -206,13 +207,13 @@ void print_board()
     }
 
     // border bottom
-    strappend("╰");
+    strappend(ARC_2);
     for (int i = 0; i <= width * 2; i++)
-        strappend("─");
-    strappend("╯\n\r");
+        strappend(LINE_H);
+    strappend(ARC_3 "\n\r");
 
     // stats bottom
-    strappend(B_H_CYN " # " H_CYN "%d\n" RESET, moves);
+    strappend(B_H_CYN " " MOVES " " H_CYN "%d\n" RESET, moves);
 
     // results bottom
     if (game_over && (width > (getmaxx(stdscr) - 34) / 2 || height <= 8))

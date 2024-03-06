@@ -4,6 +4,7 @@
  */
 #include "../include/difficulty.h"
 #include "../include/string_builder.h"
+#include "../include/symbols.h"
 #include <stdio.h>
 #include <ncurses.h>
 
@@ -76,21 +77,21 @@ void print_diff_menu()
     refresh();
 
     // board
-    strappend("╭");
+    strappend(ARC_0);
     for (int i = 0; i <= side * 2; i++)
-        strappend("─");
-    strappend("╮\n\r");
+        strappend(LINE_H);
+    strappend(ARC_1 "\n\r");
     for (int i = 0; i < side; i++)
     {
-        strappend("│ ");
+        strappend(LINE_V " ");
         for (int j = 0; j < side; j++)
-            strappend("■ ");
-        strappend("│\n\r");
+            strappend(CELL " ");
+        strappend(LINE_V "\n\r");
     }
-    strappend("╰");
+    strappend(ARC_2);
     for (int i = 0; i <= side * 2; i++)
-        strappend("─");
-    strappend("╯\n");
+        strappend(LINE_H);
+    strappend(ARC_3 "\n");
     printf("%s", buffer);
     offset = 0;
 
