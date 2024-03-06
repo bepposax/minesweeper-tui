@@ -3,8 +3,11 @@
  * @author Ivano Izzo
  */
 #include "../include/difficulty.h"
+#include "../include/string_builder.h"
 #include <stdio.h>
 #include <ncurses.h>
+
+int side = 16;
 
 /**
  * @brief mvprintw with color
@@ -58,8 +61,6 @@ int select_diff()
 
 void print_diff_menu()
 {
-    int width = 16;
-
     clear();
     start_color();
     init_pair(COLOR_GREEN, COLOR_GREEN, -1);
@@ -69,27 +70,29 @@ void print_diff_menu()
 
     // corner stats
     cmvprintw(COLOR_GREEN, 0, 1, "goal");
-    cmvprintw(COLOR_RED, 0, width * 2 - 3, "mines");
-    cmvprintw(COLOR_CYAN, width + 3, 1, "moves");
+    cmvprintw(COLOR_RED, 0, side * 2 - 3, "mines");
+    cmvprintw(COLOR_CYAN, side + 3, 1, "moves");
     move(1, 0);
     refresh();
 
     // board
-    printf("╭");
-    for (int i = 0; i <= width * 2; i++)
-        printf("─");
-    printf("╮\n\r");
-    for (int i = 0; i < width; i++)
+    strappend("╭");
+    for (int i = 0; i <= side * 2; i++)
+        strappend("─");
+    strappend("╮\n\r");
+    for (int i = 0; i < side; i++)
     {
-        printf("│ ");
-        for (int j = 0; j < width; j++)
-            printf("■ ");
-        printf("│\n\r");
+        strappend("│ ");
+        for (int j = 0; j < side; j++)
+            strappend("■ ");
+        strappend("│\n\r");
     }
-    printf("╰");
-    for (int i = 0; i <= width * 2; i++)
-        printf("─");
-    printf("╯\n");
+    strappend("╰");
+    for (int i = 0; i <= side * 2; i++)
+        strappend("─");
+    strappend("╯\n");
+    printf("%s", buffer);
+    offset = 0;
 
     // difficulties
     attron(A_BOLD);
@@ -102,13 +105,13 @@ void print_diff_menu()
 
     // side options
     attron(A_UNDERLINE);
-    mvprintw(width - 1, width * 2 + 6, "n");
-    mvprintw(width + 0, width * 2 + 6, "r");
-    mvprintw(width + 1, width * 2 + 6, "q");
+    mvprintw(side - 1, side * 2 + 6, "n");
+    mvprintw(side + 0, side * 2 + 6, "r");
+    mvprintw(side + 1, side * 2 + 6, "q");
     attroff(A_UNDERLINE);
-    mvprintw(width - 1, width * 2 + 7, "ew game");
-    mvprintw(width + 0, width * 2 + 7, "estart");
-    mvprintw(width + 1, width * 2 + 7, "uit");
+    mvprintw(side - 1, side * 2 + 7, "ew game");
+    mvprintw(side + 0, side * 2 + 7, "estart");
+    mvprintw(side + 1, side * 2 + 7, "uit");
 }
 
 static int cmvprintw(int color, int row, int col, const char *str)

@@ -11,7 +11,7 @@
 char *buffer;
 size_t offset;
 static size_t allocated;
-extern int height, width;
+extern int height, width, side;
 
 /**
  * @brief prints memory allocation error to stderr
@@ -53,7 +53,7 @@ void strfree()
 
 static void strinit()
 {
-    allocated = height * width * 10;
+    allocated = (height && width) ? height * width * 10 : side * side * 10;
     if (!(buffer = (char *)malloc(allocated)))
         printerr(__LINE__ - 1);
 }
