@@ -53,7 +53,9 @@ void strfree()
 
 static void strinit()
 {
-    allocated = (height && width) ? height * width * 10 : side * side * 10;
+    int multiplier = 20;
+
+    allocated = ((height && width) ? height * width : side * side) * multiplier;
     if (!(buffer = (char *)malloc(allocated)))
         printerr(__LINE__ - 1);
 }

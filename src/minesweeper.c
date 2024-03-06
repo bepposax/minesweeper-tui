@@ -87,6 +87,7 @@ int game_loop()
         moves = 0;
         uncovered_cells = 0;
 
+        strfree();
         if (ch != 'r')
             place_mines();
         print_board();
