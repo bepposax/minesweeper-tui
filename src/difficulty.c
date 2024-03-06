@@ -91,7 +91,7 @@ void print_diff_menu()
     strappend(ARC_2);
     for (int i = 0; i <= side * 2; i++)
         strappend(LINE_H);
-    strappend(ARC_3 "\n");
+    strappend(ARC_3 "\n\r");
     printf("%s", buffer);
     offset = 0;
 

@@ -289,10 +289,10 @@ static bool discoverable(int row, int col)
                 {
                     if ((neighbor = &(board[i][j]))->is_flagged)
                         flags++;
-                    else if (!neighbor->is_discovered)
+                    else if (!undiscovered_neighbors && !neighbor->is_discovered)
                         undiscovered_neighbors = true;
                 }
-    return flags == board[row][col].surrounding_mines && undiscovered_neighbors;
+    return (flags == board[row][col].surrounding_mines) && undiscovered_neighbors;
 }
 
 static bool is_game_over(cell *this)
