@@ -192,10 +192,10 @@ void print_board()
                 else if (pos->is_marked)
                     strappend(H_YEL MARK " " RESET);
                 else
-                    strappend("■ ");
+                    strappend(CELL " ");
             }
         }
-        strappend("│");
+        strappend(LINE_V);
 
         // results right
         if (game_over && (width <= (getmaxx(stdscr) - 34) / 2 && height > 8))
