@@ -4,6 +4,7 @@
  */
 #include "../include/minesweeper.h"
 #include "../include/string_builder.h"
+#include "../include/timer.h"
 #include <ncurses.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -91,6 +92,7 @@ int game_loop()
         if (ch != 'r')
             place_mines();
         print_board();
+        timer_start(height + 3, width * 2 - 3);
         while (!game_over)
         {
             if ((ch = tolower(getch())) == KEY_MOUSE)
@@ -132,12 +134,14 @@ int game_loop()
         }
         // game over
         print_board();
+        timer_stop();
         while ((ch = tolower(getch())) != 'q' && ch != 'n' && ch != 'r')
             if (ch == KEY_RESIZE)
                 print_board();
         if (ch == 'r')
             reset_board();
     } while (ch == 'r');
+    timer_kill();
     strfree();
 
     return ch;
