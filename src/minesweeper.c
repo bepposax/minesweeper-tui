@@ -10,7 +10,7 @@
 #include <time.h>
 #include <ctype.h>
 
-int goal, moves, uncovered_cells;
+int goal, uncovered_cells, mines_left, moves;
 bool game_over, lost;
 
 /**
@@ -82,10 +82,10 @@ int game_loop()
 
     do
     {
-        game_over = false;
-        goal = height * width - mines;
-        moves = 0;
+        goal = height * width - (mines_left = mines);
         uncovered_cells = 0;
+        moves = 0;
+        game_over = false;
 
         strfree();
         if (ch != 'r')
@@ -124,8 +124,9 @@ int game_loop()
             }
             else if (ch == 'r')
             {
-                moves = 0;
                 uncovered_cells = 0;
+                mines_left = mines;
+                moves = 0;
                 reset_board();
                 print_board();
             }
@@ -145,11 +146,11 @@ int game_loop()
 
 static void place_mines()
 {
-    int mine_row, mine_col, mines_left = mines;
+    int mine_row, mine_col, mines_to_place = mines;
     cell *pos;
 
     srand(time(NULL));
-    while (mines_left)
+    while (mines_to_place)
     {
         mine_row = rand() % height;
         mine_col = rand() % width;
@@ -157,7 +158,7 @@ static void place_mines()
         {
             pos->is_mine = true;
             signal_mine(mine_row, mine_col);
-            mines_left--;
+            mines_to_place--;
         }
     }
 }
@@ -182,7 +183,7 @@ static void flag(int row, int col)
     {
         if (this->is_marked)
             mark(row, col);
-        (this->is_flagged = !this->is_flagged) ? mines-- : mines++;
+        (this->is_flagged = !this->is_flagged) ? mines_left-- : mines_left++;
         print_board();
     }
 }

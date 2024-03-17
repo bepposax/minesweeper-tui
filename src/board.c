@@ -13,7 +13,7 @@
 
 cell **board;
 int height, width, mines;
-extern int goal, moves, uncovered_cells;
+extern int goal, moves, uncovered_cells, mines_left;
 extern bool game_over, lost;
 
 /**
@@ -136,7 +136,7 @@ void print_board()
     int len = strappend(" " CELL " %d/%d", uncovered_cells, goal);
     for (int i = 0; i < width * 2 - len; i++)
         strappend(" ");
-    strappend(B_H_RED MINE H_RED " %2d\n\r" RESET, mines);
+    strappend(B_H_RED MINE H_RED " %2d\n\r" RESET, mines_left);
 
     // border top
     strappend(ARC_0);
