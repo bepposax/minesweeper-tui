@@ -246,7 +246,7 @@ static int print_stats(int line)
     case 3:
         return strappend("Remaining cells: " H_YEL "%8d" RESET, goal - uncovered_cells);
     case 4:
-        return strappend("Mines left: " H_RED "%13d" RESET, mines);
+        return strappend("Mines left: " H_RED "%13d" RESET, mines_left);
     case 6:
         if (lost)
             return strappend("You " BG_RED B_H_WHT " LOST " RESET "%15s", "Try again");
