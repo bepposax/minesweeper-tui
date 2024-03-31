@@ -9,6 +9,7 @@
 #include "../include/symbols.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <ncurses.h>
 
 cell **board;
@@ -85,8 +86,11 @@ static int customize(char *prompt)
         limit = prompt[0] == 'H' ? maxy - 6 : prompt[0] == 'W' ? maxx / 2 - 2
                                                                : height * width;
         mvprintw(16, 14, "max%4d ", limit);
+        mvprintw(17, 14, "or 100%% ");
         mvgetnstr(15, 20, input, 4);
         choice = atoi(input);
+        if (input[strlen(input) - 1] == '%')
+            choice = limit * choice / 100;
     } while (choice < 1 || choice > limit);
     if (prompt[0] == 'M')
     {

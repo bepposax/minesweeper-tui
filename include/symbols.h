@@ -5,19 +5,19 @@
 #ifndef SYMBOLS_H
 #define SYMBOLS_H
 
-#define ARC_0 "\U0000256D"     // ╭
-#define ARC_1 "\U0000256E"     // ╮
-#define ARC_2 "\U00002570"     // ╰
-#define ARC_3 "\U0000256F"     // ╯
-#define LINE_H "\U00002500"    // ─
-#define LINE_V "\U00002502"    // │
-#define CELL "\U000025A0"      // ■
-#define MINE "*"               // *
-#define FLAG "\U00002691"      // ⚑
-#define MARK "?"               // ?
-#define H_BLOCK_L "\U0000258C" // ▌
-#define H_BLOCK_R "\U00002590" // ▐
-#define M_DOT "\U000000B7"     // ·
-#define MOVES "#"              // #
+#define ARC_0     "\u256D"    // ╭
+#define ARC_1     "\u256E"    // ╮
+#define ARC_2     "\u2570"    // ╰
+#define ARC_3     "\u256F"    // ╯
+#define LINE_H    "\u2500"    // ─
+#define LINE_V    "\u2502"    // │
+#define CELL      "\u25A0"    // ■
+#define MINE      "*"         // *
+#define FLAG      "\u2691"    // ⚑
+#define MARK      "?"         // ?
+#define H_BLOCK_L "\u258C"    // ▌
+#define H_BLOCK_R "\u2590"    // ▐
+#define M_DOT     "\u00B7"    // ·
+#define MOVES     "#"         // #
 
 #endif
