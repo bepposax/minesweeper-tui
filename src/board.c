@@ -90,7 +90,7 @@ static int customize(char *prompt)
         mvgetnstr(15, 20, input, 4);
         choice = atoi(input);
         if (input[strlen(input) - 1] == '%')
-            choice = limit * choice / 100;
+            choice = choice > 100 ? -1 : limit * choice / 100;
     } while (choice < 1 || choice > limit);
     if (prompt[0] == 'M')
     {
