@@ -240,7 +240,8 @@ static int print_stats(int line)
     switch (line)
     {
     case 0:
-        return strappend(B_H_WHT "------- Game Over -------" RESET);
+        char *line = LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H;
+        return strappend(B_H_WHT "%s Game Over %s" RESET, line, line);
     case 1:
         return strappend("Moves: " H_CYN "%18d" RESET, moves);
     case 2:
