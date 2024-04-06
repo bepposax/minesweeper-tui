@@ -145,7 +145,8 @@ void print_board()
 
     if (board_width >= getmaxx(stdscr) || board_height >= getmaxy(stdscr))
     {
-        mvprintw(getmaxy(stdscr) / 2, getmaxx(stdscr) / 2, "Resize window");
+        char *msg = "Resize window";
+        mvprintw(getmaxy(stdscr) / 2, getmaxx(stdscr) / 2 - strlen(msg) / 2, "%s", msg);
         return;
     }
     // stats top

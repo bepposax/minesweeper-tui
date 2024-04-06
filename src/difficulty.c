@@ -6,6 +6,7 @@
 #include "../include/string_builder.h"
 #include "../include/symbols.h"
 #include <stdio.h>
+#include <string.h>
 #include <ncurses.h>
 
 int side = 16;
@@ -66,7 +67,8 @@ void print_diff_menu()
 
     if (side * 2 + 3 >= getmaxx(stdscr) || side + 4 >= getmaxy(stdscr))
     {
-        mvprintw(getmaxy(stdscr) / 2, getmaxx(stdscr) / 2, "Resize window");
+        char *msg = "Resize window";
+        mvprintw(getmaxy(stdscr) / 2, getmaxx(stdscr) / 2 - strlen(msg) / 2, "%s", msg);
         return;
     }
     start_color();
