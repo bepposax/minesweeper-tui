@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = -Wall -Wextra
-LDFLAGS = -lncurses
+CFLAGS = -Wall -Wextra -std=c99
+LDFLAGS = -lncursesw
 TARGET = minesweeper
 SRCS = src/*.c
 

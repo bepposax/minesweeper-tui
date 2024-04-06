@@ -5,12 +5,14 @@
 #include "../include/difficulty.h"
 #include "../include/board.h"
 #include "../include/minesweeper.h"
+#include <locale.h>
 #include <ncurses.h>
 
 int main(void)
 {
     int diff, choice;
 
+    setlocale(LC_ALL, "");
     // ncurses
     initscr();
     raw();
