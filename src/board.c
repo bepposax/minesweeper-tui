@@ -35,7 +35,7 @@ static int customize(char *prompt);
  * @param line the line to print
  * @return 0 if the line is the last one
  */
-static int print_stats(int);
+static int print_results(int);
 
 void create_board(int diff)
 {
@@ -83,7 +83,7 @@ static int customize(char *prompt)
         attron(COLOR_PAIR(COLOR_CYAN));
         getmaxyx(stdscr, maxy, maxx);
         mvprintw(15, 12, " %s --  ", prompt);
-        limit = prompt[0] == 'H' ? maxy - 6 : prompt[0] == 'W' ? maxx / 2 - 2
+        limit = prompt[0] == 'H' ? maxy - 4 : prompt[0] == 'W' ? maxx / 2 - 2
                                                                : height * width;
         mvprintw(16, 14, "max%4d ", limit);
         mvprintw(17, 14, "or 100%% ");
@@ -135,6 +135,19 @@ void print_board()
     clear();
     refresh();
 
+    static int results_width = 27, results_height = 9;
+    int board_width = width * 2 + 3, board_height = height + 4;
+    int margin_right = getmaxx(stdscr) - board_width;
+    int margin_bottom = getmaxy(stdscr) - board_height;
+    int margin_left = results_width >= board_width ? 0 : (board_width - results_width) / 2 + 1;
+    bool right = margin_right >= results_width && height >= results_height;
+    bool bottom = margin_bottom >= results_height + 2 && getmaxx(stdscr) >= results_width + margin_left;
+
+    if (board_width >= getmaxx(stdscr) || board_height >= getmaxy(stdscr))
+    {
+        mvprintw(getmaxy(stdscr) / 2, getmaxx(stdscr) / 2, "Resize window");
+        return;
+    }
     // stats top
     strappend(H_GRN);
     int len = strappend(" " CELL " %d/%d", uncovered_cells, goal);
@@ -202,10 +215,10 @@ void print_board()
         strappend(LINE_V);
 
         // results right
-        if (game_over && (width <= (getmaxx(stdscr) - 34) / 2 && height > 8))
+        if (game_over && right)
         {
-            strappend("    ");
-            print_stats(i);
+            strappend("  ");
+            print_results(i);
         }
         strappend("\n\r");
     }
@@ -216,26 +229,22 @@ void print_board()
         strappend(LINE_H);
     strappend(ARC_3 "\n\r");
 
-    // stats bottom
+    // stat bottom
     strappend(B_H_CYN " " MOVES " " H_CYN "%d\n" RESET, moves);
 
     // results bottom
-    if (game_over && (width > (getmaxx(stdscr) - 34) / 2 || height <= 8))
+    if (game_over && !right && bottom)
     {
-        int i = 0, indent = width - 11;
-
+        int i = 0;
         do
-        {
-            strappend("\n\r");
-            for (int j = 0; j < indent; j++)
-                strappend(" ");
-        } while (print_stats(i++));
+            strappend("\n\r%*.s", margin_left, "");
+        while (print_results(i++));
     }
     printf("%s\r", buffer);
     offset = 0;
 }
 
-static int print_stats(int line)
+static int print_results(int line)
 {
     switch (line)
     {
@@ -243,15 +252,15 @@ static int print_stats(int line)
         char *line = LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H;
         return strappend(B_H_WHT "%s Game Over %s" RESET, line, line);
     case 1:
-        return strappend("Moves: " H_CYN "%18d" RESET, moves);
+        return strappend("Moves:" H_CYN "%19d" RESET, moves);
     case 2:
         char s[10];
         snprintf(s, 10, "%d/%d", uncovered_cells, goal);
         return strappend("Uncovered cells:" H_GRN "%9s" RESET, s);
     case 3:
-        return strappend("Remaining cells: " H_YEL "%8d" RESET, goal - uncovered_cells);
+        return strappend("Remaining cells:" H_YEL "%9d" RESET, goal - uncovered_cells);
     case 4:
-        return strappend("Mines left: " H_RED "%13d" RESET, mines_left);
+        return strappend("Mines left:" H_RED "%14d" RESET, mines_left);
     case 6:
         if (lost)
             return strappend("You " BG_RED B_H_WHT " LOST " RESET "%15s", "Try again");

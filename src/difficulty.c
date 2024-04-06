@@ -63,6 +63,12 @@ int select_diff()
 void print_diff_menu()
 {
     clear();
+
+    if (side * 2 + 3 >= getmaxx(stdscr) || side + 4 >= getmaxy(stdscr))
+    {
+        mvprintw(getmaxy(stdscr) / 2, getmaxx(stdscr) / 2, "Resize window");
+        return;
+    }
     start_color();
     init_pair(COLOR_GREEN, COLOR_GREEN, -1);
     init_pair(COLOR_YELLOW, COLOR_YELLOW, -1);
@@ -105,14 +111,17 @@ void print_diff_menu()
     attroff(A_BOLD);
 
     // side options
-    attron(A_UNDERLINE);
-    mvprintw(side - 1, side * 2 + 6, "n");
-    mvprintw(side + 0, side * 2 + 6, "r");
-    mvprintw(side + 1, side * 2 + 6, "q");
-    attroff(A_UNDERLINE);
-    mvprintw(side - 1, side * 2 + 7, "ew game");
-    mvprintw(side + 0, side * 2 + 7, "estart");
-    mvprintw(side + 1, side * 2 + 7, "uit");
+    if (side * 2 + 13 < getmaxx(stdscr))
+    {
+        attron(A_UNDERLINE);
+        mvprintw(side - 1, side * 2 + 6, "n");
+        mvprintw(side + 0, side * 2 + 6, "r");
+        mvprintw(side + 1, side * 2 + 6, "q");
+        attroff(A_UNDERLINE);
+        mvprintw(side - 1, side * 2 + 7, "ew game");
+        mvprintw(side + 0, side * 2 + 7, "estart");
+        mvprintw(side + 1, side * 2 + 7, "uit");
+    }
 }
 
 static int cmvprintw(int color, int row, int col, const char *str)
