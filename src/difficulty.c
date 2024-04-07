@@ -22,6 +22,16 @@ int side = 16;
  */
 static int cmvprintw(int color, int row, int col, const char *str);
 
+/**
+ * @brief informs the user if the window needs to be resized to print the board
+ * @param height the board's height
+ * @param width the board's width
+ * @param maxy the window's current height
+ * @param maxx the window's current width
+ * @return 1 if the board is bigger than the window; 0 otherwise
+ */
+static int is_bigger(int height, int width, int maxy, int maxx);
+
 int select_diff()
 {
     int ch;
