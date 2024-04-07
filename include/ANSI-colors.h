@@ -71,6 +71,10 @@
 #define BG_H_CYN "\033[0;106m"
 #define BG_H_WHT "\033[0;107m"
 
+// Custom colors
+#define RED_ "\033[38;2;200;32;32m"
+#define BG_RED_ "\033[48;2;200;32;32m"
+
 // Reset
 #define RESET "\033[0m"
 

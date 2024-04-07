@@ -174,7 +174,7 @@ void print_board()
             if (pos->is_mine && game_over)
             {
                 if (pos->is_discovered)
-                    strappend(RED "\b" H_BLOCK_R BG_RED B_WHT MINE RESET RED H_BLOCK_L RESET);
+                    strappend(RED_ "\b" H_BLOCK_R BG_RED_ B_WHT MINE RESET RED_ H_BLOCK_L RESET);
                 else
                     strappend(B_RED MINE " " RESET);
             }
