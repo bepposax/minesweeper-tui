@@ -61,16 +61,39 @@ int select_diff()
     return 0;
 }
 
+static int is_bigger(int height, int width, int maxy, int maxx)
+{
+    int resize = 0;
+    char *msg = "Resize window";
+
+    if (height > maxy)
+    {
+        mvprintw(0, maxx / 2, UP);
+        mvprintw(maxy - 1, maxx / 2, DOWN);
+        resize = 1;
+    }
+    if (width > maxx)
+    {
+        mvprintw(maxy / 2, 0, LEFT);
+        mvprintw(maxy / 2, maxx - 1, RIGHT);
+        resize = 1;
+    }
+    if (resize)
+        mvprintw(maxy / 2, maxx / 2 - strlen(msg) / 2, "%s", msg);
+
+    return resize;
+}
+
 void print_diff_menu()
 {
+    int maxy = getmaxy(stdscr), maxx = getmaxx(stdscr);
+    int board_width = side * 2 + 3, board_height = side + 4;
+
     clear();
 
-    if (side * 2 + 3 >= getmaxx(stdscr) || side + 4 >= getmaxy(stdscr))
-    {
-        char *msg = "Resize window";
-        mvprintw(getmaxy(stdscr) / 2, getmaxx(stdscr) / 2 - strlen(msg) / 2, "%s", msg);
+    if (is_bigger(board_height, board_width, maxy, maxx))
         return;
-    }
+
     start_color();
     init_pair(COLOR_GREEN, COLOR_GREEN, -1);
     init_pair(COLOR_YELLOW, COLOR_YELLOW, -1);

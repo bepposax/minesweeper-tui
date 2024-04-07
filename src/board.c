@@ -31,6 +31,16 @@ static void printerr(int line);
 static int customize(char *prompt);
 
 /**
+ * @brief informs the user if the window needs to be resized to print the board
+ * @param height the board's height
+ * @param width the board's width
+ * @param maxy the window's current height
+ * @param maxx the window's current width
+ * @return 1 if the board is bigger than the window; 0 otherwise
+ */
+static int is_bigger(int height, int width, int maxy, int maxx);
+
+/**
  * @brief prints the stats of the game when it ends
  * @param line the line to print
  * @return 0 if the line is the last one
@@ -130,25 +140,46 @@ void free_board()
     board = NULL;
 }
 
+static int is_bigger(int height, int width, int maxy, int maxx)
+{
+    int resize = 0;
+    char *msg = "Resize window";
+
+    if (height > maxy)
+    {
+        mvprintw(0, maxx / 2, UP);
+        mvprintw(maxy - 1, maxx / 2, DOWN);
+        resize = 1;
+    }
+    if (width > maxx)
+    {
+        mvprintw(maxy / 2, 0, LEFT);
+        mvprintw(maxy / 2, maxx - 1, RIGHT);
+        resize = 1;
+    }
+    if (resize)
+        mvprintw(maxy / 2, maxx / 2 - strlen(msg) / 2, "%s", msg);
+
+    return resize;
+}
+
 void print_board()
 {
     clear();
     refresh();
 
+    int maxy = getmaxy(stdscr), maxx = getmaxx(stdscr);
     static int results_width = 27, results_height = 9;
     int board_width = width * 2 + 3, board_height = height + 4;
-    int margin_right = getmaxx(stdscr) - board_width;
-    int margin_bottom = getmaxy(stdscr) - board_height;
+    int margin_right = maxx - board_width;
+    int margin_bottom = maxy - board_height;
     int margin_left = results_width >= board_width ? 0 : (board_width - results_width) / 2 + 1;
     bool right = margin_right >= results_width && height >= results_height;
-    bool bottom = margin_bottom >= results_height + 2 && getmaxx(stdscr) >= results_width + margin_left;
+    bool bottom = margin_bottom >= results_height + 2 && maxx >= results_width + margin_left;
 
-    if (board_width >= getmaxx(stdscr) || board_height >= getmaxy(stdscr))
-    {
-        char *msg = "Resize window";
-        mvprintw(getmaxy(stdscr) / 2, getmaxx(stdscr) / 2 - strlen(msg) / 2, "%s", msg);
+    if (is_bigger(board_height, board_width, maxy, maxx))
         return;
-    }
+
     // stats top
     strappend(H_GRN);
     int len = strappend(" " CELL " %d/%d", uncovered_cells, goal);

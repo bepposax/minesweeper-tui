@@ -19,5 +19,9 @@
 #define H_BLOCK_R "\u2590"    // ▐
 #define M_DOT     "\u00B7"    // ·
 #define MOVES     "#"         // #
+#define UP        "\u2b61"    // ⭡
+#define DOWN      "\u2b63"    // ⭣
+#define LEFT      "\u2b60"    // ⭠
+#define RIGHT     "\u2b62"    // ⭢
 
 #endif
