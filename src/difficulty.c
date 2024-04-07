@@ -76,7 +76,7 @@ static int is_bigger(int height, int width, int maxy, int maxx)
     int resize = 0;
     char *msg = "Resize window";
 
-    if (height > maxy)
+    if (height >= maxy)
     {
         mvprintw(0, maxx / 2, UP);
         mvprintw(maxy - 1, maxx / 2, DOWN);
@@ -84,8 +84,8 @@ static int is_bigger(int height, int width, int maxy, int maxx)
     }
     if (width > maxx)
     {
-        mvprintw(maxy / 2, 0, LEFT);
-        mvprintw(maxy / 2, maxx - 1, RIGHT);
+        mvprintw(maxy / 2, 1, LEFT);
+        mvprintw(maxy / 2, maxx - 2, RIGHT);
         resize = 1;
     }
     if (resize)
