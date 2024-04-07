@@ -231,7 +231,7 @@ void print_board()
     strappend(ARC_3 "\n\r");
 
     // stat bottom
-    strappend(B_H_CYN " " MOVES " " H_CYN "%d\n" RESET, moves);
+    strappend(B_H_CYN " " MOVES " " H_CYN "%d" RESET "\n", moves);
 
     // results bottom
     if (game_over && !right && bottom)
