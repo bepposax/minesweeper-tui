@@ -55,7 +55,7 @@ void print_board();
  * @param width the board's width
  * @param maxy the window's height
  * @param maxx the window's width
- * @return 1 if the board is bigger than the window; 0 otherwise
+ * @return true if the board is smaller than the window; false otherwise
  */
 bool is_printable(int height, int width, int maxy, int maxx);
 
