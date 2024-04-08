@@ -9,7 +9,7 @@
 #include <string.h>
 #include <ncurses.h>
 
-const int side = 16;
+const int side = 16, menu_height = side + 4, menu_width = side * 2 + 3;
 
 extern bool is_printable(int height, int width, int maxy, int maxx);
 
@@ -66,7 +66,6 @@ int select_diff()
 void print_diff_menu()
 {
     int maxy = getmaxy(stdscr), maxx = getmaxx(stdscr);
-    int menu_height = side + 4, menu_width = side * 2 + 3;
 
     clear();
     if (!is_printable(menu_height, menu_width, maxy, maxx))
