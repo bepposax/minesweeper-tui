@@ -7,7 +7,7 @@
 
 #include <stdbool.h>
 
-extern int height, width, mines;
+extern int height, width, board_height, board_width, mines;
 
 /**
  * @brief a cell of the game board
@@ -48,5 +48,15 @@ void free_board();
  * @brief prints the game board
  */
 void print_board();
+
+/**
+ * @brief informs the user if the window needs to be resized to print the board
+ * @param height the board's height
+ * @param width the board's width
+ * @param maxy the window's height
+ * @param maxx the window's width
+ * @return 1 if the board is bigger than the window; 0 otherwise
+ */
+bool is_printable(int height, int width, int maxy, int maxx);
 
 #endif

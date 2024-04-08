@@ -3,7 +3,6 @@
  * @author Ivano Izzo
  */
 #include "../include/board.h"
-#include "../include/difficulty.h"
 #include "../include/ANSI-colors.h"
 #include "../include/string_builder.h"
 #include "../include/symbols.h"
@@ -13,9 +12,12 @@
 #include <ncurses.h>
 
 cell **board;
-int height, width, mines;
+int height, width, board_height, board_width, mines;
+const int results_width = 27, results_height = 9;
 extern int goal, moves, uncovered_cells, mines_left;
 extern bool game_over, lost;
+
+extern void print_diff_menu();
 
 /**
  * @brief prints memory allocation error to stderr
@@ -29,16 +31,6 @@ static void printerr(int line);
  * @return the user's input
  */
 static int customize(char *prompt);
-
-/**
- * @brief informs the user if the window needs to be resized to print the board
- * @param height the board's height
- * @param width the board's width
- * @param maxy the window's current height
- * @param maxx the window's current width
- * @return 1 if the board is bigger than the window; 0 otherwise
- */
-static int is_bigger(int height, int width, int maxy, int maxx);
 
 /**
  * @brief prints the stats of the game when it ends
@@ -72,6 +64,9 @@ void create_board(int diff)
         mines = customize("Mines ");
         break;
     }
+    board_width = width * 2 + 3;
+    board_height = height + 4;
+
     if (!(board = (cell **)calloc(height, sizeof(cell *))))
         printerr(__LINE__ - 1);
     for (int i = 0; i < height; i++)
@@ -140,44 +135,39 @@ void free_board()
     board = NULL;
 }
 
-static int is_bigger(int height, int width, int maxy, int maxx)
+bool is_printable(int height, int width, int maxy, int maxx)
 {
-    int resize = 0;
+    bool printable = true;
     char *msg = "Resize window";
 
     if (height >= maxy)
     {
         mvprintw(0, maxx / 2, UP);
         mvprintw(maxy - 1, maxx / 2, DOWN);
-        resize = 1;
+        printable = false;
     }
     if (width > maxx)
     {
         mvprintw(maxy / 2, 1, LEFT);
         mvprintw(maxy / 2, maxx - 2, RIGHT);
-        resize = 1;
+        printable = false;
     }
-    if (resize)
+    if (!printable)
         mvprintw(maxy / 2, maxx / 2 - strlen(msg) / 2, "%s", msg);
 
-    return resize;
+    return printable;
 }
 
 void print_board()
 {
+    int maxy = getmaxy(stdscr), maxx = getmaxx(stdscr);
+    int margin_left = results_width >= board_width ? 0 : (board_width - results_width) / 2 + 1;
+    bool results_right = maxx - board_width >= results_width && height >= results_height;
+    bool results_bottom = maxy - board_height >= results_height + 2 && maxx >= results_width + margin_left;
+
     clear();
     refresh();
-
-    int maxy = getmaxy(stdscr), maxx = getmaxx(stdscr);
-    static int results_width = 27, results_height = 9;
-    int board_width = width * 2 + 3, board_height = height + 4;
-    int margin_right = maxx - board_width;
-    int margin_bottom = maxy - board_height;
-    int margin_left = results_width >= board_width ? 0 : (board_width - results_width) / 2 + 1;
-    bool right = margin_right >= results_width && height >= results_height;
-    bool bottom = margin_bottom >= results_height + 2 && maxx >= results_width + margin_left;
-
-    if (is_bigger(board_height, board_width, maxy, maxx))
+    if (!is_printable(board_height, board_width, maxy, maxx))
         return;
 
     // stats top
@@ -247,7 +237,7 @@ void print_board()
         strappend(LINE_V);
 
         // results right
-        if (game_over && right)
+        if (game_over && results_right)
         {
             strappend("  ");
             print_results(i);
@@ -265,7 +255,7 @@ void print_board()
     strappend(B_H_CYN " " MOVES " " H_CYN "%d" RESET "\n", moves);
 
     // results bottom
-    if (game_over && !right && bottom)
+    if (game_over && !results_right && results_bottom)
     {
         int i = 0;
         do

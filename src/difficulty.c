@@ -9,7 +9,9 @@
 #include <string.h>
 #include <ncurses.h>
 
-int side = 16;
+const int side = 16;
+
+extern bool is_printable(int height, int width, int maxy, int maxx);
 
 /**
  * @brief mvprintw with color
@@ -21,16 +23,6 @@ int side = 16;
  * @see mvprintw
  */
 static int cmvprintw(int color, int row, int col, const char *str);
-
-/**
- * @brief informs the user if the window needs to be resized to print the board
- * @param height the board's height
- * @param width the board's width
- * @param maxy the window's current height
- * @param maxx the window's current width
- * @return 1 if the board is bigger than the window; 0 otherwise
- */
-static int is_bigger(int height, int width, int maxy, int maxx);
 
 int select_diff()
 {
@@ -71,37 +63,13 @@ int select_diff()
     return 0;
 }
 
-static int is_bigger(int height, int width, int maxy, int maxx)
-{
-    int resize = 0;
-    char *msg = "Resize window";
-
-    if (height >= maxy)
-    {
-        mvprintw(0, maxx / 2, UP);
-        mvprintw(maxy - 1, maxx / 2, DOWN);
-        resize = 1;
-    }
-    if (width > maxx)
-    {
-        mvprintw(maxy / 2, 1, LEFT);
-        mvprintw(maxy / 2, maxx - 2, RIGHT);
-        resize = 1;
-    }
-    if (resize)
-        mvprintw(maxy / 2, maxx / 2 - strlen(msg) / 2, "%s", msg);
-
-    return resize;
-}
-
 void print_diff_menu()
 {
     int maxy = getmaxy(stdscr), maxx = getmaxx(stdscr);
-    int board_width = side * 2 + 3, board_height = side + 4;
+    int menu_height = side + 4, menu_width = side * 2 + 3;
 
     clear();
-
-    if (is_bigger(board_height, board_width, maxy, maxx))
+    if (!is_printable(menu_height, menu_width, maxy, maxx))
         return;
 
     start_color();
