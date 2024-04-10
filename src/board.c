@@ -15,7 +15,6 @@ cell **board;
 int height, width, board_height, board_width, mines;
 const int results_width = 27, results_height = 9;
 extern int goal, moves, uncovered_cells, mines_left;
-extern const int side, menu_height, menu_width;
 extern bool game_over, lost;
 
 extern void print_diff_menu();
@@ -84,23 +83,18 @@ static int customize(char *prompt)
     curs_set(2);
     do
     {
-        if (menu_height < LINES || menu_width <= COLS)
-        {
-            print_diff_menu();
-            attron(A_BOLD);
-            attron(COLOR_PAIR(COLOR_CYAN));
-            mvprintw(15, 12, " %s --  ", prompt);
-            limit = prompt[0] == 'H' ? LINES - 5 : prompt[0] == 'W' ? COLS / 2 - 2
-                                                                    : height * width;
-            mvprintw(16, 14, "max%4d ", limit);
-            mvprintw(17, 14, "or 100%% ");
-            mvgetnstr(15, 20, input, 4);
-            choice = atoi(input);
-            if (input[strlen(input) - 1] == '%')
-                choice = choice > 100 ? -1 : limit * choice / 100;
-        }
-        else
-            choice = -1;
+        print_diff_menu();
+        attron(A_BOLD | COLOR_PAIR(COLOR_CYAN));
+        mvprintw(15, 12, " %s --  ", prompt);
+        limit = prompt[0] == 'H' ? LINES - 5 : prompt[0] == 'W' ? COLS / 2 - 2
+                                                                : height * width;
+        mvprintw(16, 14, "max%4d ", limit);
+        mvprintw(17, 14, "or 100%% ");
+        mvgetnstr(15, 20, input, 4);
+        attroff(A_BOLD | COLOR_PAIR(COLOR_CYAN));
+        choice = atoi(input);
+        if (input[strlen(input) - 1] == '%')
+            choice = choice > 100 ? -1 : limit * choice / 100;
     } while (choice < 1 || choice > limit);
     if (prompt[0] == 'M')
     {
