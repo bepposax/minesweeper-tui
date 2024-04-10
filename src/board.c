@@ -17,7 +17,7 @@ const int results_width = 27, results_height = 9;
 extern int goal, moves, uncovered_cells, mines_left;
 extern bool game_over, lost;
 
-extern void print_diff_menu();
+extern int print_diff_menu();
 
 /**
  * @brief prints memory allocation error to stderr
@@ -77,31 +77,29 @@ void create_board(int diff)
 static int customize(char *prompt)
 {
     char input[4];
-    int limit, choice;
+    int limit, choice, ch;
 
-    echo();
-    curs_set(2);
     do
     {
-        print_diff_menu();
+        while (print_diff_menu())
+            if ((ch = getch()) == KEY_RESIZE)
+                continue;
         attron(A_BOLD | COLOR_PAIR(COLOR_CYAN));
         mvprintw(15, 12, " %s --  ", prompt);
         limit = prompt[0] == 'H' ? LINES - 5 : prompt[0] == 'W' ? COLS / 2 - 2
                                                                 : height * width;
         mvprintw(16, 14, "max%4d ", limit);
         mvprintw(17, 14, "or 100%% ");
+        echo();
+        curs_set(2);
         mvgetnstr(15, 20, input, 4);
+        noecho();
+        curs_set(0);
         attroff(A_BOLD | COLOR_PAIR(COLOR_CYAN));
         choice = atoi(input);
         if (input[strlen(input) - 1] == '%')
             choice = choice > 100 ? -1 : limit * choice / 100;
     } while (choice < 1 || choice > limit);
-    if (prompt[0] == 'M')
-    {
-        curs_set(0);
-        noecho();
-        clear();
-    }
 
     return choice;
 }

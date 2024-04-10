@@ -17,7 +17,8 @@ int select_diff();
 
 /**
  * @brief prints the difficulty menu
+ * @return 1 if not printable; 0 otherwise
  */
-void print_diff_menu();
+int print_diff_menu();
 
 #endif

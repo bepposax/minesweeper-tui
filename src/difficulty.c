@@ -63,12 +63,11 @@ int select_diff()
     return 0;
 }
 
-void print_diff_menu()
+int print_diff_menu()
 {
     clear();
     if (!is_printable(menu_height, menu_width))
-        return;
-
+        return 1;
     start_color();
     init_pair(COLOR_GREEN, COLOR_GREEN, -1);
     init_pair(COLOR_YELLOW, COLOR_YELLOW, -1);
@@ -122,6 +121,8 @@ void print_diff_menu()
         mvprintw(side + 0, side * 2 + 7, "estart");
         mvprintw(side + 1, side * 2 + 7, "uit");
     }
+
+    return 0;
 }
 
 static int cmvprintw(int color, int row, int col, const char *str)
