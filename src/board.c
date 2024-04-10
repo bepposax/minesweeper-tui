@@ -77,7 +77,7 @@ void create_board(int diff)
 static int customize(char *prompt)
 {
     char input[4];
-    int maxx, maxy, limit, choice;
+    int limit, choice;
 
     echo();
     curs_set(2);
@@ -86,10 +86,9 @@ static int customize(char *prompt)
         print_diff_menu();
         attron(A_BOLD);
         attron(COLOR_PAIR(COLOR_CYAN));
-        getmaxyx(stdscr, maxy, maxx);
         mvprintw(15, 12, " %s --  ", prompt);
-        limit = prompt[0] == 'H' ? maxy - 4 : prompt[0] == 'W' ? maxx / 2 - 2
-                                                               : height * width;
+        limit = prompt[0] == 'H' ? LINES - 4 : prompt[0] == 'W' ? COLS / 2 - 2
+                                                                : height * width;
         mvprintw(16, 14, "max%4d ", limit);
         mvprintw(17, 14, "or 100%% ");
         mvgetnstr(15, 20, input, 4);
@@ -135,39 +134,38 @@ void free_board()
     board = NULL;
 }
 
-bool is_printable(int height, int width, int maxy, int maxx)
+bool is_printable(int height, int width)
 {
     bool printable = true;
     char *msg = "Resize window";
 
-    if (height >= maxy)
+    if (height >= LINES)
     {
-        mvprintw(0, maxx / 2, UP);
-        mvprintw(maxy - 1, maxx / 2, DOWN);
+        mvprintw(0, COLS / 2, UP);
+        mvprintw(LINES - 1, COLS / 2, DOWN);
         printable = false;
     }
-    if (width > maxx)
+    if (width > COLS)
     {
-        mvprintw(maxy / 2, 1, LEFT);
-        mvprintw(maxy / 2, maxx - 2, RIGHT);
+        mvprintw(LINES / 2, 1, LEFT);
+        mvprintw(LINES / 2, COLS - 2, RIGHT);
         printable = false;
     }
     if (!printable)
-        mvprintw(maxy / 2, maxx / 2 - strlen(msg) / 2, "%s", msg);
+        mvprintw(LINES / 2, COLS / 2 - strlen(msg) / 2, "%s", msg);
 
     return printable;
 }
 
 void print_board()
 {
-    int maxy = getmaxy(stdscr), maxx = getmaxx(stdscr);
     int margin_left = results_width >= board_width ? 0 : (board_width - results_width) / 2 + 1;
-    bool results_right = maxx - board_width >= results_width && height >= results_height;
-    bool results_bottom = maxy - board_height >= results_height + 2 && maxx >= results_width + margin_left;
+    bool results_right = COLS - board_width >= results_width && height >= results_height;
+    bool results_bottom = LINES - board_height >= results_height + 2 && COLS >= results_width + margin_left;
 
     clear();
     refresh();
-    if (!is_printable(board_height, board_width, maxy, maxx))
+    if (!is_printable(board_height, board_width))
         return;
 
     // stats top

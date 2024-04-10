@@ -11,7 +11,7 @@
 
 const int side = 16, menu_height = side + 4, menu_width = side * 2 + 3;
 
-extern bool is_printable(int height, int width, int maxy, int maxx);
+extern bool is_printable(int height, int width);
 
 /**
  * @brief mvprintw with color
@@ -65,10 +65,8 @@ int select_diff()
 
 void print_diff_menu()
 {
-    int maxy = getmaxy(stdscr), maxx = getmaxx(stdscr);
-
     clear();
-    if (!is_printable(menu_height, menu_width, maxy, maxx))
+    if (!is_printable(menu_height, menu_width))
         return;
 
     start_color();
@@ -113,7 +111,7 @@ void print_diff_menu()
     attroff(A_BOLD);
 
     // side options
-    if (side * 2 + 13 < getmaxx(stdscr))
+    if (side * 2 + 13 < COLS)
     {
         attron(A_UNDERLINE);
         mvprintw(side - 1, side * 2 + 6, "n");

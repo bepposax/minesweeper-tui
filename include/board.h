@@ -53,10 +53,8 @@ void print_board();
  * @brief informs the user if the window needs to be resized to print the board
  * @param height the board's height
  * @param width the board's width
- * @param maxy the window's height
- * @param maxx the window's width
  * @return true if the board is smaller than the window; false otherwise
  */
-bool is_printable(int height, int width, int maxy, int maxx);
+bool is_printable(int height, int width);
 
 #endif
