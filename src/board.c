@@ -2,14 +2,14 @@
  * @file board.c
  * @author Ivano Izzo
  */
-#include "../include/board.h"
-#include "../include/ANSI-colors.h"
-#include "../include/string_builder.h"
-#include "../include/symbols.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <ncurses.h>
+#include "board.h"
+#include "ANSI-colors.h"
+#include "string_builder.h"
+#include "symbols.h"
 
 cell **board;
 int height, width, board_height, board_width, mines;

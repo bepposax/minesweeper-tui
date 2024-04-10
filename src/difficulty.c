@@ -2,12 +2,12 @@
  * @file difficulty.c
  * @author Ivano Izzo
  */
-#include "../include/difficulty.h"
-#include "../include/string_builder.h"
-#include "../include/symbols.h"
 #include <stdio.h>
 #include <string.h>
 #include <ncurses.h>
+#include "difficulty.h"
+#include "string_builder.h"
+#include "symbols.h"
 
 const int side = 16, menu_height = side + 4, menu_width = side * 2 + 3;
 

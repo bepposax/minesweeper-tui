@@ -5,7 +5,7 @@
 #ifndef MINESWEEPER_H
 #define MINESWEEPER_H
 
-#include "../include/board.h"
+#include "board.h"
 
 extern int goal, moves, uncovered_cells;
 extern bool game_over;

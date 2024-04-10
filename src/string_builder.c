@@ -2,14 +2,14 @@
  * @file string_builder.c
  * @author Ivano Izzo
  */
-#include "../include/string_builder.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include "string_builder.h"
 
 char *buffer;
-size_t offset;
+long unsigned int offset;
 static size_t allocated;
 extern int height, width, side;
 

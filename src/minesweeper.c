@@ -2,13 +2,13 @@
  * @file minesweeper.c
  * @author Ivano Izzo
  */
-#include "../include/minesweeper.h"
-#include "../include/string_builder.h"
 #include <ncurses.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <ctype.h>
+#include "minesweeper.h"
+#include "string_builder.h"
 
 int goal, uncovered_cells, mines_left, moves;
 bool game_over, lost;

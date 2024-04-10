@@ -2,11 +2,11 @@
  * @file main.c
  * @author Ivano Izzo
  */
-#include "../include/difficulty.h"
-#include "../include/board.h"
-#include "../include/minesweeper.h"
 #include <locale.h>
 #include <ncurses.h>
+#include "difficulty.h"
+#include "board.h"
+#include "minesweeper.h"
 
 int main(void)
 {
