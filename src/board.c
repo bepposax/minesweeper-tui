@@ -82,8 +82,8 @@ static int customize(char *prompt)
     do
     {
         while (print_diff_menu())
-            if ((ch = getch()) == KEY_RESIZE)
-                continue;
+            while ((ch = getch()) != KEY_RESIZE)
+                ;
         attron(A_BOLD | COLOR_PAIR(COLOR_CYAN));
         mvprintw(15, 12, " %s --  ", prompt);
         limit = prompt[0] == 'H' ? LINES - 5 : prompt[0] == 'W' ? COLS / 2 - 2
