@@ -69,7 +69,7 @@ void create_board(int diff)
     FILE *f;
     char s[COLS];
 
-    if (!(f = fopen("testing/board.txt", "r")))
+    if (!(f = fopen(".testing/board.txt", "r")))
         printerr("Can't open file", __LINE__ - 1);
     if (!(width = strlen(fgets(s, COLS, f)) / 2))
         printerr("fgets error", __LINE__ - 1);

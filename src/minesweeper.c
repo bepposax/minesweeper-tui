@@ -165,7 +165,7 @@ static void place_mines()
 #else
     FILE *f;
 
-    if (!(f = fopen("testing/board.txt", "r")))
+    if (!(f = fopen(".testing/board.txt", "r")))
     {
         fprintf(stderr, "%s:%d: Error: Can't open file\n", __FILE__, __LINE__ - 2);
         exit(EXIT_FAILURE);
