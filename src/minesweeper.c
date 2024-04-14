@@ -214,6 +214,7 @@ static void init_test_board()
                 break;
             case '.':
                 board[row][col].is_discovered = true;
+                uncovered_cells++;
                 break;
             case '#':
                 board[row][col].is_discovered = false;
