@@ -68,8 +68,7 @@ void create_board(int diff)
 #else
     FILE *f;
     char s[COLS];
-    height = 0;
-    width = 0;
+    height = width = mines = 0;
 
     if (!(f = fopen(".testing/board.txt", "r")))
         printerr("Can't open file", __LINE__ - 1);
