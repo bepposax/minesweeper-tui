@@ -76,6 +76,20 @@ static bool discoverable(int row, int col);
  */
 static bool is_game_over(cell *this);
 
+#ifdef TEST
+/**
+ * @brief sets the board's state as specified in .testing/board.txt
+ */
+static void init_test_board();
+
+/**
+ * @brief places a mine on the board
+ * @param row the board's row
+ * @param col the board's column
+ */
+static void place_mine(int row, int col);
+#endif
+
 int game_loop()
 {
     int ch = 0, row, col;
@@ -88,8 +102,12 @@ int game_loop()
         game_over = false;
 
         strfree();
+#ifndef TEST
         if (ch != 'r')
             place_mines();
+#else
+        init_test_board();
+#endif
         print_board();
         while (!game_over)
         {
@@ -124,10 +142,12 @@ int game_loop()
             }
             else if (ch == 'r')
             {
-                uncovered_cells = 0;
+                uncovered_cells = moves = 0;
                 mines_left = mines;
-                moves = 0;
                 reset_board();
+#ifdef TEST
+                init_test_board();
+#endif
                 print_board();
             }
         }
@@ -146,7 +166,6 @@ int game_loop()
 
 static void place_mines()
 {
-#ifndef TEST
     int mine_row, mine_col, mines_to_place = mines;
     cell *pos;
 
@@ -162,7 +181,23 @@ static void place_mines()
             mines_to_place--;
         }
     }
-#else
+}
+
+#ifdef TEST
+static void place_mine(int row, int col)
+{
+    bool *is_mine = &(board[row][col].is_mine);
+
+    if (!(*is_mine))
+    {
+        *is_mine = true;
+        signal_mine(row, col);
+        mines++;
+    }
+}
+
+static void init_test_board()
+{
     FILE *f;
 
     if (!(f = fopen(".testing/board.txt", "r")))
@@ -175,9 +210,27 @@ static void place_mines()
             switch (fgetc(f))
             {
             case '*':
-                board[row][col].is_mine = true;
-                signal_mine(row, col);
-                mines++;
+                place_mine(row, col);
+                break;
+            case '.':
+                board[row][col].is_discovered = true;
+                break;
+            case '#':
+                board[row][col].is_discovered = false;
+                break;
+            case 'f':
+                flag(row, col);
+                break;
+            case 'm':
+                mark(row, col);
+                break;
+            case 'F':
+                place_mine(row, col);
+                flag(row, col);
+                break;
+            case 'M':
+                place_mine(row, col);
+                mark(row, col);
                 break;
             case ' ':
             case '\n':
@@ -186,8 +239,8 @@ static void place_mines()
             }
     fclose(f);
     goal = height * width - (mines_left = mines);
-#endif
 }
+#endif
 
 static void signal_mine(int row, int col)
 {

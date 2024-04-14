@@ -1,6 +1,16 @@
+/**
+ * @file minesweeper.c
+ * @author Ivano Izzo
+ */
 #include <stdio.h>
 #include <stdlib.h>
 
+/**
+ * @brief writes an empty or full (of mines) board in `board.txt`
+ * @param R the board's rows
+ * @param C the board's columns
+ * @param fill 0 if the board should be empty; filled with mines otherwise
+ */
 void draw(const int R, const int C, int fill)
 {
     FILE *f;
