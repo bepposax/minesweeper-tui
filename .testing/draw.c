@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void draw(const int R, const int C, char fill)
+void draw(const int R, const int C, int fill)
 {
     FILE *f;
 
