@@ -23,7 +23,7 @@ extern int print_diff_menu();
  * @brief prints memory allocation error to stderr
  * @param line the line where the error occourred
  */
-static void printerr(int line);
+static void printerr(char *msg, int line);
 
 /**
  * @brief asks the user for custom input
@@ -41,6 +41,7 @@ static int print_results(int);
 
 void create_board(int diff)
 {
+#ifndef TEST
     switch (diff)
     {
     case 1:
@@ -64,14 +65,27 @@ void create_board(int diff)
         mines = customize("Mines ");
         break;
     }
+#else
+    FILE *f;
+    char s[COLS];
+
+    if (!(f = fopen("testing/board.txt", "r")))
+        printerr("Can't open file", __LINE__ - 1);
+    if (!(width = strlen(fgets(s, COLS, f)) / 2))
+        printerr("fgets error", __LINE__ - 1);
+    height++;
+    while (fgets(s, COLS, f))
+        height++;
+    fclose(f);
+#endif
     board_width = width * 2 + 3;
     board_height = height + 4;
 
     if (!(board = (cell **)calloc(height, sizeof(cell *))))
-        printerr(__LINE__ - 1);
+        printerr("Failed to allocate memory", __LINE__ - 1);
     for (int i = 0; i < height; i++)
         if (!(board[i] = (cell *)calloc(width, sizeof(cell))))
-            printerr(__LINE__ - 1);
+            printerr("Failed to allocate memory", __LINE__ - 1);
 }
 
 static int customize(char *prompt)
@@ -104,9 +118,9 @@ static int customize(char *prompt)
     return choice;
 }
 
-static void printerr(int line)
+static void printerr(char *msg, int line)
 {
-    fprintf(stderr, "%s:%d: Error: Failed to allocate memory\n", __FILE__, line);
+    fprintf(stderr, "%s:%d: Error: %s\n", __FILE__, line, msg);
     exit(EXIT_FAILURE);
 }
 

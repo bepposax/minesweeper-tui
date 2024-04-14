@@ -4,7 +4,7 @@ LDFLAGS = -lncursesw
 TARGET = minesweeper
 SRCS = src/*.c
 
-.PHONY: all clean run
+.PHONY: all clean run test
 
 all: $(TARGET)
 
@@ -16,3 +16,6 @@ clean:
 
 run: $(TARGET)
 	./$(TARGET)
+
+test:	$(SRCS)
+	$(CC) $(SRCS) -o $(TARGET) -I include/ $(LDFLAGS) -D TEST

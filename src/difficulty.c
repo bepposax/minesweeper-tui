@@ -26,6 +26,10 @@ static int cmvprintw(int color, int row, int col, const char *str);
 
 int select_diff()
 {
+#ifdef TEST
+    return 1;
+#endif
+
     int ch;
 
     print_diff_menu();

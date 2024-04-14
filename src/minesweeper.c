@@ -146,6 +146,7 @@ int game_loop()
 
 static void place_mines()
 {
+#ifndef TEST
     int mine_row, mine_col, mines_to_place = mines;
     cell *pos;
 
@@ -161,6 +162,31 @@ static void place_mines()
             mines_to_place--;
         }
     }
+#else
+    FILE *f;
+
+    if (!(f = fopen("testing/board.txt", "r")))
+    {
+        fprintf(stderr, "%s:%d: Error: Can't open file\n", __FILE__, __LINE__ - 2);
+        exit(EXIT_FAILURE);
+    }
+    for (int row = 0; row < height; ++row)
+        for (int col = 0; col < width; ++col)
+            switch (fgetc(f))
+            {
+            case '*':
+                board[row][col].is_mine = true;
+                signal_mine(row, col);
+                mines++;
+                break;
+            case ' ':
+            case '\n':
+                col--;
+                break;
+            }
+    fclose(f);
+    goal = height * width - (mines_left = mines);
+#endif
 }
 
 static void signal_mine(int row, int col)
