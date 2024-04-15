@@ -1,12 +1,12 @@
 /**
- * @file string_builder.c
+ * @file string-builder.c
  * @author Ivano Izzo
  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
-#include "string_builder.h"
+#include "string-builder.h"
 
 char *buffer;
 long unsigned int offset;
@@ -62,6 +62,6 @@ static void strinit()
 
 static void printerr(int line)
 {
-    fprintf(stderr, "%s:%d: Error: Failed to allocate memory\n", __FILE__, line);
+    fprintf(stderr, "%s:%d: Failed to allocate memory\n", __FILE__, line);
     exit(EXIT_FAILURE);
 }

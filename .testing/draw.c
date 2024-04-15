@@ -11,7 +11,7 @@
  * @param C the board's columns
  * @param fill 0 if the board should be empty; filled with mines otherwise
  */
-void draw(const int R, const int C, int fill)
+void draw(const int R, const int C, const int fill)
 {
     FILE *f;
 
@@ -23,7 +23,7 @@ void draw(const int R, const int C, int fill)
     for (int r = 0; r < R; ++r)
     {
         for (int c = 0; c < C; ++c)
-            fwrite(fill ? "* " : ". ", 1, 2, f);
+            fwrite(fill ? "* " : "# ", 1, 2, f);
         fwrite("\n", 1, 1, f);
     }
     fclose(f);
@@ -42,11 +42,11 @@ int main(int argc, char **argv)
     }
     else
     {
-        printf("rows: ");
+        printf("# rows: ");
         scanf("%d", &rows);
-        printf("cols: ");
+        printf("# cols: ");
         scanf("%d", &cols);
-        printf("fill: ");
+        printf("fill? (1/0): ");
         scanf("%d", &fill);
     }
     draw(rows, cols, fill);

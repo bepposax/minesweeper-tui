@@ -1,15 +1,13 @@
 # Minesweeper-TUI
 
-Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](https://en.wikipedia.org/wiki/Minesweeper_(video_game) "Minesweeper (video game) - Wikipedia") game in C.
+Minesweeper-TUI is a command-line implementation of the [Minesweeper](https://en.wikipedia.org/wiki/Minesweeper_(video_game) "Minesweeper (video game) - Wikipedia") game in C.
 
-<img src="https://github.com/bepposax/minesweeper-tui/assets/43136113/080719ff-c474-49e9-93ce-8e9c789acf3a" alt="menu" height="375em" width="auto">
-<img src="https://github.com/bepposax/minesweeper-tui/assets/43136113/5ea605a9-852a-4a74-b434-f8c9487dcbea" alt="board" height="375em" width="auto">
-
-<!-- ![difficultites](https://github.com/bepposax/minesweeper-tui/assets/43136113/aa55979f-3347-495a-83d3-df46db765349) ![board](https://github.com/bepposax/minesweeper-tui/assets/43136113/0ae39140-ea32-4c9c-b6b6-62fcfc3fc200 "Game board")  -->
+<img src="https://github.com/bepposax/minesweeper-tui/assets/43136113/080719ff-c474-49e9-93ce-8e9c789acf3a" alt="menu" height="333" width="auto">
+<img src="https://github.com/bepposax/minesweeper-tui/assets/43136113/5ea605a9-852a-4a74-b434-f8c9487dcbea" alt="board" height="333" width="auto">
 
 ## Instructions
 
-1. Make sure you have GCC (GNU Compiler Collection) installed on your system.
+1. Make sure you have the necessary [requirements](#requirements) installed on your system.
 2. Clone the repository or download the source code files.
 3. Open a terminal and navigate to the directory containing the source code files.
 4. Compile the program by running the command `make`.
@@ -18,9 +16,8 @@ Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](htt
 ## Gameplay
 
 - The game board is represented by a grid of cells.
-- The goal of the game is to uncover all the cells that do not contain mines.
 - Each cell may either be empty or contain a mine.
-- Uncover all non-mine cells to win the game.
+- The goal of the game is to uncover all the empty cells.
 - Uncover a mine to lose the game.
 
 ## Controls
@@ -28,16 +25,16 @@ Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](htt
 <table>
   <tr>
     <th>🖱️ <kbd>Left
-    <td>uncover an undiscovered cell ( ■ )
+    <td>uncover an undiscovered cell ( <b style="color: white">■</b> )
   <tr>
     <td>
-    <td>uncover the surroundings of a numbered cell ( <b>2</b> ) if all its adjacent mines are flagged
+    <td>uncover the surroundings of a numbered cell ( <b style="color: green">2</b> ) if all its adjacent mines are flagged
   <tr>
     <th>🖱️ <kbd>Right
-    <td>flag ( <b>⚑</b> ) an undiscovered cell as a mine spot
+    <td>flag ( <b style="color: red">⚑</b> ) an undiscovered cell as a mine spot
   <tr>
     <th>🖱️ <kbd>Middle
-    <td>mark ( <b>?</b> ) an undiscovered cell as a possible mine spot
+    <td>mark ( <b style="color: yellow">?</b> ) an undiscovered cell as a possible mine spot
   <tr>
     <th><kbd>Q
     <td>quit the game or exit the program
@@ -51,13 +48,16 @@ Minesweeper-TUI is a simple command-line implementation of the [Minesweeper](htt
 
 ## Requirements
 
-- [ncurses](https://en.wikipedia.org/wiki/Ncurses "ncurses - Wikipedia") library
+- [Make](https://www.gnu.org/software/make/ "Make - GNU Project - Free Software Foundation") tool
+- [GCC](https://gcc.gnu.org/ "GCC, the GNU Compiler Collection - GNU Project") compiler
+- [NCURSES](https://invisible-island.net/ncurses/ "NCURSES - New Curses") library
 
 ## Usage
 
 - `make`: Compiles the source code files and generates the executable file.
 - `make run`: Runs the program.
 - `make clean`: Deletes the executable file.
+- `make test`: Compiles the program in testing mode.
 
 ## Notes
 

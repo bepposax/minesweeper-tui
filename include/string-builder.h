@@ -1,5 +1,5 @@
 /**
- * @file string_builder.h
+ * @file string-builder.h
  * @author Ivano Izzo
  */
 #ifndef STRING_BUILDER_H

@@ -8,7 +8,7 @@
 #include <time.h>
 #include <ctype.h>
 #include "minesweeper.h"
-#include "string_builder.h"
+#include "string-builder.h"
 
 int goal, uncovered_cells, mines_left, moves;
 bool game_over, lost;

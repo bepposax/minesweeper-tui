@@ -8,7 +8,7 @@
 #include <ncurses.h>
 #include "board.h"
 #include "ANSI-colors.h"
-#include "string_builder.h"
+#include "string-builder.h"
 #include "symbols.h"
 
 cell **board;

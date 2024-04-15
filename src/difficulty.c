@@ -6,7 +6,7 @@
 #include <string.h>
 #include <ncurses.h>
 #include "difficulty.h"
-#include "string_builder.h"
+#include "string-builder.h"
 #include "symbols.h"
 
 const int side = 16, menu_height = side + 4, menu_width = side * 2 + 3;
@@ -26,12 +26,11 @@ static int cmvprintw(int color, int row, int col, const char *str);
 
 int select_diff()
 {
-#ifdef TEST
-    return 1;
-#endif
-
     int ch;
 
+#ifdef TEST
+    return -1;
+#endif
     print_diff_menu();
     while ((ch = getch()))
     {

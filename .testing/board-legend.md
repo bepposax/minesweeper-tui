@@ -1,6 +1,6 @@
 ### Symbols used in [`board.txt`](board.txt)
 
-| symbol |      meaning      |
+|        |                   |
 |:------:|:------------------|
 |   *    | mine              |
 |   .    | discovered cell   |

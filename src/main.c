@@ -2,8 +2,8 @@
  * @file main.c
  * @author Ivano Izzo
  */
-#include <locale.h>
 #include <ncurses.h>
+#include <locale.h>
 #include "difficulty.h"
 #include "board.h"
 #include "minesweeper.h"
