@@ -25,16 +25,16 @@ Minesweeper-TUI is a command-line implementation of the [Minesweeper](https://en
 <table>
   <tr>
     <th>🖱️ <kbd>Left
-    <td>uncover an undiscovered cell ( <b style="color: white">■</b> )
+    <td>uncover an undiscovered cell ( <b>■</b> )
   <tr>
     <td>
-    <td>uncover the surroundings of a numbered cell ( <b style="color: green">2</b> ) if all its adjacent mines are flagged
+    <td>uncover the surroundings of a numbered cell ( <b>2</b> ) if all its adjacent mines are flagged
   <tr>
     <th>🖱️ <kbd>Right
-    <td>flag ( <b style="color: red">⚑</b> ) an undiscovered cell as a mine spot
+    <td>flag ( <b>⚑</b> ) an undiscovered cell as a mine spot
   <tr>
     <th>🖱️ <kbd>Middle
-    <td>mark ( <b style="color: yellow">?</b> ) an undiscovered cell as a possible mine spot
+    <td>mark ( <b>?</b> ) an undiscovered cell as a possible mine spot
   <tr>
     <th><kbd>Q
     <td>quit the game or exit the program
