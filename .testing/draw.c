@@ -1,5 +1,5 @@
 /**
- * @file minesweeper.c
+ * @file draw.c
  * @author Ivano Izzo
  */
 #include <stdio.h>
