@@ -141,10 +141,7 @@ int game_loop()
                 }
             }
             else if (ch == KEY_RESIZE)
-            {
-                timer_reset();
                 print_board();
-            }
             else if (ch == 'n' || ch == 'q')
             {
                 strfree();
