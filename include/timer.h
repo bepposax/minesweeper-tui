@@ -11,6 +11,7 @@ void timer_init();
 void timer_start();
 void timer_stop();
 void timer_reset();
+void timer_win_reset();
 void print_time();
 
 #endif

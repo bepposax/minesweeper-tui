@@ -22,13 +22,11 @@ void timer_init()
 {
     w = newwin(1, 8, board_height - 1, board_width - 8);
     min = sec = 0;
-    start_color();
-    init_pair(COLOR_BLACK, COLOR_BLACK, -1);
-    wattron(w, COLOR_PAIR(COLOR_BLACK));
 }
 
 void timer_start()
 {
+    min = sec = 0;
     if (pthread_create(&thread_id, NULL, &timer_run, NULL))
     {
         printf("Failed to create thread.\n");
@@ -56,9 +54,9 @@ void print_time()
 {
     if (board_height < LINES && board_width <= COLS)
     {
-        wattron(w, A_BOLD);
+        wattron(w, A_BOLD | COLOR_PAIR(COLOR_YELLOW));
         wprintw(w, TIMER);
-        wattroff(w, A_BOLD);
+        wattroff(w, A_BOLD | COLOR_PAIR(COLOR_YELLOW));
         wprintw(w, " %02d:%02d\b\b\b\b\b\b\b", min, sec);
         wrefresh(w);
     }
@@ -79,4 +77,13 @@ void timer_reset()
 {
     delwin(w);
     timer_init();
+}
+
+void timer_win_reset()
+{
+    int temp_min = min, temp_sec = sec;
+
+    timer_reset();
+    min = temp_min;
+    sec = temp_sec;
 }

@@ -158,6 +158,7 @@ bool is_printable(int height, int width)
         mvprintw(0, COLS / 2, UP);
         mvprintw(LINES - 1, COLS / 2, DOWN);
         printable = false;
+        timer_win_reset();
     }
     if (width > COLS)
     {
