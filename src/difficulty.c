@@ -76,6 +76,7 @@ int print_diff_menu()
     cmvprintw(COLOR_GREEN, 0, 1, "goal");
     cmvprintw(COLOR_RED, 0, side * 2 - 3, "mines");
     cmvprintw(COLOR_CYAN, side + 3, 1, "moves");
+    cmvprintw(COLOR_YELLOW, side + 3, side * 2 - 2, "time");
     move(1, 0);
     refresh();
 
