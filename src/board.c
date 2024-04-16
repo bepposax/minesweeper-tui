@@ -10,6 +10,7 @@
 #include "ANSI-colors.h"
 #include "string-builder.h"
 #include "symbols.h"
+#include "timer.h"
 
 cell **board;
 int height, width, board_height, board_width, mines;
@@ -184,8 +185,7 @@ void print_board()
     // stats top
     strappend(H_GRN);
     int len = strappend(" " CELL " %d/%d", uncovered_cells, goal);
-    for (int i = 0; i < width * 2 - len; i++)
-        strappend(" ");
+    strappend("%*.s", width * 2 - len, "");
     strappend(B_H_RED MINE H_RED " %2d\n\r" RESET, mines_left);
 
     // border top
@@ -275,6 +275,9 @@ void print_board()
     }
     printf("%s\r", buffer);
     offset = 0;
+
+    // time bottom
+    print_time();
 }
 
 static int print_results(int line)

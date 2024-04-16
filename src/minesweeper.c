@@ -9,6 +9,7 @@
 #include <ctype.h>
 #include "minesweeper.h"
 #include "string-builder.h"
+#include "timer.h"
 
 int goal, uncovered_cells, mines_left, moves;
 bool game_over, lost;
@@ -94,6 +95,7 @@ int game_loop()
 {
     int ch = 0, row, col;
 
+    timer_init();
     do
     {
         goal = height * width - (mines_left = mines);
@@ -124,6 +126,11 @@ int game_loop()
                         continue;
                     if (row >= 0 && row < height && col >= 0 && col < width)
                     {
+                        if (!timer_running)
+                        {
+                            timer_reset();
+                            timer_start();
+                        }
                         if (event.bstate & BUTTON1_CLICKED)
                             play(row, col);
                         else if (event.bstate & BUTTON2_CLICKED)
@@ -138,6 +145,7 @@ int game_loop()
             else if (ch == 'n' || ch == 'q')
             {
                 strfree();
+                timer_stop();
                 return ch;
             }
             else if (ch == 'r')
@@ -145,6 +153,8 @@ int game_loop()
                 uncovered_cells = moves = 0;
                 mines_left = mines;
                 reset_board();
+                timer_stop();
+                timer_reset();
 #ifdef TEST
                 init_test_board();
 #endif
@@ -153,12 +163,18 @@ int game_loop()
         }
         // game over
         print_board();
+        timer_stop();
         while ((ch = tolower(getch())) != 'q' && ch != 'n' && ch != 'r')
             if (ch == KEY_RESIZE)
                 print_board();
         if (ch == 'r')
+        {
             reset_board();
+            timer_stop();
+            timer_reset();
+        }
     } while (ch == 'r');
+    timer_stop();
     strfree();
 
     return ch;
