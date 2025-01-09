@@ -113,6 +113,8 @@ static int customize(char *prompt)
         curs_set(0);
         attroff(A_BOLD | COLOR_PAIR(COLOR_CYAN));
         choice = atoi(input);
+        if (choice < 3 && (prompt[0] == 'H' || prompt[0] == 'W'))
+            choice = -1;
         if (input[strlen(input) - 1] == '%')
             choice = choice > 100 ? -1 : limit * choice / 100;
     } while (choice < 1 || choice > limit);
