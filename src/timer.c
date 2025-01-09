@@ -12,7 +12,7 @@
 
 static void *timer_run();
 
-extern int board_height, board_width;
+extern int board_h, board_w;
 static pthread_t thread_id;
 static WINDOW *w = NULL;
 int min, sec;
@@ -20,7 +20,7 @@ bool timer_running;
 
 void timer_init()
 {
-    w = newwin(1, 8, board_height - 1, board_width - 8);
+    w = newwin(1, 8, board_h - 1, board_w - 8);
     min = sec = 0;
 }
 
@@ -52,7 +52,7 @@ static void *timer_run()
 
 void print_time()
 {
-    if (board_height < LINES && board_width <= COLS)
+    if (board_h < LINES && board_w <= COLS)
     {
         wattron(w, A_BOLD | COLOR_PAIR(COLOR_YELLOW));
         wprintw(w, TIMER);

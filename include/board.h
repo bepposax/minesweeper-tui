@@ -7,7 +7,7 @@
 
 #include <stdbool.h>
 
-extern int height, width, board_height, board_width, mines;
+extern int height, width, board_h, board_w, mines;
 
 /**
  * @brief a cell of the game board
@@ -16,7 +16,7 @@ extern int height, width, board_height, board_width, mines;
  * @param is_discovered true if the cell has been discovered
  * @param is_flagged true if the cell has been flagged
  */
-typedef struct cell
+typedef struct cell_t
 {
     int surrounding_mines;
     bool is_mine, is_discovered, is_flagged, is_marked;
@@ -51,10 +51,10 @@ void print_board();
 
 /**
  * @brief informs the user if the window needs to be resized to print the board
- * @param height the board's height
- * @param width the board's width
+ * @param board_h the board's height
+ * @param board_w the board's width
  * @return true if the board is smaller than the window; false otherwise
  */
-bool is_printable(int height, int width);
+bool is_printable(int board_h, int board_w);
 
 #endif

@@ -11,7 +11,7 @@
 char *buffer;
 long unsigned int offset;
 static size_t allocated;
-extern int height, width, side;
+extern int height, width, board_size;
 
 /**
  * @brief prints memory allocation error to stderr
@@ -55,7 +55,7 @@ static void strinit()
 {
     int multiplier = 20;
 
-    allocated = ((height && width) ? height * width : side * side) * multiplier;
+    allocated = ((height && width) ? height * width : board_size * board_size) * multiplier;
     if (!(buffer = (char *)malloc(allocated)))
         printerr(__LINE__ - 1);
 }

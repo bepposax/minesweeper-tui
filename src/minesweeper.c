@@ -104,11 +104,11 @@ int game_loop()
         game_over = false;
 
         strfree();
-#ifndef TEST
+#ifdef TEST
+        init_test_board();
+#else
         if (ch != 'r')
             place_mines();
-#else
-        init_test_board();
 #endif
         print_board();
         while (!game_over)
@@ -394,5 +394,5 @@ static bool discoverable(int row, int col)
 
 static bool is_game_over(cell *this)
 {
-    return (game_over = ((lost = this->is_mine) || !(goal - uncovered_cells)));
+    return (game_over = ((lost = this->is_mine) || (goal - uncovered_cells == 0)));
 }

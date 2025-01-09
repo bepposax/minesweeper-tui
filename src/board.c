@@ -13,7 +13,7 @@
 #include "timer.h"
 
 cell **board;
-int height, width, board_height, board_width, mines;
+int height, width, board_h, board_w, mines;
 const int results_width = 27, results_height = 9;
 extern int goal, moves, uncovered_cells, mines_left;
 extern bool game_over, lost;
@@ -46,13 +46,11 @@ void create_board(int diff)
     switch (diff)
     {
     case 1:
-        height = 9;
-        width = 9;
+        height = width = 9;
         mines = 10;
         break;
     case 2:
-        height = 16;
-        width = 16;
+        height = width = 16;
         mines = 40;
         break;
     case 3:
@@ -80,8 +78,8 @@ void create_board(int diff)
         height++;
     fclose(f);
 #endif
-    board_width = width * 2 + 3;
-    board_height = height + 4;
+    board_h = height + 4;
+    board_w = width * 2 + 3;
 
     if (!(board = (cell **)calloc(height, sizeof(cell *))))
         printerr("Failed to allocate memory", __LINE__ - 1);
@@ -102,8 +100,17 @@ static int customize(char *prompt)
                 ;
         attron(A_BOLD | COLOR_PAIR(COLOR_CYAN));
         mvprintw(15, 12, " %s --  ", prompt);
-        limit = prompt[0] == 'H' ? LINES - 5 : prompt[0] == 'W' ? COLS / 2 - 2
-                                                                : height * width;
+        switch (prompt[0])
+        {
+        case 'H':
+            limit = LINES - 5;
+            break;
+        case 'W':
+            limit = COLS / 2 - 2;
+            break;
+        default:
+            limit = height * width;
+        }
         mvprintw(16, 14, "max%4d ", limit);
         mvprintw(17, 14, "or 100%% ");
         echo();
@@ -150,39 +157,40 @@ void free_board()
     board = NULL;
 }
 
-bool is_printable(int height, int width)
+bool is_printable(int board_h, int board_w)
 {
     bool printable = true;
     char *msg = "Resize window";
+    int center_y = LINES / 2, center_x = COLS / 2;
 
-    if (height >= LINES)
+    if (board_h >= LINES)
     {
-        mvprintw(0, COLS / 2, UP);
-        mvprintw(LINES - 1, COLS / 2, DOWN);
+        mvprintw(0, center_x, UP);
+        mvprintw(LINES - 1, center_x, DOWN);
         printable = false;
         timer_win_reset();
     }
-    if (width > COLS)
+    if (board_w > COLS)
     {
-        mvprintw(LINES / 2, 1, LEFT);
-        mvprintw(LINES / 2, COLS - 2, RIGHT);
+        mvprintw(center_y, 1, LEFT);
+        mvprintw(center_y, COLS - 2, RIGHT);
         printable = false;
     }
     if (!printable)
-        mvprintw(LINES / 2, COLS / 2 - strlen(msg) / 2, "%s", msg);
+        mvprintw(center_y, center_x - strlen(msg) / 2, "%s", msg);
 
     return printable;
 }
 
 void print_board()
 {
-    int margin_left = results_width >= board_width ? 0 : (board_width - results_width) / 2 + 1;
-    bool results_right = COLS - board_width >= results_width && height >= results_height;
-    bool results_bottom = LINES - board_height >= results_height + 2 && COLS >= results_width + margin_left;
+    int margin_left = results_width >= board_w ? 0 : (board_w - results_width) / 2 + 1;
+    bool printable_results_r = COLS - board_w >= results_width && height >= results_height;
+    bool printable_results_b = LINES - board_h >= results_height + 2 && COLS >= results_width + margin_left;
 
     clear();
     refresh();
-    if (!is_printable(board_height, board_width))
+    if (!is_printable(board_h, board_w))
         return;
 
     // stats top
@@ -232,7 +240,6 @@ void print_board()
                         break;
                     default:
                         strappend(H_CYN);
-                        break;
                     }
                     strappend("%d " RESET, num_mines);
                 }
@@ -251,7 +258,7 @@ void print_board()
         strappend(LINE_V);
 
         // results right
-        if (game_over && results_right)
+        if (game_over && printable_results_r)
         {
             strappend("  ");
             print_results(i);
@@ -269,7 +276,7 @@ void print_board()
     strappend(B_H_CYN " " MOVES " " H_CYN "%d" RESET "\n", moves);
 
     // results bottom
-    if (game_over && !results_right && results_bottom)
+    if (game_over && !printable_results_r && printable_results_b)
     {
         int i = 0;
         do
@@ -288,8 +295,8 @@ static int print_results(int line)
     switch (line)
     {
     case 0:
-        char *line = LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H;
-        return strappend(B_H_WHT "%s Game Over %s" RESET, line, line);
+        char *lines_h = LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H;
+        return strappend(B_H_WHT "%s Game Over %s" RESET, lines_h, lines_h);
     case 1:
         return strappend("Moves:" H_CYN "%19d" RESET, moves);
     case 2:

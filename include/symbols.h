@@ -12,7 +12,7 @@
 #define LINE_H    "\u2500"    // ─
 #define LINE_V    "\u2502"    // │
 #define CELL      "\u25A0"    // ■
-#define MINE      "*"         // *
+#define MINE      "\u2A2F"    // ⨯
 #define FLAG      "\u2691"    // ⚑
 #define MARK      "?"         // ?
 #define H_BLOCK_L "\u258C"    // ▌

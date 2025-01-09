@@ -9,7 +9,18 @@
 #include "string-builder.h"
 #include "symbols.h"
 
-const int side = 16, menu_height = side + 4, menu_width = side * 2 + 3;
+const int board_size = 16, mid_col = board_size + 1;
+const char title[] = "D I F F I C U L T Y";
+const char *diff[] = {"B E G I N N E R",
+                      "I N T E R M E D I A T E",
+                      "E X P E R T",
+                      "C U S T O M"};
+
+#define t_h (int)strlen(title) / 2
+#define d0_h (int)strlen(diff[0]) / 2
+#define d1_h (int)strlen(diff[1]) / 2
+#define d2_h (int)strlen(diff[2]) / 2
+#define d3_h (int)strlen(diff[3]) / 2
 
 extern bool is_printable(int height, int width);
 
@@ -41,19 +52,19 @@ int select_diff()
                 switch (event.y)
                 {
                 case 6:
-                    if (event.x >= 9 && event.x <= 25)
+                    if (event.x >= mid_col - d0_h && event.x <= mid_col + d0_h)
                         return 1;
                     break;
                 case 9:
-                    if (event.x >= 5 && event.x <= 29)
+                    if (event.x >= mid_col - d1_h && event.x <= mid_col + d1_h)
                         return 2;
                     break;
                 case 12:
-                    if (event.x >= 11 && event.x <= 23)
+                    if (event.x >= mid_col - d2_h && event.x <= mid_col + d2_h)
                         return 3;
                     break;
                 case 15:
-                    if (event.x >= 11 && event.x <= 23)
+                    if (event.x >= mid_col - d3_h && event.x <= mid_col + d3_h)
                         return 4;
                     break;
                 }
@@ -68,32 +79,36 @@ int select_diff()
 
 int print_diff_menu()
 {
+    const int board_h = board_size, board_w = board_size * 2,
+              menu_h = board_h + 4, menu_w = board_w + 3;
+    int optns_col = board_w + 6;
+
     clear();
-    if (!is_printable(menu_height, menu_width))
+    if (!is_printable(menu_h, menu_w))
         return 1;
 
     // corner stats
     cmvprintw(COLOR_GREEN, 0, 1, "goal");
-    cmvprintw(COLOR_RED, 0, side * 2 - 3, "mines");
-    cmvprintw(COLOR_CYAN, side + 3, 1, "moves");
-    cmvprintw(COLOR_YELLOW, side + 3, side * 2 - 2, "time");
+    cmvprintw(COLOR_RED, 0, menu_w - 6, "mines");
+    cmvprintw(COLOR_CYAN, menu_h - 1, 1, "moves");
+    cmvprintw(COLOR_YELLOW, menu_h - 1, menu_w - 5, "time");
     move(1, 0);
     refresh();
 
     // board
     strappend(ARC_0);
-    for (int i = 0; i <= side * 2; i++)
+    for (int i = 0; i <= board_w; i++)
         strappend(LINE_H);
     strappend(ARC_1 "\n\r");
-    for (int i = 0; i < side; i++)
+    for (int i = 0; i < board_h; i++)
     {
         strappend(LINE_V " ");
-        for (int j = 0; j < side; j++)
+        for (int j = 0; j < board_w; j += 2)
             strappend(CELL " ");
         strappend(LINE_V "\n\r");
     }
     strappend(ARC_2);
-    for (int i = 0; i <= side * 2; i++)
+    for (int i = 0; i <= board_w; i++)
         strappend(LINE_H);
     strappend(ARC_3 "\n\r");
     printf("%s", buffer);
@@ -101,24 +116,25 @@ int print_diff_menu()
 
     // difficulties
     attron(A_BOLD);
-    mvprintw(3, 8, "D I F F I C U L T Y");
-    cmvprintw(COLOR_GREEN, 6, 10, "B E G I N N E R");
-    cmvprintw(COLOR_YELLOW, 9, 6, "I N T E R M E D I A T E");
-    cmvprintw(COLOR_RED, 12, 12, "E X P E R T");
-    cmvprintw(COLOR_CYAN, 15, 12, "C U S T O M");
+    mvprintw(3, mid_col - t_h, title);
+    cmvprintw(COLOR_GREEN, 6, mid_col - d0_h, diff[0]);
+    cmvprintw(COLOR_YELLOW, 9, mid_col - d1_h, diff[1]);
+    cmvprintw(COLOR_RED, 12, mid_col - d2_h, diff[2]);
+    cmvprintw(COLOR_CYAN, 15, mid_col - d3_h, diff[3]);
     attroff(A_BOLD);
 
     // side options
-    if (side * 2 + 13 < COLS)
+    if (optns_col + 7 < COLS)
     {
         attron(A_UNDERLINE);
-        mvprintw(side - 1, side * 2 + 6, "n");
-        mvprintw(side + 0, side * 2 + 6, "r");
-        mvprintw(side + 1, side * 2 + 6, "q");
+        mvprintw(menu_h - 5, optns_col, "n");
+        mvprintw(menu_h - 4, optns_col, "r");
+        mvprintw(menu_h - 3, optns_col, "q");
         attroff(A_UNDERLINE);
-        mvprintw(side - 1, side * 2 + 7, "ew game");
-        mvprintw(side + 0, side * 2 + 7, "estart");
-        mvprintw(side + 1, side * 2 + 7, "uit");
+        optns_col++;
+        mvprintw(menu_h - 5, optns_col, "ew game");
+        mvprintw(menu_h - 4, optns_col, "estart");
+        mvprintw(menu_h - 3, optns_col, "uit");
     }
 
     return 0;
