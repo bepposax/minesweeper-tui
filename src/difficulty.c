@@ -3,6 +3,7 @@
  * @author Ivano Izzo
  */
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ncurses.h>
 #include "difficulty.h"
@@ -10,17 +11,17 @@
 #include "symbols.h"
 
 const int board_size = 16, mid_col = board_size + 1;
-const char title[] = "D I F F I C U L T Y";
-const char *diff[] = {"B E G I N N E R",
+const char *diff[] = {"D I F F I C U L T Y",
+                      "B E G I N N E R",
                       "I N T E R M E D I A T E",
                       "E X P E R T",
                       "C U S T O M"};
 
-#define t_h (int)strlen(title) / 2
-#define d0_h (int)strlen(diff[0]) / 2
-#define d1_h (int)strlen(diff[1]) / 2
-#define d2_h (int)strlen(diff[2]) / 2
-#define d3_h (int)strlen(diff[3]) / 2
+#define half_d0 (int)strlen(diff[0]) / 2
+#define half_d1 (int)strlen(diff[1]) / 2
+#define half_d2 (int)strlen(diff[2]) / 2
+#define half_d3 (int)strlen(diff[3]) / 2
+#define half_d4 (int)strlen(diff[4]) / 2
 
 extern bool is_printable(int height, int width);
 
@@ -37,7 +38,7 @@ static int cmvprintw(int color, int row, int col, const char *str);
 
 int select_diff()
 {
-    int ch;
+    int ch, offset;
 
 #ifdef TEST
     return -1;
@@ -49,25 +50,28 @@ int select_diff()
         {
             MEVENT event;
             if (getmouse(&event) == OK && (event.bstate & BUTTON1_CLICKED))
+            {
+                offset = abs(mid_col - event.x);
                 switch (event.y)
                 {
                 case 6:
-                    if (event.x >= mid_col - d0_h && event.x <= mid_col + d0_h)
+                    if (offset <= half_d1)
                         return 1;
                     break;
                 case 9:
-                    if (event.x >= mid_col - d1_h && event.x <= mid_col + d1_h)
+                    if (offset <= half_d2)
                         return 2;
                     break;
                 case 12:
-                    if (event.x >= mid_col - d2_h && event.x <= mid_col + d2_h)
+                    if (offset <= half_d3)
                         return 3;
                     break;
                 case 15:
-                    if (event.x >= mid_col - d3_h && event.x <= mid_col + d3_h)
+                    if (offset <= half_d4)
                         return 4;
                     break;
                 }
+            }
         }
         else if (ch == 'q' || ch == 'Q')
             break;
@@ -116,11 +120,11 @@ int print_diff_menu()
 
     // difficulties
     attron(A_BOLD);
-    mvprintw(3, mid_col - t_h, title);
-    cmvprintw(COLOR_GREEN, 6, mid_col - d0_h, diff[0]);
-    cmvprintw(COLOR_YELLOW, 9, mid_col - d1_h, diff[1]);
-    cmvprintw(COLOR_RED, 12, mid_col - d2_h, diff[2]);
-    cmvprintw(COLOR_CYAN, 15, mid_col - d3_h, diff[3]);
+    mvprintw(3, mid_col - half_d0, "%s", diff[0]);
+    cmvprintw(COLOR_GREEN, 6, mid_col - half_d1, diff[1]);
+    cmvprintw(COLOR_YELLOW, 9, mid_col - half_d2, diff[2]);
+    cmvprintw(COLOR_RED, 12, mid_col - half_d3, diff[3]);
+    cmvprintw(COLOR_CYAN, 15, mid_col - half_d4, diff[4]);
     attroff(A_BOLD);
 
     // side options
