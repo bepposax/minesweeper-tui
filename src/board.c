@@ -200,10 +200,10 @@ void print_board()
     strappend(B_H_RED MINE H_RED " %2d\n\r" RESET, mines_left);
 
     // border top
-    strappend(ARC_0);
+    strappend(ARC0);
     for (int i = 0; i <= width * 2; i++)
         strappend(LINE_H);
-    strappend(ARC_1 "\n\r");
+    strappend(ARC1 "\n\r");
 
     // game board
     for (int i = 0; i < height; i++)
@@ -217,7 +217,7 @@ void print_board()
             if (pos->is_mine && game_over)
             {
                 if (pos->is_discovered)
-                    strappend(RED_ "\b" H_BLOCK_R BG_RED_ B_WHT MINE RESET RED_ H_BLOCK_L RESET);
+                    strappend(RED_ "\b" HBLOCK_R BG_RED_ B_WHT MINE RESET RED_ HBLOCK_L RESET);
                 else
                     strappend(B_RED MINE " " RESET);
             }
@@ -244,7 +244,7 @@ void print_board()
                     strappend("%d " RESET, num_mines);
                 }
                 else
-                    strappend(H_BLK M_DOT " " RESET);
+                    strappend(H_BLK MDOT " " RESET);
             else
             {
                 if (pos->is_flagged)
@@ -267,10 +267,10 @@ void print_board()
     }
 
     // border bottom
-    strappend(ARC_2);
+    strappend(ARC2);
     for (int i = 0; i <= width * 2; i++)
         strappend(LINE_H);
-    strappend(ARC_3 "\n\r");
+    strappend(ARC3 "\n\r");
 
     // stat bottom
     strappend(B_H_CYN " " MOVES " " H_CYN "%d" RESET "\n", moves);

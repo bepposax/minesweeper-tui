@@ -16,9 +16,7 @@ const char *diffs[] = {"D I F F I C U L T Y",
                        "I N T E R M E D I A T E",
                        "E X P E R T",
                        "C U S T O M"};
-
 #define NUM_DIFFS (int)sizeof(diffs) / (int)sizeof(diffs[0])
-
 int semilen[NUM_DIFFS];
 
 extern bool is_printable(int height, int width);
@@ -103,10 +101,10 @@ int print_diff_menu()
     refresh();
 
     // board
-    strappend(ARC_0);
+    strappend(ARC0);
     for (int i = 0; i <= board_w; i++)
         strappend(LINE_H);
-    strappend(ARC_1 "\n\r");
+    strappend(ARC1 "\n\r");
     for (int i = 0; i < board_h; i++)
     {
         strappend(LINE_V " ");
@@ -114,10 +112,10 @@ int print_diff_menu()
             strappend(CELL " ");
         strappend(LINE_V "\n\r");
     }
-    strappend(ARC_2);
+    strappend(ARC2);
     for (int i = 0; i <= board_w; i++)
         strappend(LINE_H);
-    strappend(ARC_3 "\n\r");
+    strappend(ARC3 "\n\r");
     printf("%s", buffer);
     offset = 0;
 
