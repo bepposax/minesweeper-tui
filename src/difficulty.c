@@ -16,13 +16,15 @@ const char *diffs[] = {"D I F F I C U L T Y",
                        "I N T E R M E D I A T E",
                        "E X P E R T",
                        "C U S T O M"};
-#define diff_num (int)sizeof(diffs) / (int)sizeof(diffs[0])
-int half_len_d[diff_num];
+
+#define NUM_DIFFS (int)sizeof(diffs) / (int)sizeof(diffs[0])
+
+int semilen[NUM_DIFFS];
 
 extern bool is_printable(int height, int width);
 
 /**
- * @brief initializes half_len_d[] with half the lengths of the strings in diffs[]
+ * @brief initializes semilen[] with half the lengths of the strings in diffs[]
  */
 static void init_semilenghts();
 
@@ -56,19 +58,19 @@ int select_diff()
                 switch (event.y)
                 {
                 case 6:
-                    if (offset <= half_len_d[1])
+                    if (offset <= semilen[1])
                         return 1;
                     break;
                 case 9:
-                    if (offset <= half_len_d[2])
+                    if (offset <= semilen[2])
                         return 2;
                     break;
                 case 12:
-                    if (offset <= half_len_d[3])
+                    if (offset <= semilen[3])
                         return 3;
                     break;
                 case 15:
-                    if (offset <= half_len_d[4])
+                    if (offset <= semilen[4])
                         return 4;
                     break;
                 }
@@ -122,11 +124,11 @@ int print_diff_menu()
     // difficulties
     init_semilenghts();
     attron(A_BOLD);
-    mvprintw(3, mid_col - half_len_d[0], "%s", diffs[0]);
-    cmvprintw(COLOR_GREEN, 6, mid_col - half_len_d[1], diffs[1]);
-    cmvprintw(COLOR_YELLOW, 9, mid_col - half_len_d[2], diffs[2]);
-    cmvprintw(COLOR_RED, 12, mid_col - half_len_d[3], diffs[3]);
-    cmvprintw(COLOR_CYAN, 15, mid_col - half_len_d[4], diffs[4]);
+    mvprintw(3, mid_col - semilen[0], "%s", diffs[0]);
+    cmvprintw(COLOR_GREEN, 6, mid_col - semilen[1], diffs[1]);
+    cmvprintw(COLOR_YELLOW, 9, mid_col - semilen[2], diffs[2]);
+    cmvprintw(COLOR_RED, 12, mid_col - semilen[3], diffs[3]);
+    cmvprintw(COLOR_CYAN, 15, mid_col - semilen[4], diffs[4]);
     attroff(A_BOLD);
 
     // side options
@@ -148,8 +150,8 @@ int print_diff_menu()
 
 static void init_semilenghts()
 {
-    for (int i = 0; i < diff_num; ++i)
-        half_len_d[i] = (int)strlen(diffs[i]) / 2;
+    for (int i = 0; i < NUM_DIFFS; ++i)
+        semilen[i] = (int)strlen(diffs[i]) / 2;
 }
 
 static int cmvprintw(int color, int row, int col, const char *str)
