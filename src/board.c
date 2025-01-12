@@ -12,7 +12,7 @@
 #include "symbols.h"
 #include "timer.h"
 
-cell **board;
+cell_t **board;
 int height, width, board_h, board_w, mines;
 const int results_width = 27, results_height = 9;
 extern int goal, moves, uncovered_cells, mines_left;
@@ -81,10 +81,10 @@ void create_board(int diff)
     board_h = height + 4;
     board_w = width * 2 + 3;
 
-    if (!(board = (cell **)calloc(height, sizeof(cell *))))
+    if (!(board = (cell_t **)calloc(height, sizeof(cell_t *))))
         printerr("Failed to allocate memory", __LINE__ - 1);
     for (int i = 0; i < height; i++)
-        if (!(board[i] = (cell *)calloc(width, sizeof(cell))))
+        if (!(board[i] = (cell_t *)calloc(width, sizeof(cell_t))))
             printerr("Failed to allocate memory", __LINE__ - 1);
 }
 
@@ -139,11 +139,7 @@ void reset_board()
 {
     for (int i = 0; i < height; ++i)
         for (int j = 0; j < width; ++j)
-        {
-            board[i][j].is_discovered &= 0;
-            board[i][j].is_flagged &= 0;
-            board[i][j].is_marked &= 0;
-        }
+            board[i][j].state = UNDISCOVERED;
 }
 
 void free_board()
@@ -211,17 +207,17 @@ void print_board()
         strappend(LINE_V " ");
         for (int j = 0; j < width; j++)
         {
-            cell *pos = &(board[i][j]);
+            cell_t *pos = &(board[i][j]);
             int num_mines;
 
             if (pos->is_mine && game_over)
             {
-                if (pos->is_discovered)
+                if (pos->state == DISCOVERED)
                     strappend(RED_ "\b" HBLOCK_R BG_RED_ B_WHT MINE RESET RED_ HBLOCK_L RESET);
                 else
                     strappend(B_RED MINE " " RESET);
             }
-            else if (pos->is_discovered)
+            else if (pos->state == DISCOVERED)
                 if ((num_mines = pos->surrounding_mines))
                 {
                     switch (num_mines)
@@ -247,9 +243,9 @@ void print_board()
                     strappend(H_BLK MDOT " " RESET);
             else
             {
-                if (pos->is_flagged)
+                if (pos->state == FLAGGED)
                     strappend(RED FLAG " " RESET);
-                else if (pos->is_marked)
+                else if (pos->state == MARKED)
                     strappend(H_YEL MARK " " RESET);
                 else
                     strappend(CELL " ");

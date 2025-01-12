@@ -9,24 +9,32 @@
 
 extern int height, width, board_h, board_w, mines;
 
+typedef enum cell_state
+{
+    UNDISCOVERED,
+    DISCOVERED,
+    FLAGGED,
+    MARKED
+} cell_state_t;
+
 /**
  * @brief a cell of the game board
  * @param surrounding_mines the number of mines surrounding the cell
- * @param is_mine true if the cell contains a mine
- * @param is_discovered true if the cell has been discovered
- * @param is_flagged true if the cell has been flagged
+ * @param state the cell's state
+ * @see cell_state
  */
-typedef struct cell_t
+typedef struct cell
 {
     int surrounding_mines;
-    bool is_mine, is_discovered, is_flagged, is_marked;
-} cell;
+    bool is_mine;
+    cell_state_t state;
+} cell_t;
 
 /**
  * @brief the game board
  * @see cell
  */
-extern cell **board;
+extern cell_t **board;
 
 /**
  * @brief creates the game board
