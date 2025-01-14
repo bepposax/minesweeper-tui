@@ -8,6 +8,11 @@
 extern bool timer_running;
 
 /**
+ * @brief creates the timer window
+ */
+void timer_newwin();
+
+/**
  * @brief starts the timer thread
  */
 void timer_start();

@@ -11,11 +11,6 @@
 #include "symbols.h"
 
 /**
- * @brief creates the timer window
- */
-static void timer_newwin();
-
-/**
  * @brief runs the time
  */
 static void *timer_run();
@@ -26,7 +21,7 @@ static WINDOW *w = NULL;
 int min, sec;
 bool timer_running;
 
-static void timer_newwin()
+void timer_newwin()
 {
     delwin(w);
     w = newwin(1, 8, board_h - 1, board_w - 8);
