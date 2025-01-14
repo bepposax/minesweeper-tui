@@ -164,13 +164,14 @@ bool is_printable(int board_h, int board_w)
         mvprintw(0, center_x, UP);
         mvprintw(LINES - 1, center_x, DOWN);
         printable = false;
-        timer_win_reset();
+        timer_newwin();
     }
     if (board_w > COLS)
     {
         mvprintw(center_y, 1, LEFT);
         mvprintw(center_y, COLS - 2, RIGHT);
         printable = false;
+        timer_newwin();
     }
     if (!printable)
         mvprintw(center_y, center_x - strlen(msg) / 2, "%s", msg);

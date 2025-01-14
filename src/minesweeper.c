@@ -95,7 +95,7 @@ int game_loop()
 {
     int ch = 0, row, col;
 
-    timer_init();
+    timer_reset();
     do
     {
         goal = height * width - (mines_left = mines);
@@ -127,10 +127,7 @@ int game_loop()
                     if (row >= 0 && row < height && col >= 0 && col < width)
                     {
                         if (!timer_running)
-                        {
-                            timer_reset();
                             timer_start();
-                        }
                         if (event.bstate & BUTTON1_CLICKED)
                             play(row, col);
                         else if (event.bstate & BUTTON2_CLICKED)
