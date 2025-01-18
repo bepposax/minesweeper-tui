@@ -9,6 +9,7 @@
 #include "board.h"
 #include "ANSI-colors.h"
 #include "string-builder.h"
+#include "history.h"
 #include "symbols.h"
 #include "timer.h"
 
@@ -280,7 +281,9 @@ void print_board()
             strappend("\n\r%*.s", margin_left, "");
         while (print_results(i++));
     }
-    printf("%s\r", buffer);
+    strappend("\r");
+    printf("%s", buffer);
+    add_to_history();
     offset = 0;
 
     // time bottom
@@ -304,13 +307,15 @@ static int print_results(int line)
         return strappend("Remaining cells:" H_YEL "%9d" RESET, goal - uncovered_cells);
     case 4:
         return strappend("Mines left:" H_RED "%14d" RESET, mines_left);
-    case 6:
+    case 5:
         if (lost)
             return strappend("You " BG_RED B_H_WHT " LOST " RESET "%15s", "Try again");
         else
             return strappend("You " BG_GRN B_H_YEL " WON " RESET "%16s", "Well done!");
+    case 7:
+        return strappend(U_WHT "n" RESET "ew-game%28s", U_WHT "r" RESET "estart");
     case 8:
-        return strappend(U_WHT "n" RESET "ew-game   " U_WHT "r" RESET "estart   " U_WHT "q" RESET "uit");
+        return strappend(U_WHT "h" RESET "istory%29s", U_WHT "q" RESET "uit");
     case 9:
         return 0;
     default:
