@@ -288,11 +288,12 @@ void print_board(bool resizing)
 
 void print_results()
 {
-    int margin_left = results_width >= board_w ? 0 : (board_w - results_width) / 2;
+    int margin_left = results_width >= board_w ? 0 : (board_w - results_width) / 2,
+        margin,
+        row = 0, col = 0;
     bool printable_results_r = COLS - board_w >= results_width && height >= results_height,
          printable_results_b = LINES - board_h >= results_height + 3 && COLS >= results_width + margin_left,
          printable = false;
-    int row = 0, col = 0;
 
     if (game_over)
     {
@@ -324,22 +325,23 @@ void print_results()
             mvprintw(row + 3, col, "Remaining cells:");
             mvprintw(row + 4, col, "Mines left:");
             attron(A_BOLD);
-            cmvprintw(COLOR_CYAN, row += 1, col + 7, "%19d", moves);
-            cmvprintw(COLOR_GREEN, row++, col + 17, "%9s", s);
-            cmvprintw(COLOR_YELLOW, row++, col + 17, "%9d", goal - uncovered_cells);
-            cmvprintw(COLOR_RED, row++, col + 12, "%14d", mines_left);
+            cmvprintw(COLOR_CYAN, row + 1, col + 7, "%19d", moves);
+            cmvprintw(COLOR_GREEN, row + 2, col + 17, "%9s", s);
+            cmvprintw(COLOR_YELLOW, row + 3, col + 17, "%9d", goal - uncovered_cells);
+            cmvprintw(COLOR_RED, row + 4, col + 12, "%14d", mines_left);
             attroff(A_BOLD);
-            row += 2;
+            row += 6;
+            margin = 4;
             attron(A_UNDERLINE);
-            mvprintw(row, col, "n");
-            mvprintw(row, col + 19, "r");
-            mvprintw(row + 1, col, "h");
-            mvprintw(row + 1, col + 22, "q");
+            mvprintw(row, col + margin, "n");
+            mvprintw(row, col + 19 - margin, "r");
+            mvprintw(row + 1, col + margin, "h");
+            mvprintw(row + 1, col + 19 - margin, "q");
             attroff(A_UNDERLINE);
-            mvprintw(row, col + 1, "ew-game");
-            mvprintw(row++, col + 20, "estart");
-            mvprintw(row, col + 1, "istory");
-            mvprintw(row, col + 23, "uit");
+            mvprintw(row, col + margin + 1, "ew-game");
+            mvprintw(row++, col + 20 - margin, "estart");
+            mvprintw(row, col + margin + 1, "istory");
+            mvprintw(row, col + 20 - margin, "uit");
         }
     }
 }
