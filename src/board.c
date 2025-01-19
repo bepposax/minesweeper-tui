@@ -314,7 +314,7 @@ void print_results()
             char *lines_h = LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H;
             char s[10];
             init_pair(8, COLOR_WHITE, COLOR_RED);
-            init_pair(9, COLOR_YELLOW, COLOR_GREEN);
+            init_pair(9, COLOR_WHITE, COLOR_GREEN);
 
             mvprintw(row, col, "%s YOU", lines_h);
             cmvprintw(lost ? 8 : 9, row, col + 12, "%s", lost ? " LOST " : " WON! ");
