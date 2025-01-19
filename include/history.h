@@ -15,6 +15,17 @@ void add_to_history();
  */
 void clear_history();
 
+/**
+ * @brief prints the game history move by move, every time 'h' is pressed
+ * @return the user's input: 'q' to quit, 'r' to restart, 'n' for a new game
+ */
 int show_history();
+
+/**
+ * @brief removes the history file before exiting the program
+ * @return 0 if successfull, -1 otherwise
+ * @see remove()
+ */
+int remove_history();
 
 #endif

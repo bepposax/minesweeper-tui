@@ -186,7 +186,7 @@ int game_loop()
     } while (ch == 'r');
     timer_stop();
     strfree();
-    clear_history();
+    remove_history();
     offset = 0;
 
     return ch;
