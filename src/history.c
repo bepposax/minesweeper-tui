@@ -28,7 +28,7 @@ static void print_history(char *buffer);
 
 void add_to_history()
 {
-    if (!(history = fopen("history", "a")))
+    if (!(history = fopen(".history", "a")))
         printerr("Failed to open history file\n", __LINE__ - 1);
     fprintf(history, "%s\n!!!\n", buffer);
     fclose(history);
@@ -36,7 +36,7 @@ void add_to_history()
 
 void clear_history()
 {
-    if (!(history = fopen("history", "w")))
+    if (!(history = fopen(".history", "w")))
         printerr("Failed to open history file\n", __LINE__ - 1);
     fclose(history);
 }
@@ -48,7 +48,7 @@ int show_history()
     char hist_buffer[sizeof(line) * board_h];
 
     hist_buffer[0] = '\0';
-    if (!(history = fopen("history", "r")))
+    if (!(history = fopen(".history", "r")))
         printerr("Failed to open history file\n", __LINE__ - 1);
     while (fgets(line, sizeof(line), history))
     {
