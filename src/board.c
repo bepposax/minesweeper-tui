@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ncurses.h>
+#include <stdarg.h>
 #include "board.h"
 #include "ANSI-colors.h"
 #include "string-builder.h"
@@ -15,7 +16,7 @@
 
 cell_t **board;
 int height, width, board_h, board_w, mines;
-const int results_width = 27, results_height = 9;
+const int results_width = 28, results_height = 8;
 extern int goal, moves, uncovered_cells, mines_left;
 extern bool game_over, lost;
 
@@ -35,11 +36,20 @@ static void printerr(char *msg, int line);
 static int customize(char *prompt);
 
 /**
- * @brief prints the stats of the game when it ends
- * @param line the line to print
- * @return 0 if the line is the last one
+ * @brief prints the game's stats when it ends
  */
-static int print_results(int);
+static void print_results();
+
+/**
+ * @brief mvprintw with color
+ * @param color the color to use
+ * @param row the row to print
+ * @param col the column to print
+ * @param str the string to print
+ * @return the return value of mvprintw
+ * @see mvprintw
+ */
+static int cmvprintw(int color, int row, int col, const char *str, ...);
 
 void create_board(int diff)
 {
@@ -160,6 +170,8 @@ bool is_printable(int board_h, int board_w)
     char *msg = "Resize window";
     int center_y = LINES / 2, center_x = COLS / 2;
 
+    clear();
+    refresh();
     if (board_h >= LINES)
     {
         mvprintw(0, center_x, UP);
@@ -180,16 +192,21 @@ bool is_printable(int board_h, int board_w)
     return printable;
 }
 
-void print_board()
+void print_board(bool resizing)
 {
-    int margin_left = results_width >= board_w ? 0 : (board_w - results_width) / 2 + 1;
-    bool printable_results_r = COLS - board_w >= results_width && height >= results_height;
-    bool printable_results_b = LINES - board_h >= results_height + 2 && COLS >= results_width + margin_left;
-
     clear();
     refresh();
     if (!is_printable(board_h, board_w))
         return;
+    if (resizing)
+    {
+        printf("%s", buffer);
+        print_time();
+        print_results();
+        return;
+    }
+    else
+        offset = 0;
 
     // stats top
     strappend(H_GRN);
@@ -253,15 +270,7 @@ void print_board()
                     strappend(CELL " ");
             }
         }
-        strappend(LINE_V);
-
-        // results right
-        if (game_over && printable_results_r)
-        {
-            strappend("  ");
-            print_results(i);
-        }
-        strappend("\n\r");
+        strappend(LINE_V "\n\r");
     }
 
     // border bottom
@@ -271,54 +280,81 @@ void print_board()
     strappend(ARC3 "\n\r");
 
     // stat bottom
-    strappend(B_H_CYN " " MOVES " " H_CYN "%d" RESET "\n", moves);
+    strappend(B_H_CYN " " MOVES " " H_CYN "%d" RESET "\n\r", moves);
 
-    // results bottom
-    if (game_over && !printable_results_r && printable_results_b)
-    {
-        int i = 0;
-        do
-            strappend("\n\r%*.s", margin_left, "");
-        while (print_results(i++));
-    }
-    strappend("\r");
+    if (game_over)
+        print_results();
     printf("%s", buffer);
     add_to_history();
-    offset = 0;
 
     // time bottom
     print_time();
 }
 
-static int print_results(int line)
+static void print_results()
 {
-    switch (line)
+    int margin_left = results_width >= board_w ? 0 : (board_w - results_width) / 2 + 1;
+    bool printable_results_r = COLS - board_w >= results_width && height >= results_height;
+    bool printable_results_b = LINES - board_h >= results_height + 3 && COLS >= results_width + margin_left;
+    int row = 0, col = 0;
+
+    if (game_over)
     {
-    case 0:
-        char *lines_h = LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H;
-        return strappend(B_H_WHT "%s Game Over %s" RESET, lines_h, lines_h);
-    case 1:
-        return strappend("Moves:" H_CYN "%19d" RESET, moves);
-    case 2:
-        char s[10];
-        snprintf(s, 10, "%d/%d", uncovered_cells, goal);
-        return strappend("Uncovered cells:" H_GRN "%9s" RESET, s);
-    case 3:
-        return strappend("Remaining cells:" H_YEL "%9d" RESET, goal - uncovered_cells);
-    case 4:
-        return strappend("Mines left:" H_RED "%14d" RESET, mines_left);
-    case 5:
-        if (lost)
-            return strappend("You " BG_RED B_H_WHT " LOST " RESET "%15s", "Try again");
-        else
-            return strappend("You " BG_GRN B_H_YEL " WON " RESET "%16s", "Well done!");
-    case 7:
-        return strappend(U_WHT "n" RESET "ew-game%28s", U_WHT "r" RESET "estart");
-    case 8:
-        return strappend(U_WHT "h" RESET "istory%29s", U_WHT "q" RESET "uit");
-    case 9:
-        return 0;
-    default:
-        return 1;
+        if (printable_results_r)
+        {
+            row = (board_h - results_height) / 3;
+            col = board_w + 3;
+        }
+        else if (printable_results_b)
+        {
+            row = board_h + 1;
+            col = margin_left;
+        }
+        if (row)
+        {
+            char *lines_h = LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H;
+            char s[10];
+            init_pair(8, COLOR_WHITE, COLOR_RED);
+            init_pair(9, COLOR_YELLOW, COLOR_GREEN);
+
+            mvprintw(row, col, "%s YOU", lines_h);
+            cmvprintw(lost ? 8 : 9, row, col + 12, "%s", lost ? " LOST " : " WON! ");
+            mvprintw(row, col + 19, "%s", lines_h);
+            mvprintw(row + 1, col, "Moves:");
+            snprintf(s, 10, "%d/%d", uncovered_cells, goal);
+            mvprintw(row + 2, col, "Uncovered cells:");
+            mvprintw(row + 3, col, "Remaining cells:");
+            mvprintw(row + 4, col, "Mines left:");
+            attron(A_BOLD);
+            cmvprintw(COLOR_CYAN, row + 1, col + 7, "%19d", moves);
+            cmvprintw(COLOR_GREEN, row + 2, col + 17, "%9s", s);
+            cmvprintw(COLOR_YELLOW, row + 3, col + 17, "%9d", goal - uncovered_cells);
+            cmvprintw(COLOR_RED, row + 4, col + 12, "%14d", mines_left);
+            attroff(A_BOLD);
+            row += 6;
+            attron(A_UNDERLINE);
+            mvprintw(row, col, "n");
+            mvprintw(row, col + 19, "r");
+            mvprintw(row + 1, col, "h");
+            mvprintw(row + 1, col + 22, "q");
+            attroff(A_UNDERLINE);
+            mvprintw(row, col + 1, "ew-game");
+            mvprintw(row++, col + 20, "estart");
+            mvprintw(row, col + 1, "istory");
+            mvprintw(row, col + 23, "uit");
+        }
     }
+}
+
+static int cmvprintw(int color, int row, int col, const char *str, ...)
+{
+    va_list args;
+    va_start(args, str);
+    attron(COLOR_PAIR(color));
+    move(row, col);
+    int r = vw_printw(stdscr, str, args);
+    attroff(COLOR_PAIR(color));
+    va_end(args);
+
+    return r;
 }
