@@ -198,7 +198,7 @@ void print_board(bool resizing)
     refresh();
     if (!is_printable(board_h, board_w))
         return;
-    if (resizing)
+    if (resizing && buffer)
     {
         printf("%s", buffer);
         print_time();
@@ -294,8 +294,9 @@ void print_board(bool resizing)
 static void print_results()
 {
     int margin_left = results_width >= board_w ? 0 : (board_w - results_width) / 2 + 1;
-    bool printable_results_r = COLS - board_w >= results_width && height >= results_height;
-    bool printable_results_b = LINES - board_h >= results_height + 3 && COLS >= results_width + margin_left;
+    bool printable_results_r = COLS - board_w >= results_width && height >= results_height,
+         printable_results_b = LINES - board_h >= results_height + 3 && COLS >= results_width + margin_left,
+         printable = false;
     int row = 0, col = 0;
 
     if (game_over)
@@ -304,13 +305,15 @@ static void print_results()
         {
             row = (board_h - results_height) / 3;
             col = board_w + 3;
+            printable = true;
         }
         else if (printable_results_b)
         {
             row = board_h + 1;
             col = margin_left;
+            printable = true;
         }
-        if (row)
+        if (printable)
         {
             char *lines_h = LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H;
             char s[10];
@@ -326,12 +329,12 @@ static void print_results()
             mvprintw(row + 3, col, "Remaining cells:");
             mvprintw(row + 4, col, "Mines left:");
             attron(A_BOLD);
-            cmvprintw(COLOR_CYAN, row + 1, col + 7, "%19d", moves);
-            cmvprintw(COLOR_GREEN, row + 2, col + 17, "%9s", s);
-            cmvprintw(COLOR_YELLOW, row + 3, col + 17, "%9d", goal - uncovered_cells);
-            cmvprintw(COLOR_RED, row + 4, col + 12, "%14d", mines_left);
+            cmvprintw(COLOR_CYAN, row += 1, col + 7, "%19d", moves);
+            cmvprintw(COLOR_GREEN, row++, col + 17, "%9s", s);
+            cmvprintw(COLOR_YELLOW, row++, col + 17, "%9d", goal - uncovered_cells);
+            cmvprintw(COLOR_RED, row++, col + 12, "%14d", mines_left);
             attroff(A_BOLD);
-            row += 6;
+            row += 2;
             attron(A_UNDERLINE);
             mvprintw(row, col, "n");
             mvprintw(row, col + 19, "r");
