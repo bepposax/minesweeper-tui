@@ -35,7 +35,7 @@ static void init_semilenghts();
  * @return the return value of mvprintw
  * @see mvprintw
  */
-static int cmvprintw(int color, int row, int col, const char *str);
+static int cmvprintw(int color, int row, int col, const char *str, ...);
 
 int select_diff()
 {
@@ -152,10 +152,15 @@ static void init_semilenghts()
         semilen[i] = (int)strlen(diffs[i]) / 2;
 }
 
-static int cmvprintw(int color, int row, int col, const char *str)
+static int cmvprintw(int color, int row, int col, const char *str, ...)
 {
+    va_list args;
+    va_start(args, str);
     attron(COLOR_PAIR(color));
-    int r = mvprintw(row, col, "%s", str);
+    move(row, col);
+    int r = vw_printw(stdscr, str, args);
     attroff(COLOR_PAIR(color));
+    va_end(args);
+
     return r;
 }

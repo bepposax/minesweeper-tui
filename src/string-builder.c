@@ -15,9 +15,10 @@ extern int height, width, board_size;
 
 /**
  * @brief prints memory allocation error to stderr
+ * @param msg the message to print
  * @param line the line where the error occourred
  */
-static void printerr(int line);
+static void printerr(char *msg, int line);
 
 /**
  * @brief allocates the string
@@ -34,7 +35,7 @@ int strappend(const char *fmt, ...)
     va_start(args, fmt);
     if (offset + strlen(fmt) > allocated)
         if (!(buffer = (char *)realloc(buffer, allocated *= 2)))
-            printerr(__LINE__ - 1);
+            printerr("Failed to allocate memory\n", __LINE__ - 1);
     res = vsprintf(buffer + offset, fmt, args);
     va_end(args);
     offset += res;
@@ -49,6 +50,7 @@ void strfree()
         free(buffer);
         buffer = NULL;
     }
+    // clear_history();
 }
 
 static void strinit()
@@ -57,11 +59,11 @@ static void strinit()
 
     allocated = ((height && width) ? height * width : board_size * board_size) * multiplier;
     if (!(buffer = (char *)malloc(allocated)))
-        printerr(__LINE__ - 1);
+        printerr("Failed to allocate memory\n", __LINE__ - 1);
 }
 
-static void printerr(int line)
+static void printerr(char *msg, int line)
 {
-    fprintf(stderr, "%s:%d: Failed to allocate memory\n", __FILE__, line);
+    fprintf(stderr, "%s:%d: %s", __FILE__, line, msg);
     exit(EXIT_FAILURE);
 }

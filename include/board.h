@@ -54,8 +54,14 @@ void free_board();
 
 /**
  * @brief prints the game board
+ * @param resizing true if the user is resizing the window. In this case, no modifications to the buffer are needed. Printing it again is enough
  */
-void print_board();
+void print_board(bool resizing);
+
+/**
+ * @brief prints the game's stats when it ends
+ */
+void print_results();
 
 /**
  * @brief informs the user if the window needs to be resized to print the board

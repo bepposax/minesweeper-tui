@@ -9,6 +9,7 @@
 #include <ctype.h>
 #include "minesweeper.h"
 #include "string-builder.h"
+#include "history.h"
 #include "timer.h"
 
 int goal, uncovered_cells, mines_left, moves;
@@ -104,13 +105,14 @@ int game_loop()
         game_over = false;
 
         strfree();
+        clear_history();
 #ifdef TEST
         init_test_board();
 #else
         if (ch != 'r')
             place_mines();
 #endif
-        print_board();
+        print_board(false);
         while (!game_over)
         {
             if ((ch = tolower(getch())) == KEY_MOUSE)
@@ -138,11 +140,14 @@ int game_loop()
                 }
             }
             else if (ch == KEY_RESIZE)
-                print_board();
+                print_board(true);
             else if (ch == 'n' || ch == 'q')
             {
                 strfree();
+                clear_history();
                 timer_stop();
+                offset = 0;
+
                 return ch;
             }
             else if (ch == 'r')
@@ -150,29 +155,39 @@ int game_loop()
                 uncovered_cells = moves = 0;
                 mines_left = mines;
                 reset_board();
+                strfree();
+                clear_history();
                 timer_stop();
                 timer_reset();
 #ifdef TEST
                 init_test_board();
 #endif
-                print_board();
+                print_board(false);
             }
         }
         // game over
-        print_board();
+        print_board(false);
         timer_stop();
         while ((ch = tolower(getch())) != 'q' && ch != 'n' && ch != 'r')
+        {
+            if (ch == 'h' && ((ch = show_history()) == 'q' || ch == 'n' || ch == 'r'))
+                break;
             if (ch == KEY_RESIZE)
-                print_board();
+                print_board(true);
+        }
         if (ch == 'r')
         {
             reset_board();
+            strfree();
+            clear_history();
             timer_stop();
             timer_reset();
         }
     } while (ch == 'r');
     timer_stop();
     strfree();
+    clear_history();
+    offset = 0;
 
     return ch;
 }
@@ -276,7 +291,7 @@ static void flag(int row, int col)
     {
         *state = *state == FLAGGED ? UNDISCOVERED : FLAGGED;
         *state == FLAGGED ? mines_left-- : mines_left++;
-        print_board();
+        print_board(false);
     }
 }
 
@@ -289,7 +304,7 @@ static void mark(int row, int col)
         if (*state == FLAGGED)
             mines_left++;
         *state = *state == MARKED ? UNDISCOVERED : MARKED;
-        print_board();
+        print_board(false);
     }
 }
 
@@ -329,7 +344,7 @@ static int play(int row, int col)
             return 1;
         discover(row, col);
     }
-    print_board();
+    print_board(false);
     return 0;
 }
 
