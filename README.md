@@ -36,14 +36,17 @@ Minesweeper-TUI is a command-line implementation of the [Minesweeper](https://en
     <th>🖱️ <kbd>Middle
     <td>mark ( <b>?</b> ) an undiscovered cell as a possible mine spot
   <tr>
-    <th><kbd>Q
-    <td>quit the game or exit the program
+    <th><kbd>H
+    <td>look at the history of the last played game
+  <tr>
+    <th><kbd>R
+    <td>restart the current game
   <tr>
     <th><kbd>N
     <td>start a new game
   <tr>
-    <th><kbd>R
-    <td>restart the current game
+    <th><kbd>Q
+    <td>quit the game or exit the program
 </table>
 
 ## Requirements
