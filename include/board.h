@@ -59,6 +59,11 @@ void free_board();
 void print_board(bool resizing);
 
 /**
+ * @brief prints the game's stats when it ends
+ */
+void print_results();
+
+/**
  * @brief informs the user if the window needs to be resized to print the board
  * @param board_h the board's height
  * @param board_w the board's width

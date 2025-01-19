@@ -20,6 +20,12 @@ static FILE *history;
  */
 static void printerr(char *msg, int line);
 
+/**
+ * @brief prints the last game's history
+ * @param buffer the string to print
+ */
+static void print_history(char *buffer);
+
 void add_to_history()
 {
     if (!(history = fopen("history", "a")))
@@ -50,33 +56,34 @@ int show_history()
             strcat(hist_buffer, line);
         else
         {
-            if (is_printable(board_h, board_w))
+            print_history(hist_buffer);
+            while ((ch = tolower(getch())) != 'h')
             {
-                clear();
-                refresh();
-                printf("%s", hist_buffer);
-                while ((ch = tolower(getch())) != 'h')
+                if (ch == 'q' || ch == 'n' || ch == 'r')
                 {
-                    if (ch == 'q' || ch == 'n' || ch == 'r')
-                    {
-                        hist_buffer[0] = '\0';
-                        return ch;
-                    }
-                    if (ch == KEY_RESIZE)
-                        if (is_printable(board_h, board_w))
-                        {
-                            clear();
-                            refresh();
-                            printf("%s", hist_buffer);
-                        }
+                    hist_buffer[0] = '\0';
+                    return ch;
                 }
+                if (ch == KEY_RESIZE)
+                    print_history(hist_buffer);
             }
             hist_buffer[0] = '\0';
         }
     }
     fclose(history);
 
-    return 'h';
+    return ch;
+}
+
+static void print_history(char *buffer)
+{
+    if (is_printable(board_h, board_w))
+    {
+        clear();
+        refresh();
+        printf("%s", buffer);
+        print_results();
+    }
 }
 
 static void printerr(char *msg, int line)

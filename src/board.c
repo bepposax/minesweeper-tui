@@ -16,7 +16,7 @@
 
 cell_t **board;
 int height, width, board_h, board_w, mines;
-const int results_width = 28, results_height = 8;
+const int results_width = 29, results_height = 8;
 extern int goal, moves, uncovered_cells, mines_left;
 extern bool game_over, lost;
 
@@ -34,11 +34,6 @@ static void printerr(char *msg, int line);
  * @return the user's input
  */
 static int customize(char *prompt);
-
-/**
- * @brief prints the game's stats when it ends
- */
-static void print_results();
 
 /**
  * @brief mvprintw with color
@@ -291,9 +286,9 @@ void print_board(bool resizing)
     print_time();
 }
 
-static void print_results()
+void print_results()
 {
-    int margin_left = results_width >= board_w ? 0 : (board_w - results_width) / 2 + 1;
+    int margin_left = results_width >= board_w ? 0 : (board_w - results_width) / 2;
     bool printable_results_r = COLS - board_w >= results_width && height >= results_height,
          printable_results_b = LINES - board_h >= results_height + 3 && COLS >= results_width + margin_left,
          printable = false;
