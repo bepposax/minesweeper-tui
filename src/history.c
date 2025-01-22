@@ -12,7 +12,7 @@
 #include "board.h"
 
 static FILE *history;
-static char *hist_file = ".history";
+static char *filename = ".history";
 
 /**
  * @brief prints memory allocation error to stderr
@@ -27,18 +27,26 @@ static void printerr(char *msg, int line);
  */
 static void print_history(char *buffer);
 
-void add_to_history()
+/**
+ * @brief opens the history file
+ * @param mode the mode to open it in
+ */
+static inline void open_history(char *mode)
 {
-    if (!(history = fopen(hist_file, "a")))
+    if (!(history = fopen(filename, mode)))
         printerr("Failed to open history file\n", __LINE__ - 1);
+}
+
+void update_history()
+{
+    open_history("a");
     fprintf(history, "%s\n!!!\n", buffer);
     fclose(history);
 }
 
 void clear_history()
 {
-    if (!(history = fopen(hist_file, "w")))
-        printerr("Failed to open history file\n", __LINE__ - 1);
+    open_history("w");
     fclose(history);
 }
 
@@ -49,8 +57,7 @@ int show_history()
     char hist_buffer[sizeof(line) * board_h];
 
     hist_buffer[0] = '\0';
-    if (!(history = fopen(hist_file, "r")))
-        printerr("Failed to open history file\n", __LINE__ - 1);
+    open_history("r");
     while (fgets(line, sizeof(line), history))
     {
         if (strcmp(line, "!!!\n") != 0)
@@ -91,8 +98,8 @@ int remove_history()
 {
     int r;
 
-    if ((r = remove(hist_file)) == -1)
-        fprintf(stderr, "%s:%d: Couldn't delete the \".history\" file\n", __FILE__, __LINE__ - 1);
+    if ((r = remove(filename)) == -1)
+        fprintf(stderr, "%s:%d: Couldn't remove the \"%s\" file\n", __FILE__, __LINE__ - 1, filename);
 
     return r;
 }

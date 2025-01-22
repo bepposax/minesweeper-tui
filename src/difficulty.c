@@ -3,7 +3,6 @@
  * @author Ivano Izzo
  */
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <ncurses.h>
 #include "difficulty.h"
@@ -24,7 +23,13 @@ extern bool is_printable(int height, int width);
 /**
  * @brief initializes semilen[] with half the lengths of the strings in diffs[]
  */
-static void init_semilenghts();
+static inline void init_semilenghts()
+{
+    for (int i = 0; i < NUM_DIFFS; ++i)
+        semilen[i] = (int)strlen(diffs[i]) / 2;
+}
+
+static inline int abs(int x) { return x < 0 ? -x : x; }
 
 /**
  * @brief mvprintw with color
@@ -144,12 +149,6 @@ int print_diff_menu()
     }
 
     return 0;
-}
-
-static void init_semilenghts()
-{
-    for (int i = 0; i < NUM_DIFFS; ++i)
-        semilen[i] = (int)strlen(diffs[i]) / 2;
 }
 
 static int cmvprintw(int color, int row, int col, const char *str, ...)

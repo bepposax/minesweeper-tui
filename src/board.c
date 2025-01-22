@@ -280,7 +280,7 @@ void print_board(bool resizing)
     if (game_over)
         print_results();
     printf("%s", buffer);
-    add_to_history();
+    update_history();
 
     // time bottom
     print_time();

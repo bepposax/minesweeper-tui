@@ -8,7 +8,7 @@
 /**
  * @brief appends the string to a file
  */
-void add_to_history();
+void update_history();
 
 /**
  * @brief clears the saved history

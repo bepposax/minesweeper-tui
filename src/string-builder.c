@@ -50,7 +50,6 @@ void strfree()
         free(buffer);
         buffer = NULL;
     }
-    // clear_history();
 }
 
 static void strinit()
