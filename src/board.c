@@ -19,6 +19,9 @@ int height, width, board_h, board_w, mines;
 const int results_width = 26, results_height = 8;
 extern int goal, moves, uncovered_cells, mines_left;
 extern bool game_over, lost;
+#define MARGIN_L results_width >= board_w ? 0 : (board_w - results_width) / 2
+#define PRINTABLE_RES_R COLS >= (board_w + results_width + 3) && height >= results_height
+#define PRINTABLE_RES_B LINES >= (board_h + results_height + 3) && COLS >= (results_width + MARGIN_L)
 
 extern int print_diff_menu();
 
@@ -288,25 +291,21 @@ void print_board(bool resizing)
 
 void print_results()
 {
-    int margin_left = results_width >= board_w ? 0 : (board_w - results_width) / 2,
-        margin,
-        row = 0, col = 0;
-    bool printable_results_r = COLS >= board_w + results_width + 3 && height >= results_height,
-         printable_results_b = LINES >= board_h + results_height + 3 && COLS >= results_width + margin_left,
-         printable;
+    int margin, row = 0, col = 0;
+    bool printable = false;
 
     if (game_over)
     {
-        if (printable_results_r)
+        if (PRINTABLE_RES_R)
         {
             row = (board_h - results_height) / 3;
             col = board_w + 3;
             printable = true;
         }
-        else if (printable_results_b)
+        else if (PRINTABLE_RES_B)
         {
             row = board_h + 1;
-            col = margin_left;
+            col = MARGIN_L;
             printable = true;
         }
         if (printable)
