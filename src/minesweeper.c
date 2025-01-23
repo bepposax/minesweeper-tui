@@ -131,18 +131,53 @@ int game_loop()
                         continue;
                     if (row >= 0 && row < height && col >= 0 && col < width)
                     {
-                        if (!timer_running)
-                            timer_start();
-                        if (event.bstate & BUTTON1_CLICKED)
+                        // cell pressed "animation"
+                        if ((event.bstate & (BUTTON1_PRESSED | BUTTON2_PRESSED | BUTTON3_PRESSED)) &&
+                            board[row][col].state == UNDISCOVERED)
+                        {
+                            mvprintw(event.y, event.x, "\u25FE");
+                            if ((ch = tolower(getch())) == KEY_MOUSE)
+                            {
+                                MEVENT releasevent;
+                                if (getmouse(&releasevent) == OK)
+                                {
+                                    if ((releasevent.y == event.y) && (releasevent.x == event.x))
+                                    {
+                                        if ((releasevent.bstate & BUTTON1_RELEASED) &&
+                                            (event.bstate & BUTTON1_PRESSED))
+                                            play(row, col);
+                                        else if ((releasevent.bstate & BUTTON2_RELEASED) &&
+                                                 (event.bstate & BUTTON2_PRESSED))
+                                            mark(row, col);
+                                        else if ((releasevent.bstate & BUTTON3_RELEASED) &&
+                                                 (event.bstate & BUTTON3_PRESSED))
+                                            flag(row, col);
+                                    }
+                                    else
+                                    {
+                                        print_board(false);
+                                        continue;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                print_board(false);
+                                continue;
+                            }
+                        }
+                        else if (event.bstate & BUTTON1_CLICKED)
                             play(row, col);
                         else if (event.bstate & BUTTON2_CLICKED)
                             mark(row, col);
                         else if (event.bstate & BUTTON3_CLICKED)
                             flag(row, col);
+                        if (!timer_running)
+                            timer_start();
                     }
                 }
             }
-            else if (ch == KEY_RESIZE)
+            if (ch == KEY_RESIZE)
                 print_board(true);
             else if (ch == 'n' || ch == 'q')
             {
