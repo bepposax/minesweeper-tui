@@ -155,14 +155,14 @@ int game_loop()
                                     }
                                     else
                                     {
-                                        print_board(false);
+                                        print_board(true);
                                         continue;
                                     }
                                 }
                             }
                             else
                             {
-                                print_board(false);
+                                print_board(true);
                                 continue;
                             }
                         }
