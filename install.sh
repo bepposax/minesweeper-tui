@@ -29,7 +29,7 @@ if [[ $choice = y* || $choice = Y* ]]; then {
     touch $ALIASFILE && echo " Done"
     }
     # creates the alias 'mines' if it doesn't exist
-    if ! $(grep -q "alias mines" $ALIASFILE 1>/dev/null); then {
+    if ! $(grep -q "alias mines" $ALIASFILE); then {
         echo "Appending \"$ALIAS\" to \"$ALIASFILE\""
         echo "alias mines='cd $(find ~ -type d -name minesweeper-tui) && make run && cd -'" >> ~/.bash_aliases && echo -e "Done\nRestart the terminal for changes to take effect."
     }
