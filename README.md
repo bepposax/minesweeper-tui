@@ -55,6 +55,8 @@ Minesweeper-TUI is a command-line implementation of the [Minesweeper](https://en
 - [GCC](https://gcc.gnu.org/ "GCC, the GNU Compiler Collection - GNU Project") compiler
 - [NCURSES](https://invisible-island.net/ncurses/ "NCURSES - New Curses") library
 
+Run the `install.sh` script to install missing dependencies
+
 ## Usage
 
 - `make`: Compiles the source code files and generates the executable file.
