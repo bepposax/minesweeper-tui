@@ -1,8 +1,8 @@
 #!/bin/bash
 
 dependencies=(
-    "gcc"
     "make"
+    "gcc"
     "libncurses-dev"
 )
 
