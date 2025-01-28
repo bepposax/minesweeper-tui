@@ -22,7 +22,7 @@ done
 read -rp "Do you wish to create the alias 'mines' to run the game? [Y/n] " choice
 if [[ $choice = y* || $choice = Y* ]]; then {
     ALIASFILE=~/.bash_aliases
-    ALIAS="alias mines='cd $(find ~ -type d -name minesweeper-tui) && make run && cd -'"
+    ALIAS="alias mines='cd $(find ~ -type d -name minesweeper-tui) && make run && cd - &>/dev/null'"
 
     # creates ALIASFILE if it doesn't exist
     [ -f $ALIASFILE ] || {
