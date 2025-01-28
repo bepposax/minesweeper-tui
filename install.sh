@@ -26,8 +26,8 @@ if [[ $choice = y* || $choice = Y* ]]; then {
 
     # creates ALIASFILE if it doesn't exist
     [ -f $ALIASFILE ] || {
-    echo -n "Creating '$ALIASFILE'... "
-    touch $ALIASFILE && echo " Done"
+        echo -n "Creating '$ALIASFILE'... "
+        touch $ALIASFILE && echo "Done"
     }
     # creates the alias 'mines' if it doesn't exist
     if ! $(grep -q "alias mines" $ALIASFILE); then {
