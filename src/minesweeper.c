@@ -182,7 +182,7 @@ int game_loop()
             else if (ch == 'n' || ch == 'q')
             {
                 strfree();
-                clear_history();
+                remove_history();
                 timer_stop();
                 offset = 0;
 
