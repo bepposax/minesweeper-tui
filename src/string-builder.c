@@ -7,11 +7,12 @@
 #include <stdarg.h>
 #include <string.h>
 #include "string-builder.h"
+#include "board.h"
 
 char *buffer;
 long unsigned int offset;
 static size_t allocated;
-extern int height, width, board_size;
+extern int board_size;
 
 /**
  * @brief prints memory allocation error to stderr
@@ -56,7 +57,7 @@ static void strinit()
 {
     int multiplier = 20;
 
-    allocated = ((height && width) ? height * width : board_size * board_size) * multiplier;
+    allocated = ((board.rows && board.cols) ? board.rows * board.cols : board_size * board_size) * multiplier;
     if (!(buffer = (char *)malloc(allocated)))
         printerr("Failed to allocate memory\n", __LINE__ - 1);
 }

@@ -53,8 +53,8 @@ void clear_history()
 int show_history()
 {
     int ch;
-    char line[board_w * 8];
-    char hist_buffer[sizeof(line) * board_h];
+    char line[board.width * 8];
+    char hist_buffer[sizeof(line) * board.height];
 
     hist_buffer[0] = '\0';
     open_history("r");
@@ -85,7 +85,7 @@ int show_history()
 
 static void print_history(char *buffer)
 {
-    if (is_printable(board_h, board_w))
+    if (is_printable(board.height, board.width))
     {
         clear();
         refresh();

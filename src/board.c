@@ -14,14 +14,13 @@
 #include "symbols.h"
 #include "timer.h"
 
-cell_t **board;
-int height, width, board_h, board_w, mines;
-const int results_width = 26, results_height = 8;
+board_t board;
+const int res_w = 26, res_h = 8;
 extern int goal, moves, uncovered_cells, mines_left;
 extern bool game_over, lost;
-#define MARGIN_L results_width >= board_w ? 0 : (board_w - results_width) / 2
-#define PRINTABLE_RES_R COLS >= (board_w + results_width + 3) && height >= results_height
-#define PRINTABLE_RES_B LINES >= (board_h + results_height + 3) && COLS >= (results_width + MARGIN_L)
+#define MARGIN_L res_w >= board.width ? 0 : (board.width - res_w) / 2
+#define PRINTABLE_RES_R COLS >= (board.width + res_w + 3) && board.rows >= res_h
+#define PRINTABLE_RES_B LINES >= (board.height + res_h + 3) && COLS >= (res_w + MARGIN_L)
 
 extern int print_diff_menu();
 
@@ -55,45 +54,45 @@ void create_board(int diff)
     switch (diff)
     {
     case 1:
-        height = width = 9;
-        mines = 10;
+        board.rows = board.cols = 9;
+        board.mines = 10;
         break;
     case 2:
-        height = width = 16;
-        mines = 40;
+        board.rows = board.cols = 16;
+        board.mines = 40;
         break;
     case 3:
-        height = 16;
-        width = 30;
-        mines = 99;
+        board.rows = 16;
+        board.cols = 30;
+        board.mines = 99;
         break;
     case 4:
-        height = customize("Height");
-        width = customize("Width ");
-        mines = customize("Mines ");
+        board.rows = customize("Height");
+        board.cols = customize("Width ");
+        board.mines = customize("Mines ");
         break;
     }
 #else
     FILE *f;
     char s[COLS];
-    height = width = mines = 0;
+    board.rows = board.cols = board.mines = 0;
 
     if (!(f = fopen(".testing/board.txt", "r")))
         printerr("Can't open file", __LINE__ - 1);
-    if (!(width = strlen(fgets(s, COLS, f)) / 2))
+    if (!(board.cols = strlen(fgets(s, COLS, f)) / 2))
         printerr("fgets error", __LINE__ - 1);
-    height++;
+    board.rows++;
     while (fgets(s, COLS, f))
-        height++;
+        board.rows++;
     fclose(f);
 #endif
-    board_h = height + 4;
-    board_w = width * 2 + 3;
+    board.height = board.rows + 4;
+    board.width = board.cols * 2 + 3;
 
-    if (!(board = (cell_t **)calloc(height, sizeof(cell_t *))))
+    if (!(board.cells = (cell_t **)calloc(board.rows, sizeof(cell_t *))))
         printerr("Failed to allocate memory", __LINE__ - 1);
-    for (int i = 0; i < height; i++)
-        if (!(board[i] = (cell_t *)calloc(width, sizeof(cell_t))))
+    for (int i = 0; i < board.rows; i++)
+        if (!(board.cells[i] = (cell_t *)calloc(board.cols, sizeof(cell_t))))
             printerr("Failed to allocate memory", __LINE__ - 1);
 }
 
@@ -118,7 +117,7 @@ static int customize(char *prompt)
             limit = COLS / 2 - 2;
             break;
         default:
-            limit = height * width;
+            limit = board.rows * board.cols;
         }
         mvprintw(16, 14, "max%4d ", limit);
         mvprintw(17, 14, "or 100%% ");
@@ -146,23 +145,23 @@ static void printerr(char *msg, int line)
 
 void reset_board()
 {
-    for (int i = 0; i < height; ++i)
-        for (int j = 0; j < width; ++j)
-            board[i][j].state = UNDISCOVERED;
+    for (int i = 0; i < board.rows; ++i)
+        for (int j = 0; j < board.cols; ++j)
+            board.cells[i][j].state = UNDISCOVERED;
 }
 
 void free_board()
 {
-    for (int i = 0; i < height; i++)
+    for (int i = 0; i < board.rows; i++)
     {
-        free(board[i]);
-        board[i] = NULL;
+        free(board.cells[i]);
+        board.cells[i] = NULL;
     }
-    free(board);
-    board = NULL;
+    free(board.cells);
+    board.cells = NULL;
 }
 
-bool is_printable(int board_h, int board_w)
+bool is_printable(int h, int w)
 {
     bool printable = true;
     char *msg = "Resize window";
@@ -170,14 +169,14 @@ bool is_printable(int board_h, int board_w)
 
     clear();
     refresh();
-    if (board_h >= LINES)
+    if (h >= LINES)
     {
         mvprintw(0, center_x, UP);
         mvprintw(LINES - 1, center_x, DOWN);
         printable = false;
         timer_newwin();
     }
-    if (board_w > COLS)
+    if (w > COLS)
     {
         mvprintw(center_y, 1, LEFT);
         mvprintw(center_y, COLS - 2, RIGHT);
@@ -194,7 +193,7 @@ void print_board(bool resizing)
 {
     clear();
     refresh();
-    if (!is_printable(board_h, board_w))
+    if (!is_printable(board.height, board.width))
         return;
     if (resizing && buffer)
     {
@@ -209,22 +208,22 @@ void print_board(bool resizing)
     // stats top
     strappend(H_GRN);
     int len = strappend(" " CELL " %d/%d", uncovered_cells, goal);
-    strappend("%*.s", width * 2 - len, "");
+    strappend("%*.s", board.cols * 2 - len, "");
     strappend(B_H_RED MINE H_RED " %2d\n\r" RESET, mines_left);
 
     // border top
     strappend(ARC0);
-    for (int i = 0; i <= width * 2; i++)
+    for (int i = 0; i <= board.cols * 2; i++)
         strappend(LINE_H);
     strappend(ARC1 "\n\r");
 
     // game board
-    for (int i = 0; i < height; i++)
+    for (int i = 0; i < board.rows; i++)
     {
         strappend(LINE_V " ");
-        for (int j = 0; j < width; j++)
+        for (int j = 0; j < board.cols; j++)
         {
-            cell_t *pos = &(board[i][j]);
+            cell_t *pos = &(board.cells[i][j]);
             int num_mines;
 
             if (pos->is_mine && game_over)
@@ -273,7 +272,7 @@ void print_board(bool resizing)
 
     // border bottom
     strappend(ARC2);
-    for (int i = 0; i <= width * 2; i++)
+    for (int i = 0; i <= board.cols * 2; i++)
         strappend(LINE_H);
     strappend(ARC3 "\n\r");
 
@@ -298,13 +297,13 @@ void print_results()
     {
         if (PRINTABLE_RES_R)
         {
-            row = (board_h - results_height) / 3;
-            col = board_w + 3;
+            row = (board.height - res_h) / 3;
+            col = board.width + 3;
             printable = true;
         }
         else if (PRINTABLE_RES_B)
         {
-            row = board_h + 1;
+            row = board.height + 1;
             col = MARGIN_L;
             printable = true;
         }

@@ -9,13 +9,13 @@
 #include <ncurses.h>
 #include "timer.h"
 #include "symbols.h"
+#include "board.h"
 
 /**
  * @brief runs the time
  */
 static void *timer_run();
 
-extern int board_h, board_w;
 static pthread_t thread_id;
 static WINDOW *w = NULL;
 int min, sec;
@@ -24,7 +24,7 @@ bool timer_running;
 void timer_newwin()
 {
     delwin(w);
-    w = newwin(1, 8, board_h - 1, board_w - 8);
+    w = newwin(1, 8, board.height - 1, board.width - 8);
 }
 
 void timer_start()
@@ -55,7 +55,7 @@ static void *timer_run()
 
 void print_time()
 {
-    if (board_h < LINES && board_w <= COLS)
+    if (board.height < LINES && board.width <= COLS)
     {
         wattron(w, A_BOLD | COLOR_PAIR(COLOR_YELLOW));
         wprintw(w, TIMER);

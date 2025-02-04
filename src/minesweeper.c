@@ -102,7 +102,7 @@ int game_loop()
     timer_reset();
     do
     {
-        goal = height * width - (mines_left = mines);
+        goal = board.rows * board.cols - (mines_left = board.mines);
         uncovered_cells = 0;
         moves = 0;
         game_over = false;
@@ -129,11 +129,11 @@ int game_loop()
                         col /= 2;
                     else
                         continue;
-                    if (row >= 0 && row < height && col >= 0 && col < width)
+                    if (row >= 0 && row < board.rows && col >= 0 && col < board.cols)
                     {
                         // cell pressed "animation"
                         if ((event.bstate & (BUTTON1_PRESSED | BUTTON2_PRESSED | BUTTON3_PRESSED)) &&
-                            board[row][col].state == UNDISCOVERED)
+                            board.cells[row][col].state == UNDISCOVERED)
                         {
                             mvprintw(event.y, event.x, "\u25FE");
                             if ((ch = tolower(getch())) == KEY_MOUSE)
@@ -191,7 +191,7 @@ int game_loop()
             else if (ch == 'r')
             {
                 uncovered_cells = moves = 0;
-                mines_left = mines;
+                mines_left = board.mines;
                 reset_board();
                 strfree();
                 clear_history();
@@ -232,15 +232,15 @@ int game_loop()
 
 static void place_mines()
 {
-    int mine_row, mine_col, mines_to_place = mines;
+    int mine_row, mine_col, mines_to_place = board.mines;
     cell_t *pos;
 
     srand(time(NULL));
     while (mines_to_place)
     {
-        mine_row = rand() % height;
-        mine_col = rand() % width;
-        if (!(pos = &(board[mine_row][mine_col]))->is_mine)
+        mine_row = rand() % board.rows;
+        mine_col = rand() % board.cols;
+        if (!(pos = &(board.cells[mine_row][mine_col]))->is_mine)
         {
             pos->is_mine = true;
             signal_mine(mine_row, mine_col);
@@ -252,13 +252,13 @@ static void place_mines()
 #ifdef TEST
 static void place_mine(int row, int col)
 {
-    bool *is_mine = &(board[row][col].is_mine);
+    bool *is_mine = &(board.cells[row][col].is_mine);
 
     if (!(*is_mine))
     {
         *is_mine = true;
         signal_mine(row, col);
-        mines++;
+        board.mines++;
     }
 }
 
@@ -271,19 +271,19 @@ static void init_test_board()
         fprintf(stderr, "%s:%d: Error: Can't open file\n", __FILE__, __LINE__ - 2);
         exit(EXIT_FAILURE);
     }
-    for (int row = 0; row < height; ++row)
-        for (int col = 0; col < width; ++col)
+    for (int row = 0; row < board.rows; ++row)
+        for (int col = 0; col < board.cols; ++col)
             switch (fgetc(f))
             {
             case '*':
                 place_mine(row, col);
                 break;
             case '.':
-                board[row][col].state = DISCOVERED;
+                board.cells[row][col].state = DISCOVERED;
                 uncovered_cells++;
                 break;
             case '#':
-                board[row][col].state = UNDISCOVERED;
+                board.cells[row][col].state = UNDISCOVERED;
                 break;
             case 'f':
                 flag(row, col);
@@ -305,7 +305,7 @@ static void init_test_board()
                 break;
             }
     fclose(f);
-    goal = height * width - (mines_left = mines);
+    goal = board.rows * board.cols - (mines_left = board.mines);
 }
 #endif
 
@@ -314,16 +314,16 @@ static void signal_mine(int row, int col)
     cell_t *pos;
 
     for (int i = row - 1; i <= row + 1; i++)
-        if (i >= 0 && i < height)
+        if (i >= 0 && i < board.rows)
             for (int j = col - 1; j <= col + 1; j++)
-                if (j >= 0 && j < width)
-                    if (!(pos = &(board[i][j]))->is_mine)
+                if (j >= 0 && j < board.cols)
+                    if (!(pos = &(board.cells[i][j]))->is_mine)
                         (pos->surrounding_mines)++;
 }
 
 static void flag(int row, int col)
 {
-    cell_state_t *state = &board[row][col].state;
+    cell_state_t *state = &board.cells[row][col].state;
 
     if (*state != DISCOVERED)
     {
@@ -335,7 +335,7 @@ static void flag(int row, int col)
 
 static void mark(int row, int col)
 {
-    cell_state_t *state = &board[row][col].state;
+    cell_state_t *state = &board.cells[row][col].state;
 
     if (*state != DISCOVERED)
     {
@@ -348,7 +348,7 @@ static void mark(int row, int col)
 
 static int play(int row, int col)
 {
-    cell_t *pos = &(board[row][col]);
+    cell_t *pos = &(board.cells[row][col]);
 
     if (pos->state == FLAGGED || pos->state == MARKED)
         return 0;
@@ -360,12 +360,12 @@ static int play(int row, int col)
         {
             moves++;
             for (int i = row - 1; i <= row + 1; i++)
-                if (i >= 0 && i < height)
+                if (i >= 0 && i < board.rows)
                     for (int j = col - 1; j <= col + 1; j++)
-                        if (j >= 0 && j < width && board[i][j].state != FLAGGED)
+                        if (j >= 0 && j < board.cols && board.cells[i][j].state != FLAGGED)
                         {
                             discover(i, j);
-                            if (is_game_over(&board[i][j]))
+                            if (is_game_over(&board.cells[i][j]))
                                 return 1;
                         }
         }
@@ -388,7 +388,7 @@ static int play(int row, int col)
 
 static int discover(int row, int col)
 {
-    cell_t *this = &(board[row][col]);
+    cell_t *this = &(board.cells[row][col]);
     cell_t *neighbor;
 
     if (this->state != DISCOVERED)
@@ -402,11 +402,11 @@ static int discover(int row, int col)
             return 1;
     }
     for (int i = row - 1; i <= row + 1; i++)
-        if (i >= 0 && i < height)
+        if (i >= 0 && i < board.rows)
             for (int j = col - 1; j <= col + 1; j++)
-                if (j >= 0 && j < width)
+                if (j >= 0 && j < board.cols)
                 {
-                    if ((neighbor = &(board[i][j]))->state != DISCOVERED)
+                    if ((neighbor = &(board.cells[i][j]))->state != DISCOVERED)
                     {
                         if (!neighbor->surrounding_mines && !neighbor->is_mine)
                             discover(i, j);
@@ -429,14 +429,14 @@ static bool discoverable(int row, int col)
     cell_t *neighbor;
 
     for (int i = row - 1; i <= row + 1; i++)
-        if (i >= 0 && i < height)
+        if (i >= 0 && i < board.rows)
             for (int j = col - 1; j <= col + 1; j++)
-                if (j >= 0 && j < width)
+                if (j >= 0 && j < board.cols)
                 {
-                    if ((neighbor = &(board[i][j]))->state == FLAGGED)
+                    if ((neighbor = &(board.cells[i][j]))->state == FLAGGED)
                         flags++;
                     else if (!undiscovered_neighbors && neighbor->state != DISCOVERED)
                         undiscovered_neighbors = true;
                 }
-    return (flags == board[row][col].surrounding_mines) && undiscovered_neighbors;
+    return (flags == board.cells[row][col].surrounding_mines) && undiscovered_neighbors;
 }

@@ -7,8 +7,6 @@
 
 #include <stdbool.h>
 
-extern int height, width, board_h, board_w, mines;
-
 typedef enum cell_state
 {
     UNDISCOVERED,
@@ -32,9 +30,21 @@ typedef struct cell
 
 /**
  * @brief the game board
+ * @param cells the cells matrix
+ * @param rows the number of rows
+ * @param cols the number of columns
+ * @param height the height of the printed board
+ * @param width the width of the printed board
+ * @param mines the number of mines on the board
  * @see cell
  */
-extern cell_t **board;
+typedef struct board
+{
+    cell_t **cells;
+    int rows, cols, height, width, mines;
+} board_t;
+
+extern board_t board;
 
 /**
  * @brief creates the game board
