@@ -15,14 +15,52 @@
 #include "timer.h"
 
 board_t board;
-const int res_w = 26, res_h = 8;
+
+typedef struct results
+{
+    int height, width, row, col, margin;
+} results_t;
+
+results_t res = {
+    .height = 8,
+    .width = 26,
+    .margin = 4
+};
+
 extern int goal, moves, uncovered_cells, mines_left;
 extern bool game_over, lost;
-#define MARGIN_L res_w >= board.width ? 0 : (board.width - res_w) / 2
-#define PRINTABLE_RES_R COLS >= (board.width + res_w + 3) && board.rows >= res_h
-#define PRINTABLE_RES_B LINES >= (board.height + res_h + 3) && COLS >= (res_w + MARGIN_L)
 
 extern int print_diff_menu();
+
+/**
+ * @brief calculates the column where the results should be printed, if printing them at the bottom
+ * @return the number of the column where to start printing the results, so that they'll be centered
+ * compared to the board 
+ */
+static inline int margin_l() { return res.width >= board.width ? 0 : (board.width - res.width) / 2; }
+
+/**
+ * @brief checks if there's space to print the results
+ * @return true if there's space, false otherwise
+ */
+static bool printable_results(){
+    // printable to the right?
+    if (COLS >= (board.width + res.width + 3) && board.rows >= res.height)
+    {
+        res.row = (board.height - res.height) / 3;
+        res.col = board.width + 3;
+        return true;
+    }
+    // printable at the bottom?
+    if (LINES >= (board.height + res.height + 3) && COLS >= (res.width + margin_l()))
+    {
+        res.row = board.height + 1;
+        res.col = margin_l();
+        return true;
+    }
+    return false;
+}
+
 
 /**
  * @brief prints memory allocation error to stderr
@@ -290,57 +328,37 @@ void print_board(bool resizing)
 
 void print_results()
 {
-    int margin, row = 0, col = 0;
-    bool printable = false;
-
-    if (game_over)
+    if (game_over && printable_results())
     {
-        if (PRINTABLE_RES_R)
-        {
-            row = (board.height - res_h) / 3;
-            col = board.width + 3;
-            printable = true;
-        }
-        else if (PRINTABLE_RES_B)
-        {
-            row = board.height + 1;
-            col = MARGIN_L;
-            printable = true;
-        }
-        if (printable)
-        {
-            char *lines_h = LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H;
-            char s[10];
-            init_pair(8, COLOR_WHITE, COLOR_RED);
-            init_pair(9, COLOR_WHITE, COLOR_GREEN);
-
-            mvprintw(row, col, "%s YOU", lines_h);
-            cmvprintw(lost ? 8 : 9, row, col + 12, "%s", lost ? " LOST " : " WON! ");
-            mvprintw(row, col + 19, "%s", lines_h);
-            mvprintw(row + 1, col, "Moves:");
-            snprintf(s, 10, "%d/%d", uncovered_cells, goal);
-            mvprintw(row + 2, col, "Uncovered cells:");
-            mvprintw(row + 3, col, "Remaining cells:");
-            mvprintw(row + 4, col, "Mines left:");
-            attron(A_BOLD);
-            cmvprintw(COLOR_CYAN, row + 1, col + 7, "%19d", moves);
-            cmvprintw(COLOR_GREEN, row + 2, col + 17, "%9s", s);
-            cmvprintw(COLOR_YELLOW, row + 3, col + 17, "%9d", goal - uncovered_cells);
-            cmvprintw(COLOR_RED, row + 4, col + 12, "%14d", mines_left);
-            attroff(A_BOLD);
-            row += 6;
-            margin = 4;
-            attron(A_UNDERLINE);
-            mvprintw(row, col + margin, "n");
-            mvprintw(row, col + 19 - margin, "r");
-            mvprintw(row + 1, col + margin, "h");
-            mvprintw(row + 1, col + 19 - margin, "q");
-            attroff(A_UNDERLINE);
-            mvprintw(row, col + margin + 1, "ew-game");
-            mvprintw(row++, col + 20 - margin, "estart");
-            mvprintw(row, col + margin + 1, "istory");
-            mvprintw(row, col + 20 - margin, "uit");
-        }
+        char *lines_h = LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H LINE_H;
+        char s[10];
+        init_pair(8, COLOR_WHITE, COLOR_RED);
+        init_pair(9, COLOR_WHITE, COLOR_GREEN);
+        mvprintw(res.row, res.col, "%s YOU", lines_h);
+        cmvprintw(lost ? 8 : 9, res.row, res.col + 12, "%s", lost ? " LOST " : " WON! ");
+        mvprintw(res.row, res.col + 19, "%s", lines_h);
+        mvprintw(res.row + 1, res.col, "Moves:");
+        snprintf(s, 10, "%d/%d", uncovered_cells, goal);
+        mvprintw(res.row + 2, res.col, "Uncovered cells:");
+        mvprintw(res.row + 3, res.col, "Remaining cells:");
+        mvprintw(res.row + 4, res.col, "Mines left:");
+        attron(A_BOLD);
+        cmvprintw(COLOR_CYAN, res.row + 1, res.col + 7, "%19d", moves);
+        cmvprintw(COLOR_GREEN, res.row + 2, res.col + 17, "%9s", s);
+        cmvprintw(COLOR_YELLOW, res.row + 3, res.col + 17, "%9d", goal - uncovered_cells);
+        cmvprintw(COLOR_RED, res.row + 4, res.col + 12, "%14d", mines_left);
+        attroff(A_BOLD);
+        res.row += 6;
+        attron(A_UNDERLINE);
+        mvprintw(res.row, res.col + res.margin, "n");
+        mvprintw(res.row, res.col + 19 - res.margin, "r");
+        mvprintw(res.row + 1, res.col + res.margin, "h");
+        mvprintw(res.row + 1, res.col + 19 - res.margin, "q");
+        attroff(A_UNDERLINE);
+        mvprintw(res.row, res.col + res.margin + 1, "ew-game");
+        mvprintw(res.row++, res.col + 20 - res.margin, "estart");
+        mvprintw(res.row, res.col + res.margin + 1, "istory");
+        mvprintw(res.row, res.col + 20 - res.margin, "uit");
     }
 }
 
