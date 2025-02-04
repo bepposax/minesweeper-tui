@@ -12,7 +12,7 @@
 char *buffer;
 long unsigned int offset;
 static size_t allocated;
-extern int board_size;
+extern int side;
 
 /**
  * @brief prints memory allocation error to stderr
@@ -57,7 +57,7 @@ static void strinit()
 {
     int multiplier = 20;
 
-    allocated = ((board.rows && board.cols) ? board.rows * board.cols : board_size * board_size) * multiplier;
+    allocated = ((board.rows && board.cols) ? board.rows * board.cols : side * side) * multiplier;
     if (!(buffer = (char *)malloc(allocated)))
         printerr("Failed to allocate memory\n", __LINE__ - 1);
 }

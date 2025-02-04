@@ -9,7 +9,7 @@
 #include "string-builder.h"
 #include "symbols.h"
 
-const int board_size = 16, mid_col = board_size + 1;
+const int side = 16, mid_col = side + 1;
 const char *diffs[] = {"D I F F I C U L T Y",
                        "B E G I N N E R",
                        "I N T E R M E D I A T E",
@@ -89,7 +89,7 @@ int select_diff()
 
 int print_diff_menu()
 {
-    const int board_h = board_size, board_w = board_size * 2,
+    const int board_h = side, board_w = side * 2,
               menu_h = board_h + 4, menu_w = board_w + 3;
     int optns_col = board_w + 6;
 
