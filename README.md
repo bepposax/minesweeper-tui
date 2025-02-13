@@ -16,9 +16,11 @@ Minesweeper-TUI is a command-line implementation of the [Minesweeper](https://en
 ## Gameplay
 
 ![demo](https://github.com/user-attachments/assets/89b0d376-1262-429e-92b2-3e20afd2ac28)
-- The board consists of hidden cells, some containing mines.
-- Uncover all empty cells to win. Hitting a mine ends the game.
+- The board is a grid of cells, some containing mines.
+- Numbers indicate how many mines are adjacent to that cell.
 - Flag suspected mines to track them and avoid accidental clicks.
+- Left-click on a numbered cell to quickly uncover surrounding cells if all adjacent mines are flagged.
+- Uncover all empty cells to win. Hitting a mine ends the game.
 
 ## Controls
 
