@@ -15,10 +15,10 @@ Minesweeper-TUI is a command-line implementation of the [Minesweeper](https://en
 
 ## Gameplay
 
-- The game board is represented by a grid of cells.
-- Each cell may either be empty or contain a mine.
-- The goal of the game is to uncover all the empty cells.
-- Uncover a mine to lose the game.
+![demo](https://github.com/user-attachments/assets/89b0d376-1262-429e-92b2-3e20afd2ac28)
+- The board consists of hidden cells, some containing mines.
+- Uncover all empty cells to win. Hitting a mine ends the game.
+- Flag suspected mines to track them and avoid accidental clicks.
 
 ## Controls
 
