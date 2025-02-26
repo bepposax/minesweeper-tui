@@ -24,8 +24,7 @@ typedef struct results
 results_t res = {
     .height = 8,
     .width = 26,
-    .margin = 4
-};
+    .margin = 4};
 
 extern int goal, moves, uncovered_cells, mines_left;
 extern bool game_over, lost;
@@ -35,7 +34,7 @@ extern int print_diff_menu();
 /**
  * @brief calculates the column where the results should be printed, if printing them at the bottom
  * @return the number of the column where to start printing the results, so that they'll be centered
- * compared to the board 
+ * compared to the board
  */
 static inline int margin_l() { return res.width >= board.width ? 0 : (board.width - res.width) / 2; }
 
@@ -43,7 +42,8 @@ static inline int margin_l() { return res.width >= board.width ? 0 : (board.widt
  * @brief checks if there's space to print the results
  * @return true if there's space, false otherwise
  */
-static bool printable_results(){
+static bool printable_results()
+{
     // printable to the right?
     if (COLS >= (board.width + res.width + 3) && board.rows >= res.height)
     {
@@ -60,7 +60,6 @@ static bool printable_results(){
     }
     return false;
 }
-
 
 /**
  * @brief prints memory allocation error to stderr
@@ -246,8 +245,8 @@ void print_board(bool resizing)
     // stats top
     strappend(H_GRN);
     int len = strappend(" " CELL " %d/%d", uncovered_cells, goal);
-    strappend("%*.s", board.cols * 2 - len, "");
-    strappend(B_H_RED MINE H_RED " %2d\n\r" RESET, mines_left);
+    strappend(B_H_RED " %*c" H_RED " %2d" RESET "\n\r",
+              board.cols * 2 - len - (mines_left >= 100 ? 1 : 0), MINE, mines_left);
 
     // border top
     strappend(ARC0);
