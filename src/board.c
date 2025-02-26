@@ -246,7 +246,7 @@ void print_board(bool resizing)
     strappend(H_GRN);
     int len = strappend(" " CELL " %d/%d", uncovered_cells, goal);
     strappend(B_H_RED " %*c" H_RED " %2d" RESET "\n\r",
-              board.cols * 2 - len - (mines_left >= 100 ? 1 : 0), MINE, mines_left);
+              board.cols * 2 - len - (mines_left >= 100), MINE, mines_left);
 
     // border top
     strappend(ARC0);
