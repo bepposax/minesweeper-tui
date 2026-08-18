@@ -9,7 +9,7 @@ Minesweeper-TUI is a command-line implementation of the [Minesweeper](https://en
 
 ### Running
 
-1. Clone the repository or [download the executable](minesweeper).
+1. Clone the repository or [download the executable](https://github.com/bepposax/minesweeper-tui/raw/refs/heads/main/minesweeper).
 2. Run the executable (e.g. `./minesweeper`).
 
 ### Compiling
