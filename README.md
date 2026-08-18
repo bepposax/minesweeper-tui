@@ -7,11 +7,25 @@ Minesweeper-TUI is a command-line implementation of the [Minesweeper](https://en
 
 ## Instructions
 
-1. Make sure you have the necessary [requirements](#requirements) installed on your system.
-2. Clone the repository or download the source code files.
-3. Open a terminal and navigate to the directory containing the source code files.
-4. Compile the program by running the command `make`.
-5. Run the program using the command `make run`.
+### Running
+
+1. Clone the repository or [download the executable](minesweeper).
+2. Run the executable (e.g. `./minesweeper`).
+
+### Compiling
+
+1. Make sure you have the necessary requirements installed on your system:
+   - [Make](https://www.gnu.org/software/make/ "Make - GNU Project - Free Software Foundation") tool - (`make`)
+   - [GCC](https://gcc.gnu.org/ "GCC, the GNU Compiler Collection - GNU Project") compiler - (`gcc`)
+   - [NCURSES](https://invisible-island.net/ncurses/ "NCURSES - New Curses") library - (`libncurses-dev`)  
+*(Run the [`install.sh`](install.sh) (`apt` only) script to install missing dependencies)*
+1. Clone the repository or download the source code files.
+2. Navigate to the directory containing the source code files.
+3. Usage (make commands):
+   - `make`: Compiles the source code files and generates the executable file.
+   - `make run`: Runs the program.
+   - `make clean`: Deletes the executable file.
+   - `make test`: Compiles the program in testing mode.
 
 ## Gameplay
 
@@ -22,7 +36,7 @@ Minesweeper-TUI is a command-line implementation of the [Minesweeper](https://en
 - Left-click on a numbered cell to quickly uncover surrounding cells if all adjacent mines are flagged.
 - Uncover all empty cells to win. Hitting a mine ends the game.
 
-## Controls
+### Controls
 
 <table>
   <tr>
@@ -50,21 +64,6 @@ Minesweeper-TUI is a command-line implementation of the [Minesweeper](https://en
     <th><kbd>Q
     <td>quit the game or exit the program
 </table>
-
-## Requirements
-
-- [Make](https://www.gnu.org/software/make/ "Make - GNU Project - Free Software Foundation") tool
-- [GCC](https://gcc.gnu.org/ "GCC, the GNU Compiler Collection - GNU Project") compiler
-- [NCURSES](https://invisible-island.net/ncurses/ "NCURSES - New Curses") library
-
-Run the `install.sh` script to install missing dependencies
-
-## Usage
-
-- `make`: Compiles the source code files and generates the executable file.
-- `make run`: Runs the program.
-- `make clean`: Deletes the executable file.
-- `make test`: Compiles the program in testing mode.
 
 ## Notes
 
