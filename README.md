@@ -10,15 +10,15 @@ Minesweeper-TUI is a command-line implementation of the [Minesweeper](https://en
 ### Running
 
 1. Clone the repository or [download the executable](https://github.com/bepposax/minesweeper-tui/raw/refs/heads/main/minesweeper).
-2. Run the executable (e.g. `./minesweeper`).
+2. Run the executable (`./minesweeper`).
 
 ### Compiling
 
 1. Make sure you have the necessary requirements installed on your system:
-   - [Make](https://www.gnu.org/software/make/ "Make - GNU Project - Free Software Foundation") tool - (`make`)
-   - [GCC](https://gcc.gnu.org/ "GCC, the GNU Compiler Collection - GNU Project") compiler - (`gcc`)
-   - [NCURSES](https://invisible-island.net/ncurses/ "NCURSES - New Curses") library - (`libncurses-dev`)  
-*(Run the [`install.sh`](install.sh) (`apt` only) script to install missing dependencies)*
+   - [Make](https://www.gnu.org/software/make/ "Make - GNU Project - Free Software Foundation") tool - `make`
+   - [GCC](https://gcc.gnu.org/ "GCC, the GNU Compiler Collection - GNU Project") compiler - `gcc`
+   - [NCURSES](https://invisible-island.net/ncurses/ "NCURSES - New Curses") library - `libncurses-dev`
+   > Run [`install.sh`](install.sh) to automate the installation (**apt** only)
 1. Clone the repository or download the source code files.
 2. Navigate to the directory containing the source code files.
 3. Usage (make commands):
