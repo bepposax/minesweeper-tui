@@ -38,6 +38,24 @@ if $installed; then
     echo -e ".\n"
 fi
 
+update_alias() {
+    if ! $(grep -q "alias mines" $ALIASFILE); then
+        echo -n "Appending alias to $ALIASFILE... "
+        echo $ALIAS >> $ALIASFILE &&
+        echo -e "Done\n\nRestart the terminal or type 'source $ALIASFILE' for changes to take effect."
+    else
+        echo "Alias 'mines' already exists."
+        read -rp "Update alias 'mines'? " choice
+        if [[ $choice = y* || $choice = Y* ]]; then
+            echo -n "Removing old alias... "
+            grep -v "alias mines" .bash_aliases > temp && mv temp .bash_aliases && echo "Done"
+            update_alias
+        else
+            echo 
+        fi
+    fi
+}
+
 read -rp "Create the alias 'mines' to run the game? [Y/n] " choice
 if [[ $choice = y* || $choice = Y* ]]; then
     ALIASFILE=~/.bash_aliases
@@ -49,13 +67,7 @@ if [[ $choice = y* || $choice = Y* ]]; then
         touch $ALIASFILE && echo "Done"
     }
     # creates the alias 'mines' if it doesn't exist
-    if ! $(grep -q "alias mines" $ALIASFILE); then
-        echo -n "Appending alias to $ALIASFILE... "
-        echo $ALIAS >> $ALIASFILE &&
-        echo -e "Done\n\nRestart the terminal or type 'source $ALIASFILE' for changes to take effect."
-    else
-        echo "Alias 'mines' already exists."
-    fi
+    update_alias
 else
     echo "Abort."
 fi
