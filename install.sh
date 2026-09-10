@@ -41,7 +41,7 @@ fi
 read -rp "Create the alias 'mines' to run the game? [Y/n] " choice
 if [[ $choice = y* || $choice = Y* ]]; then
     ALIASFILE=~/.bash_aliases
-    ALIAS="alias mines='make -C $(find ~ -type d -name minesweeper-tui) run'"
+    ALIAS="alias mines='$(find -L ~ -type d -name minesweeper-tui)/minesweeper'"
 
     # creates ALIASFILE if it doesn't exist
     [ -f $ALIASFILE ] || {
@@ -52,7 +52,7 @@ if [[ $choice = y* || $choice = Y* ]]; then
     if ! $(grep -q "alias mines" $ALIASFILE); then
         echo -n "Appending alias to $ALIASFILE... "
         echo $ALIAS >> $ALIASFILE &&
-        echo -e "Done\nRestart the terminal for changes to take effect."
+        echo -e "Done\n\nRestart the terminal or type 'source $ALIASFILE' for changes to take effect."
     else
         echo "Alias 'mines' already exists."
     fi
