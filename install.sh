@@ -48,10 +48,10 @@ update_alias() {
         read -rp "Update alias 'mines'? " choice
         if [[ $choice = y* || $choice = Y* ]]; then
             echo -n "Removing old alias... "
-            grep -v "alias mines" .bash_aliases > temp && mv temp .bash_aliases && echo "Done"
+            grep -v "alias mines" $ALIASFILE > temp && mv temp $ALIASFILE && echo "Done"
             update_alias
         else
-            echo 
+            echo -e "Discard\nDone."
         fi
     fi
 }
