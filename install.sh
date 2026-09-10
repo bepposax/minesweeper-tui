@@ -59,7 +59,7 @@ update_alias() {
 read -rp "Create the alias 'mines' to run the game? [Y/n] " choice
 if [[ $choice = y* || $choice = Y* ]]; then
     ALIASFILE=~/.bash_aliases
-    ALIAS="alias mines='$(find -L ~ -type d -name minesweeper-tui)/minesweeper'"
+    ALIAS="alias mines='\$(find -L ~ -type f -name minesweeper -executable -print -quit)'"
 
     # creates ALIASFILE if it doesn't exist
     [ -f $ALIASFILE ] || {
