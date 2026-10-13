@@ -55,7 +55,7 @@ int select_diff()
         if (ch == KEY_MOUSE)
         {
             MEVENT event;
-            if (getmouse(&event) == OK && (event.bstate & BUTTON1_CLICKED))
+            if (getmouse(&event) == OK && (event.bstate & BUTTON1_PRESSED))
             {
                 offset = abs(mid_col - event.x);
                 switch (event.y)
@@ -90,7 +90,7 @@ int select_diff()
 int print_diff_menu()
 {
     const int board_h = side, board_w = side * 2,
-              menu_h = board_h + 4, menu_w = board_w + 3;
+        menu_h = board_h + 4, menu_w = board_w + 3;
     int optns_col = board_w + 6;
 
     clear();

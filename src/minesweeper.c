@@ -147,10 +147,10 @@ int game_loop()
                                             (event.bstate & BUTTON1_PRESSED))
                                             play(row, col);
                                         else if ((releasevent.bstate & BUTTON2_RELEASED) &&
-                                                 (event.bstate & BUTTON2_PRESSED))
+                                            (event.bstate & BUTTON2_PRESSED))
                                             mark(row, col);
                                         else if ((releasevent.bstate & BUTTON3_RELEASED) &&
-                                                 (event.bstate & BUTTON3_PRESSED))
+                                            (event.bstate & BUTTON3_PRESSED))
                                             flag(row, col);
                                     }
                                     else
@@ -166,11 +166,11 @@ int game_loop()
                                 continue;
                             }
                         }
-                        else if (event.bstate & BUTTON1_CLICKED)
+                        else if (event.bstate & BUTTON1_PRESSED)
                             play(row, col);
-                        else if (event.bstate & BUTTON2_CLICKED)
+                        else if (event.bstate & BUTTON2_PRESSED)
                             mark(row, col);
-                        else if (event.bstate & BUTTON3_CLICKED)
+                        else if (event.bstate & BUTTON3_PRESSED)
                             flag(row, col);
                         if (!timer_running)
                             timer_start();
