@@ -2,8 +2,10 @@
  * @file history.c
  * @author Ivano Izzo
  */
+#define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <ncurses.h>
 #include <string.h>
 #include <ctype.h>
@@ -12,7 +14,7 @@
 #include "board.h"
 
 static FILE *history;
-static char *filename = ".history";
+static char filename[] = ".history.XXXXXX";
 
 /**
  * @brief prints memory allocation error to stderr
@@ -28,29 +30,45 @@ static void printerr(char *msg, int line);
 static void print_history(char *buffer);
 
 /**
+ * @return an unique history file
+ */
+static FILE* create_history()
+{
+    FILE* f;
+    int fd;
+
+    if (!(f = fdopen((fd = mkstemp(filename)), "rx"))) {
+        close(fd);
+        printerr("Failed to create history file\n", __LINE__ - 1);
+    }
+    return f;
+}
+
+/**
  * @brief opens the history file
  * @param mode the mode to open it in
  */
-static inline void open_history(char *mode)
+static void open_history(char *mode)
 {
-    if (!(history = fopen(filename, mode)))
-        printerr("Failed to open history file\n", __LINE__ - 1);
+    if (!history)
+        history = create_history();
+    history = fopen(filename, mode);
 }
 
-void update_history()
+void update_history() 
 {
     open_history("a");
     fprintf(history, "%s\n!!!\n", buffer);
     fclose(history);
 }
 
-void clear_history()
+void clear_history() 
 {
     open_history("w");
     fclose(history);
 }
 
-int show_history()
+int show_history() 
 {
     int ch;
     char line[board.width * 8];
@@ -58,17 +76,17 @@ int show_history()
 
     hist_buffer[0] = '\0';
     open_history("r");
-    while (fgets(line, sizeof(line), history))
+    while (fgets(line, sizeof(line), history)) 
     {
         if (strcmp(line, "!!!\n") != 0)
             strcat(hist_buffer, line);
-        else
+        else 
         {
             print_history(hist_buffer);
-            while ((ch = tolower(getch())) != 'h')
+            while ((ch = tolower(getch())) != 'h') 
             {
                 if (ch == 'q' || ch == 'n' || ch == 'r')
-                {
+                 {
                     hist_buffer[0] = '\0';
                     return ch;
                 }
