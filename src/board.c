@@ -245,8 +245,8 @@ void print_board(bool resizing)
     // stats top
     strappend(H_GRN);
     int len = strappend(" " CELL " %d/%d", uncovered_cells, goal);
-    strappend(B_H_RED " %*c" H_RED " %2d" RESET "\n\r",
-              board.cols * 2 - len - (mines_left >= 100), MINE, mines_left);
+    strappend(B_H_RED "%*s" H_RED " %2d" RESET "\n\r",
+              board.width - len - (mines_left >= 100), MINE, mines_left);
 
     // border top
     strappend(ARC0);
