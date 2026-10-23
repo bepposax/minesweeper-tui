@@ -12,6 +12,7 @@
 #define LINE_H    "\u2500"    // ─
 #define LINE_V    "\u2502"    // │
 #define CELL      "\u25A0"    // ■
+#define CELL_M    "\u25FE"    // ◾
 #define MINE      "\u2A2F"    // ⨯
 #define FLAG      "\u2691"    // ⚑
 #define MARK      "?"         // ?

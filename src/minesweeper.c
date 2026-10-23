@@ -11,6 +11,7 @@
 #include "string-builder.h"
 #include "history.h"
 #include "timer.h"
+#include "symbols.h"
 
 int goal, uncovered_cells, mines_left, moves;
 bool game_over, lost;
@@ -135,7 +136,7 @@ int game_loop()
                         if ((event.bstate & (BUTTON1_PRESSED | BUTTON2_PRESSED | BUTTON3_PRESSED)) &&
                             board.cells[row][col].state == UNDISCOVERED)
                         {
-                            mvprintw(event.y, event.x, "\u25FE");
+                            mvprintw(event.y, event.x, CELL_M);
                             if ((ch = tolower(getch())) == KEY_MOUSE)
                             {
                                 MEVENT releasevent;
