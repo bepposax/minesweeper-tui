@@ -136,7 +136,7 @@ static void print_history(char *buffer)
         printf("%s", buffer);
         print_results();
         attron(A_BOLD);
-        mvprintw(board.height - 1, board.width / 2 - 2, "%s %s %s", LEFT_H, LINE_V, RIGHT_H);
+        mvprintw(board.height - 1, board.width / 2 - 2, "%s%s %s %s%s", LEFT_H, LINE_H, LINE_V, LINE_H, RIGHT_H);
         attroff(A_BOLD);
         move(0, 0);
     }
