@@ -25,5 +25,7 @@
 #define DOWN      "\u2B63"    // ⭣
 #define LEFT      "\u2B60"    // ⭠
 #define RIGHT     "\u2B62"    // ⭢
+#define LEFT_H    "\u2770"    // ❰
+#define RIGHT_H   "\u2771"    // ❱
 
 #endif

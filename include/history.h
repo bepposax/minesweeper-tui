@@ -19,7 +19,7 @@ void clear_history();
  * @brief prints the game history move by move, every time 'h' is pressed
  * @return the user's input: 'q' to quit, 'r' to restart, 'n' for a new game
  */
-int show_history();
+int show_history(int moves);
 
 /**
  * @brief removes the history file before exiting the program
