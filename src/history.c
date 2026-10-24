@@ -16,6 +16,7 @@
 
 static FILE *history;
 static char filename[] = ".history.XXXXXX";
+static int pages = 0;
 
 /**
  * @brief prints memory allocation error to stderr
@@ -61,6 +62,7 @@ void update_history()
     open_history("a");
     fprintf(history, "%s\n!!!\n", buffer);
     fclose(history);
+    pages++;
 }
 
 void clear_history() 
@@ -69,17 +71,15 @@ void clear_history()
     fclose(history);
 }
 
-int show_history(int moves) 
+int show_history() 
 {
-    moves += 2;
-    int ch = 0, move = 0;
+    int ch = 0, page = 0;
     char line[board.width * 8];
     char hist_buffer[sizeof(line) * board.height];
-    long cursor[moves];
+    long cursor[pages + 1];
     
     hist_buffer[0] = '\0';
     open_history("r");
-    memset(cursor, -1, sizeof(cursor));
     cursor[0] = 0;
 
     while (fgets(line, sizeof(line), history)) 
@@ -88,7 +88,7 @@ int show_history(int moves)
             strcat(hist_buffer, line);
         else 
         {
-            cursor[++move] = ftell(history);
+            cursor[++page] = ftell(history);
             print_history(hist_buffer);
 
             while ((ch = getch())) 
@@ -98,31 +98,32 @@ int show_history(int moves)
                 if (ch == 'q' || ch == 'n' || ch == 'r')
                 {
                     hist_buffer[0] = '\0';
+                    remove_history();
                     return ch;
                 }
                 if (ch == 'h' || ch == KEY_RIGHT)
                 {
-                    if (move == moves - 1)
+                    if (page == pages)
                     {
-                        move--;
-                        fseek(history, cursor[move], SEEK_SET);
+                        page--;
+                        fseek(history, cursor[page], SEEK_SET);
                     }
                     break;
                 }
                 else if (ch == KEY_LEFT)
                 {
-                    move = move >= 2 ? (move - 2) : 0;
-                    fseek(history, cursor[move], SEEK_SET);
+                    page = page >= 2 ? (page - 2) : 0;
+                    fseek(history, cursor[page], SEEK_SET);
                     break;
                 }
                 else if (ch == KEY_RESIZE)
                     print_history(hist_buffer);
             }
-                
             hist_buffer[0] = '\0';
         }
     }
     fclose(history);
+    remove_history();
 
     return ch;
 }
@@ -148,7 +149,7 @@ int remove_history()
 
     if ((r = remove(filename)) == -1)
         fprintf(stderr, "%s:%d: Couldn't remove the \"%s\" file\n", __FILE__, __LINE__ - 1, filename);
-
+    pages = 0;
     return r;
 }
 

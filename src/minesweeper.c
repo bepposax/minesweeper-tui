@@ -209,7 +209,7 @@ int game_loop()
         timer_stop();
         while ((ch = tolower(getch())) != 'q' && ch != 'n' && ch != 'r')
         {
-            if (ch == 'h' && ((ch = show_history(moves)) == 'q' || ch == 'n' || ch == 'r'))
+            if (ch == 'h' && ((ch = show_history()) == 'q' || ch == 'n' || ch == 'r'))
                 break;
             if (ch == KEY_RESIZE)
                 print_board(true);
