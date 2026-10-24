@@ -12,7 +12,7 @@ $(TARGET): $(SRCS)
 	$(CC) $(SRCS) -o $@ $(CFLAGS) $(LDFLAGS)
 
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGET) .history.*
 
 run: $(TARGET)
 	./$(TARGET)
