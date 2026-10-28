@@ -18,8 +18,10 @@ bool game_over, lost;
 
 /**
  * @brief places the mines randomly on the board
+ * @param row the first played cell's row
+ * @param col the first played cell's column
  */
-static void place_mines();
+static void place_mines(int row, int col);
 
 /**
  * @brief signals a mine to the cells surrounding it
@@ -99,6 +101,7 @@ static void place_mine(int row, int col);
 int game_loop()
 {
     int ch = 0, row, col;
+    bool restart = false;
 
     timer_reset();
     do
@@ -112,9 +115,6 @@ int game_loop()
         clear_history();
 #ifdef TEST
         init_test_board();
-#else
-        if (ch != 'r')
-            place_mines();
 #endif
         print_board(false);
         while (!game_over)
@@ -131,8 +131,7 @@ int game_loop()
                     else
                         continue;
                     if (row >= 0 && row < board.rows && col >= 0 && col < board.cols)
-                    {
-                        if ((event.bstate & (BUTTON1_PRESSED | BUTTON2_PRESSED | BUTTON3_PRESSED)))
+                        if (event.bstate & (BUTTON1_PRESSED | BUTTON2_PRESSED | BUTTON3_PRESSED))
                         {
                             // cell pressed "animation"
                             if (board.cells[row][col].state == UNDISCOVERED)
@@ -147,18 +146,24 @@ int game_loop()
                                         print_board(true);
                                         continue;
                                     }
+                                    if (event.bstate & BUTTON1_PRESSED)
+                                    {
+#ifndef TEST
+                                        if (!restart && moves == 0)
+                                            place_mines(row, col);
+#endif
+                                        play(row, col);
+                                        
+                                    }
+                                    else if (event.bstate & BUTTON2_PRESSED)
+                                        mark(row, col);
+                                    else if (event.bstate & BUTTON3_PRESSED)
+                                        flag(row, col);
+                                    if (!timer_running)
+                                        timer_start();
                                 }
-                                if ((event.bstate & BUTTON1_PRESSED))
-                                    play(row, col);
-                                else if ((event.bstate & BUTTON2_PRESSED))
-                                    mark(row, col);
-                                else if ((event.bstate & BUTTON3_PRESSED))
-                                    flag(row, col);
-                                if (!timer_running)
-                                    timer_start();
                             }
                         }
-                    }
                 }
             }
             if (ch == KEY_RESIZE)
@@ -174,6 +179,7 @@ int game_loop()
             }
             else if (ch == 'r')
             {
+                restart = true;
                 uncovered_cells = moves = 0;
                 mines_left = board.mines;
                 reset_board();
@@ -199,6 +205,7 @@ int game_loop()
         }
         if (ch == 'r')
         {
+            restart = true;
             reset_board();
             strfree();
             clear_history();
@@ -214,22 +221,32 @@ int game_loop()
     return ch;
 }
 
-static void place_mines()
+static void place_mines(int row, int col)
 {
     int mine_row, mine_col, mines_to_place = board.mines;
     cell_t *pos;
 
-    srand(time(NULL));
-    while (mines_to_place)
+    if (mines_to_place < board.rows * board.cols)
     {
-        mine_row = rand() % board.rows;
-        mine_col = rand() % board.cols;
-        if (!(pos = &(board.cells[mine_row][mine_col]))->is_mine)
+        srand(time(NULL));
+        while (mines_to_place)
         {
-            pos->is_mine = true;
-            signal_mine(mine_row, mine_col);
-            mines_to_place--;
+            do {
+                mine_row = rand() % board.rows;
+                mine_col = rand() % board.cols;
+            } while (mine_row == row && mine_col == col);
+            if (!(pos = &(board.cells[mine_row][mine_col]))->is_mine)
+            {
+                pos->is_mine = true;
+                signal_mine(mine_row, mine_col);
+                mines_to_place--;
+            }
         }
+    } else
+    {
+        for (int i = 0; i < board.rows; ++i)
+            for (int j = 0; j < board.cols; ++j)
+                board.cells[i][j].is_mine = true;
     }
 }
 
