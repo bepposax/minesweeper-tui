@@ -119,7 +119,7 @@ int game_loop()
         print_board(false);
         while (!game_over)
         {
-            if ((ch = tolower(getch())) == KEY_MOUSE)
+            if ((ch = getch()) == KEY_MOUSE)
             {
                 MEVENT event;
                 if (getmouse(&event) == OK)
@@ -132,55 +132,38 @@ int game_loop()
                         continue;
                     if (row >= 0 && row < board.rows && col >= 0 && col < board.cols)
                     {
-                        // cell pressed "animation"
-                        if ((event.bstate & (BUTTON1_PRESSED | BUTTON2_PRESSED | BUTTON3_PRESSED)) &&
-                            board.cells[row][col].state == UNDISCOVERED)
+                        if ((event.bstate & (BUTTON1_PRESSED | BUTTON2_PRESSED | BUTTON3_PRESSED)))
                         {
-                            mvprintw(event.y, event.x, CELL_M);
-                            if ((ch = tolower(getch())) == KEY_MOUSE)
+                            // cell pressed "animation"
+                            if (board.cells[row][col].state == UNDISCOVERED)
+                                mvprintw(event.y, event.x, CELL_M);
+                            if ((ch = getch()) == KEY_MOUSE)
                             {
                                 MEVENT releasevent;
                                 if (getmouse(&releasevent) == OK)
                                 {
-                                    if ((releasevent.y == event.y) && (releasevent.x == event.x))
-                                    {
-                                        if ((releasevent.bstate & BUTTON1_RELEASED) &&
-                                            (event.bstate & BUTTON1_PRESSED))
-                                            play(row, col);
-                                        else if ((releasevent.bstate & BUTTON2_RELEASED) &&
-                                            (event.bstate & BUTTON2_PRESSED))
-                                            mark(row, col);
-                                        else if ((releasevent.bstate & BUTTON3_RELEASED) &&
-                                            (event.bstate & BUTTON3_PRESSED))
-                                            flag(row, col);
-                                    }
-                                    else
+                                    if (releasevent.y != event.y || releasevent.x != event.x)
                                     {
                                         print_board(true);
                                         continue;
                                     }
                                 }
-                            }
-                            else
-                            {
-                                print_board(true);
-                                continue;
+                                if ((event.bstate & BUTTON1_PRESSED))
+                                    play(row, col);
+                                else if ((event.bstate & BUTTON2_PRESSED))
+                                    mark(row, col);
+                                else if ((event.bstate & BUTTON3_PRESSED))
+                                    flag(row, col);
+                                if (!timer_running)
+                                    timer_start();
                             }
                         }
-                        else if (event.bstate & BUTTON1_PRESSED)
-                            play(row, col);
-                        else if (event.bstate & BUTTON2_PRESSED)
-                            mark(row, col);
-                        else if (event.bstate & BUTTON3_PRESSED)
-                            flag(row, col);
-                        if (!timer_running)
-                            timer_start();
                     }
                 }
             }
             if (ch == KEY_RESIZE)
                 print_board(true);
-            else if (ch == 'n' || ch == 'q')
+            if ((ch = tolower(ch)) == 'n' || ch == 'q')
             {
                 strfree();
                 remove_history();

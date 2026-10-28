@@ -40,7 +40,7 @@ static void ncurses_init()
     curs_set(0);
     nodelay(stdscr, FALSE);
     mousemask(ALL_MOUSE_EVENTS, NULL);
-    mouseinterval(0);
+    mouseinterval(1);
     keypad(stdscr, TRUE);
     use_default_colors();
     start_color();

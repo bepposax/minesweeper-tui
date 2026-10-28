@@ -24,7 +24,7 @@ typedef struct results
 results_t res = {
     .height = 8,
     .width = 26,
-    .margin = 4};
+    .margin = 4 };
 
 extern int goal, moves, uncovered_cells, mines_left;
 extern bool game_over, lost;
@@ -135,13 +135,13 @@ void create_board(int diff)
 
 static int customize(char *prompt)
 {
-    char input[4];
-    int limit, choice, ch;
+    char input[5];
+    int limit, choice;
 
     do
     {
         while (print_diff_menu())
-            while ((ch = getch()) != KEY_RESIZE)
+            while (getch() != KEY_RESIZE)
                 ;
         attron(A_BOLD | COLOR_PAIR(COLOR_CYAN));
         mvprintw(15, 12, " %s --  ", prompt);
@@ -230,6 +230,7 @@ void print_board(bool resizing)
 {
     clear();
     refresh();
+    move(0, 0);
     if (!is_printable(board.height, board.width))
         return;
     if (resizing && buffer)
@@ -246,7 +247,7 @@ void print_board(bool resizing)
     strappend(H_GRN);
     int len = strappend(" " CELL " %d/%d", uncovered_cells, goal);
     strappend(B_H_RED "%*s" H_RED " %2d" RESET "\n\r",
-              board.width - len - (mines_left >= 100), MINE, mines_left);
+        board.width - len - (mines_left >= 100), MINE, mines_left);
 
     // border top
     strappend(ARC0);
