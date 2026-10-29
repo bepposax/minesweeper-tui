@@ -21,4 +21,4 @@ run: $(TARGET)
 	./$(TARGET)
 
 test:	$(SRCS)
-	$(CC) $(SRCS) -o $(TARGET) -I include/ $(LDFLAGS) -D TEST
+	$(CC) $(SRCS) -o $(TARGET) -I include/ -std=c99 $(LDFLAGS) -D TEST
