@@ -4,7 +4,7 @@ LDFLAGS = -lncursesw
 TARGET = minesweeper
 SRCS = src/*.c
 
-.PHONY: all clean histclean run test
+.PHONY: all clean run test
 
 all: $(TARGET)
 
@@ -13,9 +13,6 @@ $(TARGET): $(SRCS)
 
 clean:
 	rm -f $(TARGET)
-
-histclean:	clean
-	rm -f .history.*
 
 run: $(TARGET)
 	./$(TARGET)

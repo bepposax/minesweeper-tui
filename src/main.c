@@ -4,11 +4,20 @@
  */
 #include <ncurses.h>
 #include <locale.h>
+#include <signal.h>
+#include <unistd.h>
 #include "difficulty.h"
 #include "board.h"
 #include "minesweeper.h"
+#include "history.h"
 
 static void ncurses_init();
+
+static void sighup_handler(int signo)
+{
+    remove_history();
+    _exit(signo);
+}
 
 int main(void)
 {
@@ -16,6 +25,7 @@ int main(void)
 
     setlocale(LC_ALL, "");
     ncurses_init();
+    signal(SIGHUP, sighup_handler);
     do
     {
         choice = 0;
