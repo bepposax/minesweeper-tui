@@ -160,9 +160,11 @@ static int customize(char *prompt)
         mvprintw(17, 14, "or 100%% ");
         echo();
         curs_set(2);
+        noraw();
         mvgetnstr(15, 20, input, 4);
         noecho();
         curs_set(0);
+        raw();
         attroff(A_BOLD | COLOR_PAIR(COLOR_CYAN));
         choice = atoi(input);
         if (choice < 3 && (prompt[0] == 'H' || prompt[0] == 'W'))

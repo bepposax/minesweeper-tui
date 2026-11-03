@@ -12,20 +12,16 @@
 #include "history.h"
 
 static void ncurses_init();
-
-static void sighup_handler(int signo)
-{
-    remove_history();
-    _exit(signo);
-}
+static void cleanup(int signo);
 
 int main(void)
 {
     int diff, choice;
 
+    for (int i = 1; i <= 3; ++i)
+        signal(i, cleanup); // SIGHUP; SIGNINT; SIGQUIT
     setlocale(LC_ALL, "");
     ncurses_init();
-    signal(SIGHUP, sighup_handler);
     do
     {
         choice = 0;
@@ -36,8 +32,7 @@ int main(void)
             free_board();
         }
     } while (choice == 'n');
-    endwin();
-    curs_set(2);
+    cleanup(0);
 
     return 0;
 }
@@ -56,4 +51,13 @@ static void ncurses_init()
     start_color();
     for (int i = 0; i < 8; ++i)
         init_pair(i, i, -1);
+}
+
+static void cleanup(int signo)
+{
+    if (signo) remove_history();
+    endwin();
+    printf("\033[0 q"); // reset cursor default style
+    fflush(stdout);
+    if (signo) _exit(signo);
 }
