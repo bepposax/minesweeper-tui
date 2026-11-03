@@ -167,7 +167,7 @@ static int customize(char *prompt)
         choice = atoi(input);
         if (choice < 3 && (prompt[0] == 'H' || prompt[0] == 'W'))
             choice = -1;
-        if (input[strlen(input) - 1] == '%')
+        if (input[0] && input[strlen(input) - 1] == '%')
             choice = choice > 100 ? -1 : limit * choice / 100;
     } while (choice < 1 || choice > limit);
 
