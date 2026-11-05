@@ -26,7 +26,7 @@ results_t res = {
     .width = 26,
     .margin = 4 };
 
-extern int goal, moves, uncovered_cells, mines_left;
+extern int goal, moves, uncovered_cells, mines_left, side;
 extern bool game_over, lost;
 
 extern int print_diff_menu();
@@ -90,24 +90,24 @@ void create_board(int diff)
 #ifndef TEST
     switch (diff)
     {
-    case 1:
-        board.rows = board.cols = 9;
-        board.mines = 10;
-        break;
-    case 2:
-        board.rows = board.cols = 16;
-        board.mines = 40;
-        break;
-    case 3:
-        board.rows = 16;
-        board.cols = 30;
-        board.mines = 99;
-        break;
-    case 4:
-        board.rows = customize("Height");
-        board.cols = customize("Width ");
-        board.mines = customize("Mines ");
-        break;
+        case 1:
+            board.rows = board.cols = 9;
+            board.mines = 10;
+            break;
+        case 2:
+            board.rows = board.cols = 16;
+            board.mines = 40;
+            break;
+        case 3:
+            board.rows = 16;
+            board.cols = 30;
+            board.mines = 99;
+            break;
+        case 4:
+            board.rows = customize("Height");
+            board.cols = customize("Width ");
+            board.mines = customize("Mines ");
+            break;
     }
 #else
     FILE *f;
@@ -141,27 +141,29 @@ static int customize(char *prompt)
     do
     {
         while (print_diff_menu())
-            while (getch() != KEY_RESIZE)
-                ;
+            while (getch() != KEY_RESIZE);
         attron(A_BOLD | COLOR_PAIR(COLOR_CYAN));
-        mvprintw(15, 12, " %s --  ", prompt);
-        switch (prompt[0])
+        mvprintw(side - 1, side - 5, " %s %s%s%s%s ", prompt, MDOT, MDOT, MDOT, MDOT);
+        switch (prompt[0]) 
         {
-        case 'H':
-            limit = LINES - 5;
-            break;
-        case 'W':
-            limit = COLS / 2 - 2;
-            break;
-        default:
-            limit = board.rows * board.cols;
+            case 'H':
+                limit = LINES - 5;
+                break;
+            case 'W':
+                limit = COLS / 2 - 2;
+                break;
+            default:
+                limit = board.rows * board.cols;
         }
-        mvprintw(16, 14, "max%4d ", limit);
-        mvprintw(17, 14, "or 100%% ");
+        mvprintw(side, side - 4, ARC1 " max%4d " ARC0, limit);
+        mvprintw(side + 1, side - 4, LINE_V " or 100%% " LINE_V);
+        cmvprintw(COLOR_WHITE, side + 2, side - 4, "%s", LINE_UP_H);
+        cmvprintw(COLOR_WHITE, side + 2, side + 6, "%s", LINE_UP_H);
+        attron(COLOR_PAIR(COLOR_CYAN));
         echo();
         curs_set(2);
         noraw();
-        mvgetnstr(15, 20, input, 4);
+        mvgetnstr(side - 1, side + 3, input, 4);
         noecho();
         curs_set(0);
         raw();
@@ -249,7 +251,7 @@ void print_board(bool resizing)
     strappend(H_GRN);
     int len = strappend(" " CELL " %d/%d", uncovered_cells, goal);
     strappend(B_H_RED "%*s" H_RED " %2d" RESET "\n\r",
-        board.width - len - (mines_left >= 100), MINE, mines_left);
+              board.width - len - (mines_left >= 100), MINE, mines_left);
 
     // border top
     strappend(ARC0);
@@ -278,20 +280,20 @@ void print_board(bool resizing)
                 {
                     switch (num_mines)
                     {
-                    case 1:
-                        strappend(H_BLU);
-                        break;
-                    case 2:
-                        strappend(H_GRN);
-                        break;
-                    case 3:
-                        strappend(H_YEL);
-                        break;
-                    case 4:
-                        strappend(H_MAG);
-                        break;
-                    default:
-                        strappend(H_CYN);
+                        case 1:
+                            strappend(H_BLU);
+                            break;
+                        case 2:
+                            strappend(H_GRN);
+                            break;
+                        case 3:
+                            strappend(H_YEL);
+                            break;
+                        case 4:
+                            strappend(H_MAG);
+                            break;
+                        default:
+                            strappend(H_CYN);
                     }
                     strappend("%d " RESET, num_mines);
                 }

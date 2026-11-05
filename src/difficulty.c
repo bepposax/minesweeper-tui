@@ -9,13 +9,29 @@
 #include "string-builder.h"
 #include "symbols.h"
 
-const int side = 16, mid_col = side + 1;
-const char *diffs[] = {"D I F F I C U L T Y",
-                       "B E G I N N E R",
-                       "I N T E R M E D I A T E",
-                       "E X P E R T",
-                       "C U S T O M"};
+typedef struct diff {
+    const char* name;
+    int color;
+} diff_t;
+
+diff_t diffs[] = {
+    {.name = "D I F F I C U L T Y",
+     .color = COLOR_WHITE},
+    {.name = "B E G I N N E R",
+     .color = COLOR_GREEN},
+    {.name = "I N T E R M E D I A T E",
+     .color = COLOR_YELLOW},
+    {.name = "E X P E R T",
+     .color = COLOR_RED},
+    {.name = "C U S T O M",
+     .color = COLOR_CYAN}};
+
 #define NUM_DIFFS (int)sizeof(diffs) / (int)sizeof(diffs[0])
+
+const int side = 18, mid_col = side + 1,
+          board_h = side, board_w = side * 2,
+          menu_h = board_h + 4, menu_w = board_w + 3,
+          vertical_offset = board_h / (NUM_DIFFS);
 int semilen[NUM_DIFFS];
 
 extern bool is_printable(int height, int width);
@@ -26,7 +42,7 @@ extern bool is_printable(int height, int width);
 static inline void init_semilenghts()
 {
     for (int i = 0; i < NUM_DIFFS; ++i)
-        semilen[i] = (int)strlen(diffs[i]) / 2;
+        semilen[i] = (int)strlen(diffs[i].name) / 2;
 }
 
 static inline int abs(int x) { return x < 0 ? -x : x; }
@@ -49,6 +65,7 @@ int select_diff()
 #ifdef TEST
     return -1;
 #endif
+    init_semilenghts();
     print_diff_menu();
     while ((ch = getch()))
     {
@@ -60,19 +77,19 @@ int select_diff()
                 offset = abs(mid_col - event.x);
                 switch (event.y)
                 {
-                case 6:
+                case 8:
                     if (offset <= semilen[1])
                         return 1;
                     break;
-                case 9:
+                case 11:
                     if (offset <= semilen[2])
                         return 2;
                     break;
-                case 12:
+                case 14:
                     if (offset <= semilen[3])
                         return 3;
                     break;
-                case 15:
+                case 17:
                     if (offset <= semilen[4])
                         return 4;
                     break;
@@ -87,11 +104,10 @@ int select_diff()
     return 0;
 }
 
-int print_diff_menu()
+int print_diff_menu() 
 {
-    const int board_h = side, board_w = side * 2,
-        menu_h = board_h + 4, menu_w = board_w + 3;
-    int optns_col = board_w + 6;
+    int optns_col = menu_w + 3,
+        diff_row = 1 + vertical_offset;
 
     clear();
     if (!is_printable(menu_h, menu_w))
@@ -125,14 +141,22 @@ int print_diff_menu()
     offset = 0;
 
     // difficulties
-    init_semilenghts();
-    attron(A_BOLD);
-    mvprintw(3, mid_col - semilen[0], "%s", diffs[0]);
-    cmvprintw(COLOR_GREEN, 6, mid_col - semilen[1], diffs[1]);
-    cmvprintw(COLOR_YELLOW, 9, mid_col - semilen[2], diffs[2]);
-    cmvprintw(COLOR_RED, 12, mid_col - semilen[3], diffs[3]);
-    cmvprintw(COLOR_CYAN, 15, mid_col - semilen[4], diffs[4]);
-    attroff(A_BOLD);
+    attron(WA_BOLD);
+    for (int i = 0; i < NUM_DIFFS; ++i) {
+        attron(COLOR_PAIR(diffs[i].color));
+        mvprintw(diff_row - 1, mid_col - semilen[i] - 2, "%s", ARC0);
+        for (int j = 0; j < (int)strlen(diffs[i].name) + 2; ++j)
+            printw("%s", LINE_H);
+        printw("%s", ARC1);
+        mvprintw(diff_row, mid_col - semilen[i] - 2, "%s %s %s", LINE_V, diffs[i].name, LINE_V);
+        mvprintw(diff_row + 1, mid_col - semilen[i] - 2, "%s", ARC2);
+        for (int j = 0; j < (int)strlen(diffs[i].name) + 2; ++j)
+            printw("%s", LINE_H);
+        printw("%s", ARC3);
+        attroff(COLOR_PAIR(diffs[i].color));
+        diff_row += vertical_offset + (i == 0);
+    }
+    attroff(WA_BOLD);
 
     // side options
     if (optns_col + 7 < COLS)
@@ -151,15 +175,15 @@ int print_diff_menu()
     return 0;
 }
 
-static int cmvprintw(int color, int row, int col, const char *str, ...)
+static int cmvprintw(int color, int row, int col, const char *str, ...) 
 {
-    va_list args;
-    va_start(args, str);
     attron(COLOR_PAIR(color));
     move(row, col);
+    va_list args;
+    va_start(args, str);
     int r = vw_printw(stdscr, str, args);
-    attroff(COLOR_PAIR(color));
     va_end(args);
+    attroff(COLOR_PAIR(color));
 
     return r;
 }

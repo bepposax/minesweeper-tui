@@ -11,6 +11,7 @@
 #define ARC3      "\u256F"    // ╯
 #define LINE_H    "\u2500"    // ─
 #define LINE_V    "\u2502"    // │
+#define LINE_UP_H "\u2534"    // ┴
 #define CELL      "\u25A0"    // ■
 #define CELL_M    "\u25FE"    // ◾
 #define MINE      "\u2A2F"    // ⨯
