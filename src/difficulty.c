@@ -9,9 +9,11 @@
 #include "string-builder.h"
 #include "symbols.h"
 
-typedef struct diff {
-    const char* name;
-    int color;
+typedef struct diff
+{
+    const char *name;
+    const int color;
+    int row;
 } diff_t;
 
 diff_t diffs[] = {
@@ -33,8 +35,31 @@ const int side = 18, mid_col = side + 1,
           menu_h = board_h + 4, menu_w = board_w + 3,
           vertical_offset = board_h / (NUM_DIFFS);
 int semilen[NUM_DIFFS];
+int selected = 0;
+mmask_t oldmask;
 
 extern bool is_printable(int height, int width);
+
+/**
+ * @brief populate difficulties with their row
+ */
+static void set_diffs_rows()
+{
+    for (int i = 0; i < NUM_DIFFS; ++i)
+        diffs[i].row = vertical_offset * (i + 1) + 1 + (i != 0);
+}
+
+/**
+ * @brief prints a border over a difficulty name when mouse hovering
+ * @param d the difficulty number
+ */
+static void print_border(int d);
+
+/**
+ * @brief removes a border around a difficulty name when not hovering it
+ * @param d the difficulty number
+ */
+static void clear_border(int d);
 
 /**
  * @brief initializes semilen[] with half the lengths of the strings in diffs[]
@@ -60,39 +85,40 @@ static int cmvprintw(int color, int row, int col, const char *str, ...);
 
 int select_diff()
 {
-    int ch, offset;
+    int ch, x_offset, y_offset, hovering = 0;
 
 #ifdef TEST
     return -1;
 #endif
+    selected = 0;
     init_semilenghts();
+    set_diffs_rows();
+    mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, &oldmask);
+    printf("\033[?1003h\n"); // terminal reports mouse events
     print_diff_menu();
     while ((ch = getch()))
     {
         if (ch == KEY_MOUSE)
         {
             MEVENT event;
-            if (getmouse(&event) == OK && (event.bstate & BUTTON1_PRESSED))
+            if (getmouse(&event) == OK)
             {
-                offset = abs(mid_col - event.x);
-                switch (event.y)
+                x_offset = abs(mid_col - event.x);
+                for (int i = 1; i < NUM_DIFFS; ++i)
                 {
-                case 8:
-                    if (offset <= semilen[1])
-                        return 1;
-                    break;
-                case 11:
-                    if (offset <= semilen[2])
-                        return 2;
-                    break;
-                case 14:
-                    if (offset <= semilen[3])
-                        return 3;
-                    break;
-                case 17:
-                    if (offset <= semilen[4])
-                        return 4;
-                    break;
+                    y_offset = abs(diffs[i].row - event.y);
+                    if (x_offset <= semilen[i] + 2 && y_offset <= 1)
+                    {
+                        if (hovering && hovering != i)
+                            clear_border(hovering);
+                        hovering = i;
+                        print_border(hovering);
+                        if (event.bstate & BUTTON1_PRESSED)
+                            selected = i;
+                        break;
+                    }
+                    else if (hovering)
+                        clear_border(hovering);
                 }
             }
         }
@@ -100,14 +126,17 @@ int select_diff()
             break;
         else if (ch == KEY_RESIZE)
             print_diff_menu();
+        if (selected)
+            break;
     }
-    return 0;
+    mousemask(oldmask, NULL);
+
+    return selected;
 }
 
-int print_diff_menu() 
+int print_diff_menu()
 {
-    int optns_col = menu_w + 3,
-        diff_row = 1 + vertical_offset;
+    int optns_col = menu_w + 3;
 
     clear();
     if (!is_printable(menu_h, menu_w))
@@ -142,21 +171,16 @@ int print_diff_menu()
 
     // difficulties
     attron(WA_BOLD);
-    for (int i = 0; i < NUM_DIFFS; ++i) {
+    for (int i = 0; i < NUM_DIFFS; ++i)
+    {
         attron(COLOR_PAIR(diffs[i].color));
-        mvprintw(diff_row - 1, mid_col - semilen[i] - 2, "%s", ARC0);
-        for (int j = 0; j < (int)strlen(diffs[i].name) + 2; ++j)
-            printw("%s", LINE_H);
-        printw("%s", ARC1);
-        mvprintw(diff_row, mid_col - semilen[i] - 2, "%s %s %s", LINE_V, diffs[i].name, LINE_V);
-        mvprintw(diff_row + 1, mid_col - semilen[i] - 2, "%s", ARC2);
-        for (int j = 0; j < (int)strlen(diffs[i].name) + 2; ++j)
-            printw("%s", LINE_H);
-        printw("%s", ARC3);
+        mvprintw(diffs[i].row, mid_col - semilen[i], "%s", diffs[i].name);
         attroff(COLOR_PAIR(diffs[i].color));
-        diff_row += vertical_offset + (i == 0);
     }
     attroff(WA_BOLD);
+    print_border(0);
+    if (selected == 4)
+        print_border(4);
 
     // side options
     if (optns_col + 7 < COLS)
@@ -175,7 +199,37 @@ int print_diff_menu()
     return 0;
 }
 
-static int cmvprintw(int color, int row, int col, const char *str, ...) 
+static void print_border(int d)
+{
+    attron(WA_BOLD | COLOR_PAIR(diffs[d].color));
+    mvprintw(diffs[d].row - 1, mid_col - semilen[d] - 2, "%s", ARC0);
+    for (int j = 0; j < (int)strlen(diffs[d].name) + 2; ++j)
+        printw("%s", LINE_H);
+    printw("%s", ARC1);
+    mvprintw(diffs[d].row, mid_col - semilen[d] - 2, "%s", LINE_V);
+    mvprintw(diffs[d].row, mid_col + semilen[d] + 2, "%s", LINE_V);
+    mvprintw(diffs[d].row + 1, mid_col - semilen[d] - 2, "%s", ARC2);
+    for (int j = 0; j < (int)strlen(diffs[d].name) + 2; ++j)
+        printw("%s", LINE_H);
+    printw("%s", ARC3);
+    attroff(WA_BOLD | COLOR_PAIR(diffs[d].color));
+}
+
+static void clear_border(int d)
+{
+    attron(WA_BOLD);
+    move(diffs[d].row - 1, mid_col - semilen[d] - 2);
+    for (int j = 0; j < (int)strlen(diffs[d].name) + 4; j += 2)
+        printw("%s ", CELL);
+    mvprintw(diffs[d].row, mid_col - semilen[d] - 2, "%s", CELL);
+    mvprintw(diffs[d].row, mid_col + semilen[d] + 2, "%s", CELL);
+    move(diffs[d].row + 1, mid_col - semilen[d] - 2);
+    for (int j = 0; j < (int)strlen(diffs[d].name) + 4; j += 2)
+        printw("%s ", CELL);
+    attroff(WA_BOLD);
+}
+
+static int cmvprintw(int color, int row, int col, const char *str, ...)
 {
     attron(COLOR_PAIR(color));
     move(row, col);

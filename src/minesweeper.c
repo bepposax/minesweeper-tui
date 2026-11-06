@@ -153,7 +153,6 @@ int game_loop()
                                             place_mines(row, col);
 #endif
                                         play(row, col);
-                                        
                                     }
                                     else if (event.bstate & BUTTON2_PRESSED)
                                         mark(row, col);
@@ -231,7 +230,8 @@ static void place_mines(int row, int col)
         srand(time(NULL));
         while (mines_to_place)
         {
-            do {
+            do
+            {
                 mine_row = rand() % board.rows;
                 mine_col = rand() % board.cols;
             } while (mine_row == row && mine_col == col);
@@ -242,7 +242,8 @@ static void place_mines(int row, int col)
                 mines_to_place--;
             }
         }
-    } else
+    }
+    else
     {
         for (int i = 0; i < board.rows; ++i)
             for (int j = 0; j < board.cols; ++j)
