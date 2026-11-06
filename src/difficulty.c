@@ -213,6 +213,7 @@ static void print_border(int d)
         printw("%s", LINE_H);
     printw("%s", ARC3);
     attroff(WA_BOLD | COLOR_PAIR(diffs[d].color));
+    refresh();
 }
 
 static void clear_border(int d)
@@ -227,6 +228,7 @@ static void clear_border(int d)
     for (int j = 0; j < (int)strlen(diffs[d].name) + 4; j += 2)
         printw("%s ", CELL);
     attroff(WA_BOLD);
+    refresh();
 }
 
 static int cmvprintw(int color, int row, int col, const char *str, ...)
