@@ -85,7 +85,7 @@ static int cmvprintw(int color, int row, int col, const char *str, ...);
 
 int select_diff()
 {
-    int ch, x_offset, y_offset, hovering = 0;
+    int ch, x_offset, y_offset, hovering = 0, bordered = 0;
 
 #ifdef TEST
     return -1;
@@ -103,22 +103,25 @@ int select_diff()
             MEVENT event;
             if (getmouse(&event) == OK)
             {
+                hovering = abs(diffs[0].row - event.y) / vertical_offset;
+                y_offset = abs(diffs[hovering].row - event.y);
                 x_offset = abs(mid_col - event.x);
-                for (int i = 1; i < NUM_DIFFS; ++i)
+                if (hovering < NUM_DIFFS && event.y >= diffs[1].row - 2 && 
+                    x_offset <= semilen[hovering] + 2 && y_offset <= 1) 
                 {
-                    y_offset = abs(diffs[i].row - event.y);
-                    if (x_offset <= semilen[i] + 2 && y_offset <= 1)
+                    if (hovering != bordered)
                     {
-                        if (hovering && hovering != i)
-                            clear_border(hovering);
-                        hovering = i;
-                        print_border(hovering);
-                        if (event.bstate & BUTTON1_PRESSED)
-                            selected = i;
-                        break;
+                        if (bordered)
+                            clear_border(bordered);
+                        print_border((bordered = hovering));
                     }
-                    else if (hovering)
-                        clear_border(hovering);
+                    if (event.bstate & BUTTON1_PRESSED)
+                        selected = hovering;
+                }
+                else if (bordered)
+                {
+                    clear_border(bordered);
+                    bordered = 0;
                 }
             }
         }
