@@ -132,6 +132,7 @@ int select_diff()
         if (selected)
             break;
     }
+    printf("\033[?1003ln"); // disable terminal reporting
     mousemask(oldmask, NULL);
 
     return selected;
