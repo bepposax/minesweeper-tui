@@ -34,12 +34,13 @@ static void print_history(char *buffer);
 /**
  * @return an unique history file
  */
-static FILE* create_history()
+static FILE *create_history()
 {
-    FILE* f;
+    FILE *f;
     int fd;
-    
-    if (!(f = fdopen((fd = mkstemp(filename)), "rx"))) {
+
+    if (!(f = fdopen((fd = mkstemp(filename)), "rx")))
+    {
         close(fd);
         printerr("Failed to create history file\n", __LINE__ - 1);
     }
@@ -53,11 +54,11 @@ static FILE* create_history()
 static void open_history(char *mode)
 {
     if (!history)
-    history = create_history();
+        history = create_history();
     history = fopen(filename, mode);
 }
 
-void update_history() 
+void update_history()
 {
     open_history("a");
     fprintf(history, "%s\n!!!\n", buffer);
@@ -65,33 +66,33 @@ void update_history()
     pages++;
 }
 
-void clear_history() 
+void clear_history()
 {
     open_history("w");
     fclose(history);
 }
 
-int show_history() 
+int show_history()
 {
     int ch = 0, page = 0;
     char line[board.width * 8];
     char hist_buffer[sizeof(line) * board.height];
     long cursor[pages + 1];
-    
+
     hist_buffer[0] = '\0';
     open_history("r");
     cursor[0] = 0;
 
-    while (fgets(line, sizeof(line), history)) 
+    while (fgets(line, sizeof(line), history))
     {
         if (strcmp(line, "!!!\n") != 0)
             strcat(hist_buffer, line);
-        else 
+        else
         {
             cursor[++page] = ftell(history);
             print_history(hist_buffer);
 
-            while ((ch = getch())) 
+            while ((ch = getch()))
             {
                 if (ch >= 0 && ch <= 255)
                     ch = tolower(ch);
@@ -105,16 +106,25 @@ int show_history()
                 {
                     if (page == pages)
                     {
-                        page--;
-                        fseek(history, cursor[page], SEEK_SET);
+                        mvprintw(board.height - 1, board.width / 2 + 2, "  ");
+                        continue;
                     }
-                    break;
+                    else
+                        break;
                 }
                 else if (ch == KEY_LEFT)
                 {
-                    page = page >= 2 ? (page - 2) : 0;
-                    fseek(history, cursor[page], SEEK_SET);
-                    break;
+                    if (page >= 2)
+                    {
+                        page -= 2;
+                        fseek(history, cursor[page], SEEK_SET);
+                        break;
+                    }
+                    else
+                    {
+                        mvprintw(board.height - 1, board.width / 2 - 3, "  ");
+                        continue;
+                    }
                 }
                 else if (ch == KEY_RESIZE)
                     print_history(hist_buffer);
@@ -139,7 +149,6 @@ static void print_history(char *buffer)
         attron(A_BOLD);
         mvprintw(board.height - 1, board.width / 2 - 3, "%s%s %s %s%s", LEFT_H, LINE_H, LINE_V, LINE_H, RIGHT_H);
         attroff(A_BOLD);
-        move(0, 0);
     }
 }
 
