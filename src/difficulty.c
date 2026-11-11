@@ -85,7 +85,7 @@ static int cmvprintw(int color, int row, int col, const char *str, ...);
 
 int select_diff()
 {
-    int ch, x_offset, y_offset, hovering = 0, bordered = 0;
+    int ch, x_offset, y_offset, hovering = 0, bordered = 0, printable;
 
 #ifdef TEST
     return -1;
@@ -95,10 +95,10 @@ int select_diff()
     set_diffs_rows();
     mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, &oldmask);
     printf("\033[?1003h\n"); // terminal reports mouse events
-    print_diff_menu();
+    printable = !print_diff_menu();
     while ((ch = getch()))
     {
-        if (ch == KEY_MOUSE)
+        if (ch == KEY_MOUSE && printable)
         {
             MEVENT event;
             if (getmouse(&event) == OK)
@@ -128,7 +128,7 @@ int select_diff()
         else if (ch == 'q' || ch == 'Q')
             break;
         else if (ch == KEY_RESIZE)
-            print_diff_menu();
+            printable = !print_diff_menu();
         if (selected)
             break;
     }
