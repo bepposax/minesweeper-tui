@@ -2,20 +2,25 @@ CC = gcc
 CFLAGS = -I include/ -Wall -Wextra -std=c99 -O3
 LDFLAGS = -lncursesw
 TARGET = minesweeper
-SRCS = src/*.c
+TEST = $(TARGET)-test
+SRCS = $(wildcard src/*.c)
+HDRS = $(wildcard include/*.h)
 
 .PHONY: all clean run test
 
 all: $(TARGET)
 
-$(TARGET): $(SRCS)
+$(TARGET): $(SRCS) $(HDRS)
 	$(CC) $(SRCS) -o $@ $(CFLAGS) $(LDFLAGS)
 
+$(TEST): $(SRCS) $(HDRS)
+	$(CC) $(SRCS) -o $(TEST) -I include/ -std=c99 $(LDFLAGS) -D TEST
+
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGET) $(TEST)
 
 run: $(TARGET)
 	./$(TARGET)
 
-test:	$(SRCS)
-	$(CC) $(SRCS) -o $(TARGET) -I include/ -std=c99 $(LDFLAGS) -D TEST
+test: $(TEST)
+	./$(TEST)
