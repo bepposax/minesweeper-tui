@@ -6,18 +6,19 @@ update_alias() {
     if ! grep -q "^alias mines=" "$ALIASFILE"; then
         echo -n "Appending alias to $ALIASFILE... "
         printf '%s\n' "$ALIAS" >> "$ALIASFILE" &&
-        echo "Done" &&
+        echo -e "Done\n" &&
         grep -F --color=auto "$ALIAS" "$ALIASFILE"
         echo -e "\nRestart the terminal or type 'source $ALIASFILE' for changes to take effect.\n"
     else
-        echo "Alias 'mines' already exists."
-        grep -F --color=auto "$ALIAS" "$ALIASFILE"
-        printf '\nReplace it with\n%s? [Y/n] ' "$ALIAS"
-        read -r choice
+        echo -e "Alias 'mines' already exists.\n"
+        echo -ne "-    "
+        grep --color=never "^alias mines=" "$ALIASFILE"
+        printf '+    %s\n\n' "$ALIAS"
+        read -rp "Confirm update? [Y/n] " choice
         if [[ $choice = [yY]* ]]; then
             echo -n "Removing old alias... "
             tmp="$(mktemp)" &&
-            grep -v  "^alias mines=" "$ALIASFILE" > "$tmp" &&
+            grep -v "^alias mines=" "$ALIASFILE" > "$tmp" &&
             mv "$tmp" "$ALIASFILE" &&
             echo "Done"
             update_alias
