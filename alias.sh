@@ -3,18 +3,23 @@
 # Set `mines` alias
 
 update_alias() {
-    if ! $(grep -q "alias mines" $ALIASFILE); then
+    if ! grep -q "^alias mines=" "$ALIASFILE"; then
         echo -n "Appending alias to $ALIASFILE... "
-        echo $ALIAS >> $ALIASFILE &&
-        echo -e "Done\n" &&
-        grep "$ALIAS" "$ALIASFILE" &&
-        echo -e "\nRestart the terminal or type 'source $ALIASFILE' for changes to take effect."
+        printf '%s\n' "$ALIAS" >> "$ALIASFILE" &&
+        echo "Done" &&
+        grep -F --color=auto "$ALIAS" "$ALIASFILE"
+        echo -e "\nRestart the terminal or type 'source $ALIASFILE' for changes to take effect.\n"
     else
         echo "Alias 'mines' already exists."
-        read -rp "Update alias 'mines'? " choice
-        if [[ $choice = y* || $choice = Y* ]]; then
+        grep -F --color=auto "$ALIAS" "$ALIASFILE"
+        printf '\nReplace it with\n%s? [Y/n] ' "$ALIAS"
+        read -r choice
+        if [[ $choice = [yY]* ]]; then
             echo -n "Removing old alias... "
-            grep -v "alias mines" $ALIASFILE > temp && mv temp $ALIASFILE && echo "Done"
+            tmp="$(mktemp)" &&
+            grep -v  "^alias mines=" "$ALIASFILE" > "$tmp" &&
+            mv "$tmp" "$ALIASFILE" &&
+            echo "Done"
             update_alias
         else
             echo -e "Discard\nDone."
@@ -23,22 +28,20 @@ update_alias() {
 }
 
 read -rp "Create the alias 'mines' to run the game? [Y/n] " choice
-if [[ $choice = y* || $choice = Y* ]]; then
+if [[ $choice = [yY]* ]]; then
     ALIASFILE=~/.bash_aliases
-    DIR_PATH="$(dirname $(readlink -f ${BASH_SOURCE[0]}))"
+    DIR_PATH="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
     FILEPATH="$DIR_PATH/minesweeper"
     ALIAS="alias mines='$FILEPATH'"
 
-
     # creates ALIASFILE if it doesn't exist
-    [ -f $ALIASFILE ] || {
+    [ -f "$ALIASFILE" ] || {
         echo -n "Creating '$ALIASFILE'... "
-        touch $ALIASFILE && echo "Done"
+        touch "$ALIASFILE" && echo "Done"
     }
-    # creates the alias 'mines' if it doesn't exist
     update_alias
 else
-    echo "Abort."
+    echo -e "Abort\nDone."
 fi
 
 exit 0
