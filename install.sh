@@ -2,10 +2,6 @@
 
 # Install building dependencies
 
-#####################
-### Needs testing ###
-#####################
-
 . /etc/os-release
 case "${ID:-} ${ID_LIKE:-}" in
     *debian*|*ubuntu*) pm=apt                     ;;
@@ -21,17 +17,17 @@ pkg_install() {
         apt)    sudo apt-get install -y "$@"               ;;
         dnf)    sudo dnf install -y "$@"                   ;;
         pacman) sudo pacman -Syu --needed --noconfirm "$@" ;;
-        zypper) sudo zypper --non-interactive install "$@" ;;
+        zypper) sudo zypper -n in "$@"                     ;;
         apk)    sudo apk add "$@"                          ;;
     esac
 }
 
 pkg_update() {
     case "${pm}" in
-        apt)    sudo apt-get update &>/dev/null                   ;;
-        dnf)    sudo dnf makecache &>/dev/null                    ;;
-        zypper) sudo zypper --non-interactive refresh &>/dev/null ;;
-        apk)    sudo apk update &>/dev/null                       ;;
+        apt)    sudo apt-get update &>/dev/null    ;;
+        dnf)    sudo dnf makecache &>/dev/null     ;;
+        zypper) sudo zypper -n refresh &>/dev/null ;;
+        apk)    sudo apk update &>/dev/null        ;;
     esac
 }
 
@@ -39,7 +35,7 @@ pkg_upgrade() {
     case "${pm}" in
         apt)    sudo apt-get install -y --only-upgrade "$@" ;;
         dnf)    sudo dnf upgrade -y "$@"                    ;;
-        zypper) sudo zypper --non-interactive update "$@"   ;;
+        zypper) sudo zypper -n update "$@"                  ;;
         apk)    sudo apk upgrade "$@"                       ;;
     esac
 }
@@ -48,17 +44,17 @@ pkg_list() {
     case "${pm}" in
         apt)    apt list "$@" 2>/dev/null ;;
         dnf)    dnf list "$@"             ;;
-        zypper) zypper search "$@"        ;;
+        zypper) zypper search -xs "$@"    ;;
         apk)    apk list "$@"             ;;
     esac
 }
 
 pkg_upgradable() {
     case "${pm}" in
-        apt)    apt list --upgradable 2>/dev/null | grep -q "^$1/"                       ;;
-        dnf)    dnf -q check-update "$1" &>/dev/null; [ $? -eq 100 ]                     ;;
-        zypper) zypper --non-interactive list-updates 2>/dev/null | grep -qE "\| $1 +\|" ;;
-        apk)    apk list -u | grep -q "^$1-"                                             ;;
+        apt)    apt list --upgradable 2>/dev/null | grep -q "^$1/"        ;;
+        dnf)    dnf -q check-update "$1" &>/dev/null; [ $? -eq 100 ]      ;;
+        zypper) zypper -n list-updates 2>/dev/null | grep -qE "\| $1 +\|" ;;
+        apk)    apk list -u | grep -q "^$1-"                              ;;
     esac
 }
 
@@ -140,10 +136,11 @@ else
     else 
         echo -n "are"
     fi
-    echo "missing."
+    echo " missing."
     exit 1
 fi
 
 bash "$(dirname "${BASH_SOURCE[0]}")/alias.sh"
 
 exit 0
+
