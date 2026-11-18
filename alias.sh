@@ -3,12 +3,28 @@
 # Set `mines` alias
 
 update_alias() {
-    if ! grep -q "^alias mines=" "$ALIASFILE"; then
+    if grep -q "$ALIAS" "$ALIASFILE"; then
+        echo ""
+        grep -F --color=auto "$ALIAS" "$ALIASFILE"
+        echo -e "\nAlias is already set."
+        echo -e "Done"
+    elif ! grep -q "^alias mines=" "$ALIASFILE"; then
         echo -n "Appending alias to $ALIASFILE... "
         printf '%s\n' "$ALIAS" >> "$ALIASFILE" &&
         echo -e "Done\n" &&
         grep -F --color=auto "$ALIAS" "$ALIASFILE"
-        echo -e "\nRestart the terminal or type 'source $ALIASFILE' for changes to take effect.\n"
+        
+        # check if bashrc sources bash_aliases
+        BASHRC=~/.bashrc
+        [ -f ~/.bashrc ] || {
+            echo -ne "\nCreating '$BASHRC'... "
+            touch "$BASHRC" && echo "Done"
+        }
+        echo -ne "\nSourcing '~/.bash_aliases' in '$BASHRC'... "
+        grep -q ". ~/.bash_aliases" $BASHRC || 
+        printf '\nif [ -f ~/.bash_aliases ]; then\n. ~/.bash_aliases\nfi\n\n' >> ~/.bashrc &&
+        echo "Done"
+        echo -e "Restart the terminal or type '. ~/.bash_aliases' for changes to take effect.\n"
     else
         echo -e "Alias 'mines' already exists.\n"
         echo -ne "-    "
