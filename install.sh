@@ -8,30 +8,30 @@
 
 . /etc/os-release
 case "${ID:-} ${ID_LIKE:-}" in
-    *debian*|*ubuntu*) pm=apt                       ;;
-    *rhel*|*fedora*)   pm=dnf                       ;;
-    *arch*)            pm=pacman                    ;;
-    *suse*)            pm=zypper                    ;;
-    *alpine*)          pm=apk                       ;;
-    *) echo "unsupported distro: $ID" >&2; exit 1   ;;
+    *debian*|*ubuntu*) pm=apt                     ;;
+    *rhel*|*fedora*)   pm=dnf                     ;;
+    *arch*)            pm=pacman                  ;;
+    *suse*)            pm=zypper                  ;;
+    *alpine*)          pm=apk                     ;;
+    *) echo "unsupported distro: $ID" >&2; exit 1 ;;
 esac
 
 pkg_install() {
     case "${pm}" in
-        apt)    sudo apt-get install -y "$@"                ;;
-        dnf)    sudo dnf install -y "$@"                    ;;
-        pacman) sudo pacman -Syu --needed --noconfirm "$@"  ;;
-        zypper) sudo zypper --non-interactive install "$@"  ;;
-        apk)    sudo apk add "$@"                           ;;
+        apt)    sudo apt-get install -y "$@"               ;;
+        dnf)    sudo dnf install -y "$@"                   ;;
+        pacman) sudo pacman -Syu --needed --noconfirm "$@" ;;
+        zypper) sudo zypper --non-interactive install "$@" ;;
+        apk)    sudo apk add "$@"                          ;;
     esac
 }
 
 pkg_update() {
     case "${pm}" in
-        apt)    sudo apt-get update &>/dev/null                     ;;
-        dnf)    sudo dnf makecache &>/dev/null                      ;;
-        zypper) sudo zypper --non-interactive refresh &>/dev/null   ;;
-        apk)    sudo apk update &>/dev/null                         ;;
+        apt)    sudo apt-get update &>/dev/null                   ;;
+        dnf)    sudo dnf makecache &>/dev/null                    ;;
+        zypper) sudo zypper --non-interactive refresh &>/dev/null ;;
+        apk)    sudo apk update &>/dev/null                       ;;
     esac
 }
 
@@ -46,10 +46,10 @@ pkg_upgrade() {
 
 pkg_list() {
     case "${pm}" in
-        apt)    apt list "$@" 2>/dev/null   ;;
-        dnf)    dnf list "$@"               ;;
-        zypper) zypper search "$@"          ;;
-        apk)    apk list "$@"               ;;
+        apt)    apt list "$@" 2>/dev/null ;;
+        dnf)    dnf list "$@"             ;;
+        zypper) zypper search "$@"        ;;
+        apk)    apk list "$@"             ;;
     esac
 }
 
@@ -58,7 +58,7 @@ pkg_upgradable() {
         apt)    apt list --upgradable 2>/dev/null | grep -q "^$1/"                       ;;
         dnf)    dnf -q check-update "$1" &>/dev/null; [ $? -eq 100 ]                     ;;
         zypper) zypper --non-interactive list-updates 2>/dev/null | grep -qE "\| $1 +\|" ;;
-        apk)    apk list -u "$1"                                                         ;;
+        apk)    apk list -u | grep -q "^$1-"                                             ;;
     esac
 }
 
@@ -83,7 +83,7 @@ updated=true
 
 sudo -v || exit 1
 
-# pacman logic
+# pacman
 if [[ $pm == pacman ]]; then
     read -rp "Synchronize, upgrade the system and install dependencies? [Y/n] " choice
     if [[ -z $choice || $choice = [yY]* ]]; then
@@ -98,7 +98,7 @@ if [[ $pm == pacman ]]; then
         updated=false
         echo "Skipped."
     fi
-# other package managers
+# others
 else
     echo -n "Getting packages information... "
     if pkg_update; then
