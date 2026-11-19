@@ -9,6 +9,7 @@ case "${ID:-} ${ID_LIKE:-}" in
     *arch*)            pm=pacman                  ;;
     *suse*)            pm=zypper                  ;;
     *alpine*)          pm=apk                     ;;
+    *void*)            pm=xbps                    ;;
     *) echo "unsupported distro: $ID" >&2; exit 1 ;;
 esac
 
@@ -19,6 +20,7 @@ pkg_install() {
         pacman) sudo pacman -Syu --needed --noconfirm "$@" ;;
         zypper) sudo zypper -n in "$@"                     ;;
         apk)    sudo apk add "$@"                          ;;
+        xbps)   sudo xbps-install -y "$@"                  ;;
     esac
 }
 
@@ -28,6 +30,8 @@ pkg_update() {
         dnf)    sudo dnf makecache &>/dev/null     ;;
         zypper) sudo zypper -n refresh &>/dev/null ;;
         apk)    sudo apk update &>/dev/null        ;;
+        xbps)   sudo xbps-install -Syu xbps  && \
+                sudo xbps-install -Syu             ;;
     esac
 }
 
@@ -37,15 +41,17 @@ pkg_upgrade() {
         dnf)    sudo dnf upgrade -y "$@"                    ;;
         zypper) sudo zypper -n update "$@"                  ;;
         apk)    sudo apk upgrade "$@"                       ;;
+        xbps)   sudo xbps-install -yu "$@"                  ;;
     esac
 }
 
 pkg_list() {
     case "${pm}" in
-        apt)    apt list "$@" 2>/dev/null ;;
-        dnf)    dnf list "$@"             ;;
-        zypper) zypper search -xs "$@"    ;;
-        apk)    apk list "$@"             ;;
+        apt)    apt list "$@" 2>/dev/null                          ;;
+        dnf)    dnf list "$@"                                      ;;
+        zypper) zypper search -xs "$@"                             ;;
+        apk)    apk list "$@"                                      ;;
+        xbps)   for d in "$@"; do xbps-query -Rp pkgver "$d"; done ;;
     esac
 }
 
@@ -55,6 +61,7 @@ pkg_upgradable() {
         dnf)    dnf -q check-update "$1" &>/dev/null; [ $? -eq 100 ]      ;;
         zypper) zypper -n list-updates 2>/dev/null | grep -qE "\| $1 +\|" ;;
         apk)    apk list -u | grep -q "^$1-"                              ;;
+        xbps)   xbps-install -un "$1" 2>/dev/null | grep -q "^$1-"        ;;
     esac
 }
 
@@ -63,21 +70,27 @@ pkg_installed() {
         apt)        dpkg -s "$1" &>/dev/null     ;;
         dnf|zypper) rpm -q "$1" &>/dev/null      ;;
         apk)        apk info -e "$1" &>/dev/null ;;
+        xbps)       xbps-query "$1" &>/dev/null  ;;
     esac
 }
 
 case "$pm" in
-    apt)        libncurses=libncurses-dev ;;
-    dnf|zypper) libncurses=ncurses-devel  ;;
-    pacman)     libncurses=ncurses        ;;
-    apk)        libncurses=ncurses-dev    ;;
+    apt)             libncurses=libncurses-dev ;;
+    dnf|zypper|xbps) libncurses=ncurses-devel  ;;
+    pacman)          libncurses=ncurses        ;;
+    apk)             libncurses=ncurses-dev    ;;
 esac
 
 dependencies=(make gcc "$libncurses")
 installed=true
 updated=true
 
-sudo -v || exit 1
+if [[ "$(id -u)" -eq 0 ]]; then
+    sudo() { "$@"; }
+else
+    sudo -v || exit 1
+fi
+
 
 # pacman
 if [[ $pm == pacman ]]; then
