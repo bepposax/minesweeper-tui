@@ -85,6 +85,11 @@ dependencies=(make gcc "$libncurses")
 installed=true
 updated=true
 
+# alpine libc headers
+case "$pm" in
+    apk) dependencies+=(musl-dev) ;;
+esac
+
 if [[ "$(id -u)" -eq 0 ]]; then
     sudo() { "$@"; }
 else
