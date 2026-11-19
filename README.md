@@ -28,12 +28,20 @@ Minesweeper-TUI is a command-line implementation of the [Minesweeper](https://en
     ```bash
     ./install.sh
     ```
-    (works with *apt* / *dnf* / *pacman* / *zypper* / *apk* package managers)
+    (works with *apt* / *dnf* / *pacman* / *zypper* / *apk* / *xbps* package managers)
 3. Usage (make commands):
    - `make`: Compiles the source code files and generates the executable file.
    - `make run`: Runs the program.
    - `make clean`: Deletes the executable file.
    - `make test`: Compiles and runs the program in testing mode.
+
+### Optional
+
+* Save the alias `mines` with
+  ``` bash
+  ./alias.sh
+  ```
+  and run it as a command from any folder
 
 ## Gameplay
 
