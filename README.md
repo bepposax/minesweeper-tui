@@ -2,8 +2,8 @@
 
 Minesweeper-TUI is a command-line implementation of the [Minesweeper](https://en.wikipedia.org/wiki/Minesweeper_(video_game) "Minesweeper (video game) - Wikipedia") game in C.
 
-<img src="https://github.com/user-attachments/assets/06e40d84-5147-4fb6-85cf-143da5470c36" alt="menu" height="333" width="auto">&emsp;
-<img src="https://github.com/user-attachments/assets/c2f42ab5-c1b6-4b62-841c-4c2751e78a5c" alt="game" height="333" width="auto">
+<img src="https://github.com/user-attachments/assets/06e40d84-5147-4fb6-85cf-143da5470c36" alt="menu" style="max-height:333; width:auto;">&emsp;
+<img src="https://github.com/user-attachments/assets/c2f42ab5-c1b6-4b62-841c-4c2751e78a5c" alt="game" style="max-height:333; width:auto;">
 
 ## Instructions
 
@@ -57,7 +57,7 @@ Minesweeper-TUI is a command-line implementation of the [Minesweeper](https://en
 * **Full Mouse Control**: left to play, right to flag, middle to mark
 * **Four Difficulties**: Beginner, Intermediate, Expert, Custom
 
-  <img src="https://github.com/user-attachments/assets/0540ec68-9993-46bf-b3bf-403b8d22a09c" alt="custom-game" height="333" width="auto" />
+  <img src="https://github.com/user-attachments/assets/0540ec68-9993-46bf-b3bf-403b8d22a09c" alt="custom-game" style="max-height:500; width:auto;" />
 
   A full screen Custom game *[height: 100%, width: 100%, mines: 10%]*
 * **Safe First Click**: the first move can never be a mine
