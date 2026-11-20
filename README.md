@@ -16,6 +16,27 @@ Minesweeper-TUI is a command-line implementation of the [Minesweeper](https://en
     ```bash
     ./minesweeper
     ```
+> [!NOTE]
+> <details><summary>Doesn't run?</summary>
+> The prebuilt executable may not work on all distros due to different or missing library versions:
+>
+> ```console
+> $ ldd minesweeper
+>       linux-vdso.so.1 (0x00007a6cbe1a1000)
+>       libncursesw.so.6 => /lib/x86_64-linux-gnu/libncursesw.so.6 (0x00007a6cbe153000)
+>       libtinfo.so.6 => /lib/x86_64-linux-gnu/libtinfo.so.6 (0x00007a6cbe11d000)
+>       libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007a6cbdf29000)
+>       /lib64/ld-linux-x86-64.so.2 (0x00007a6cbe1a3000)
+> ```
+> 
+> If it doesn't, recompile it with:
+>
+> ```bash
+> make clean && make
+> ```
+>
+> See [Compiling ↴](#compiling)
+</details>
 
 ### Compiling
 
