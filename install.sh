@@ -100,7 +100,7 @@ fi
 # pacman
 if [[ $pm == pacman ]]; then
     read -rp "Synchronize, upgrade the system and install dependencies? [Y/n] " choice
-    if [[ -z $choice || $choice = [yY]* ]]; then
+    if [[ -z $choice || $choice != [nN]* ]]; then
         if pkg_install "${dependencies[@]}"; then
             echo "Done"
         else
@@ -127,14 +127,14 @@ else
     for d in "${dependencies[@]}"; do
         if ! pkg_installed "$d"; then
             read -rp "Install '$d'? [Y/n] " choice
-            if [[ -z $choice || $choice = [yY]* ]] && pkg_install "$d"; then
+            if [[ -z $choice || $choice != [nN]* ]] && pkg_install "$d"; then
                 echo "Done"
             else
                 installed=false
             fi
         elif pkg_upgradable "$d"; then
             read -rp "Upgrade '$d'? [Y/n] " choice
-            if [[ -z $choice || $choice = [yY]* ]] && pkg_upgrade "$d"; then
+            if [[ -z $choice || $choice != [nN]* ]] && pkg_upgrade "$d"; then
                 echo "Done"
             else
                 updated=false
