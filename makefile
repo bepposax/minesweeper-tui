@@ -10,11 +10,15 @@ HDRS = $(wildcard include/*.h)
 
 all: $(TARGET)
 
+ifeq (musl,$(findstring musl, $(shell $(CC) -dumpmachine)))
+$(TARGET): LDFLAGS += -static
+endif
+
 $(TARGET): $(SRCS) $(HDRS)
 	$(CC) $(SRCS) -o $@ $(CFLAGS) $(LDFLAGS)
 
 $(TEST): $(SRCS) $(HDRS)
-	$(CC) $(SRCS) -o $(TEST) -I include/ -std=c99 $(LDFLAGS) -D TEST
+	$(CC) $(SRCS) -o $@ -I include/ -std=c99 $(LDFLAGS) -D TEST
 
 clean:
 	rm -f $(TARGET) $(TEST)
