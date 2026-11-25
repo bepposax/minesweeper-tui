@@ -2,10 +2,10 @@
  * @file board.c
  * @author Ivano Izzo
  */
+#include <curses.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <ncurses.h>
 #include <stdarg.h>
 #include "board.h"
 #include "ANSI-colors.h"
@@ -323,7 +323,7 @@ void print_board(bool resizing)
 
     if (game_over)
         print_results();
-    printf("%s", buffer);
+    addstr(buffer);
     update_history();
 
     // time bottom

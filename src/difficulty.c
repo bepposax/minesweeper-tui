@@ -4,7 +4,7 @@
  */
 #include <stdio.h>
 #include <string.h>
-#include <ncurses.h>
+#include <curses.h>
 #include "difficulty.h"
 #include "string-builder.h"
 #include "symbols.h"
@@ -170,7 +170,7 @@ int print_diff_menu()
     for (int i = 0; i <= board_w; i++)
         strappend(LINE_H);
     strappend(ARC3 "\n\r");
-    printf("%s", buffer);
+    addstr(buffer);
     offset = 0;
 
     // difficulties

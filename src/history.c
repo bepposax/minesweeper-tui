@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <ncurses.h>
+#include <curses.h>
 #include <string.h>
 #include <ctype.h>
 #include "history.h"

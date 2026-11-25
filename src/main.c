@@ -2,7 +2,7 @@
  * @file main.c
  * @author Ivano Izzo
  */
-#include <ncurses.h>
+#include <curses.h>
 #include <locale.h>
 #include <signal.h>
 #include <unistd.h>
@@ -20,7 +20,6 @@ int main(void)
 
     for (int i = 1; i <= 3; ++i)
         signal(i, cleanup); // SIGHUP; SIGNINT; SIGQUIT
-    setlocale(LC_ALL, "");
     ncurses_init();
     do
     {
@@ -39,6 +38,11 @@ int main(void)
 
 static void ncurses_init()
 {
+#ifdef _WIN32
+    setlocale(LC_ALL, "");
+#else
+    setlocale(LC_ALL, "");
+#endif
     initscr();
     raw();
     noecho();

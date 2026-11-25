@@ -2,7 +2,7 @@
  * @file minesweeper.c
  * @author Ivano Izzo
  */
-#include <ncurses.h>
+#include <curses.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>

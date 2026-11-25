@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
-#include <ncurses.h>
+#include <curses.h>
 #include "timer.h"
 #include "symbols.h"
 #include "board.h"
