@@ -39,7 +39,7 @@ int main(void)
 static void ncurses_init()
 {
 #ifdef _WIN32
-    setlocale(LC_ALL, "");
+    setlocale(LC_ALL, ".UTF-8");
 #else
     setlocale(LC_ALL, "");
 #endif

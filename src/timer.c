@@ -17,13 +17,15 @@
 static void *timer_run();
 
 static pthread_t thread_id;
+static pthread_mutex_t timer_mutex = PTHREAD_MUTEX_INITIALIZER;
 static WINDOW *w = NULL;
 int min, sec;
 bool timer_running;
 
 void timer_newwin()
 {
-    delwin(w);
+    if (w) 
+        delwin(w);
     w = newwin(1, 8, board.height - 1, board.width - 8);
 }
 
@@ -45,8 +47,10 @@ static void *timer_run()
     while (1)
     {
         sleep(1);
+        pthread_mutex_lock(&timer_mutex);
         min = seconds / 60;
         sec = seconds % 60;
+        pthread_mutex_unlock(&timer_mutex);
         print_time();
         seconds++;
     }
@@ -55,12 +59,18 @@ static void *timer_run()
 
 void print_time()
 {
+    int m, s;
+
     if (board.height < LINES && board.width <= COLS)
     {
+        pthread_mutex_lock(&timer_mutex);
+        m = min;
+        s = sec;
+        pthread_mutex_unlock(&timer_mutex);
         wattron(w, A_BOLD | COLOR_PAIR(COLOR_YELLOW));
         wprintw(w, TIMER);
         wattroff(w, A_BOLD | COLOR_PAIR(COLOR_YELLOW));
-        wprintw(w, " %02d:%02d\b\b\b\b\b\b\b", min, sec);
+        wprintw(w, " %02d:%02d\b\b\b\b\b\b\b", m, s);
         wrefresh(w);
     }
 }

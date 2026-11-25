@@ -94,7 +94,7 @@ int select_diff()
     init_semilenghts();
     set_diffs_rows();
     mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, &oldmask);
-    printf("\033[?1003h\n"); // terminal reports mouse events
+    //printf("\033[?1003h\n"); // terminal reports mouse events
     printable = !print_diff_menu();
     while ((ch = getch()))
     {
@@ -104,10 +104,12 @@ int select_diff()
             if (getmouse(&event) == OK)
             {
                 hovering = abs(diffs[0].row - event.y) / vertical_offset;
+                if (hovering >= NUM_DIFFS) continue;
                 y_offset = abs(diffs[hovering].row - event.y);
                 x_offset = abs(mid_col - event.x);
-                if (hovering < NUM_DIFFS && event.y >= diffs[1].row - 2 &&
-                    x_offset <= semilen[hovering] + 2 && y_offset <= 1)
+                if (event.y >= diffs[1].row - 2 &&
+                    x_offset <= semilen[hovering] + 2 && 
+                    y_offset <= 1)
                 {
                     if (hovering != bordered)
                     {
@@ -132,7 +134,7 @@ int select_diff()
         if (selected)
             break;
     }
-    printf("\033[?1003l\n"); // disable terminal reporting
+    //printf("\033[?1003l\n"); // disable terminal reporting
     mousemask(oldmask, NULL);
 
     return selected;

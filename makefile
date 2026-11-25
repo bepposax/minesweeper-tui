@@ -3,7 +3,7 @@ CFLAGS = -I include/ -Wall -Wextra -std=c99 -O3
 
 ifeq ($(OS),Windows_NT)
     EXE      = .exe
-    LDFLAGS  = -lpdcurses
+    LDFLAGS  = -lpdcurses_vt
 	CFLAGS  += -I/ucrt64/include/pdcurses/ -IC:/msys64/ucrt64/include/pdcurses/ -DPDC_WIDE -DPDC_FORCE_UTF8 -DPDC_NCMOUSE
 else
     EXE =

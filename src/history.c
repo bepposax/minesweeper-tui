@@ -10,6 +10,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "history.h"
+#include <errno.h>
 #include "string-builder.h"
 #include "board.h"
 #include "symbols.h"
@@ -34,28 +35,31 @@ static void print_history(char *buffer);
 /**
  * @return an unique history file
  */
-static FILE *create_history()
+static void create_history()
 {
-    FILE *f;
     int fd;
 
-    if (!(f = fdopen((fd = mkstemp(filename)), "rx")))
+    strcpy(filename, ".history.XXXXXX");
+    if ((fd = mkstemp(filename)) == -1)
     {
-        close(fd);
-        printerr("Failed to create history file\n", __LINE__ - 1);
+        fprintf(stderr, "mkstemp failed: %s\n", strerror(errno));
+        printerr("Failed to create history file\n", __LINE__);
     }
-    return f;
+    if ((close(fd)) == -1)
+        printerr("Failed to close history file descriptor\n", __LINE__);
 }
-
+    
 /**
  * @brief opens the history file
  * @param mode the mode to open it in
  */
-static void open_history(char *mode)
+static void open_history(const char *mode)
 {
     if (!history)
-        history = create_history();
-    history = fopen(filename, mode);
+        create_history();
+    if (!(history = fopen(filename, mode)))
+        printerr("Failed to open history file\n", __LINE__);
+
 }
 
 void update_history()
@@ -63,6 +67,7 @@ void update_history()
     open_history("a");
     fprintf(history, "%s\n!!!\n", buffer);
     fclose(history);
+    history = NULL;
     pages++;
 }
 
@@ -70,6 +75,8 @@ void clear_history()
 {
     open_history("w");
     fclose(history);
+    history = NULL;
+
 }
 
 int show_history()
@@ -99,6 +106,8 @@ int show_history()
                 if (ch == 'q' || ch == 'n' || ch == 'r')
                 {
                     hist_buffer[0] = '\0';
+                    fclose(history);
+                    history = NULL;
                     remove_history();
                     return ch;
                 }
@@ -133,6 +142,7 @@ int show_history()
         }
     }
     fclose(history);
+    history = NULL;
     remove_history();
 
     return ch;
